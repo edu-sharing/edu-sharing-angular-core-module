@@ -64,6 +64,7 @@ import {UIConstants} from "./ui/ui-constants";
 })
 export class CoreModule {}
 
+
 export * from "./rest/data-object";
 export * from "./rest/rest-constants";
 export * from "./rest/request-object";
