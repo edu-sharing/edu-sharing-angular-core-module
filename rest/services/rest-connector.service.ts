@@ -482,6 +482,16 @@ export class RestConnectorService {
       baseURL+="/";
     return baseURL+this.endpointUrl;
   }
+  /**
+   * returns the absolute url to the current edu-sharing instance, e.g. http://localhost/
+   * It will NOT include /edu-sharing !
+  */
+  public getAbsoluteServerUrl(){
+    let url=this.getAbsoluteEndpointUrl();
+    let split=url.split("/");
+    split.splice(split.length-3,3);
+    return split.concat('/')+'/';
+  }
   private notifyFrame(data: any,request:any, success : boolean) {
     let result={request:request,response:data,success:success};
     console.log(result);
