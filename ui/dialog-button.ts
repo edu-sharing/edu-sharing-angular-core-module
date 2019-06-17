@@ -1,5 +1,7 @@
 
 export class DialogButton {
+    public disabled=false;
+
     public static getOkCancel(cancel : Function,ok : Function) : DialogButton[]{
         return [
             new DialogButton("CANCEL",DialogButton.TYPE_CANCEL,cancel),

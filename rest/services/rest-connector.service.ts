@@ -494,7 +494,6 @@ export class RestConnectorService {
   }
   private notifyFrame(data: any,request:any, success : boolean) {
     let result={request:request,response:data,success:success};
-    console.log(result);
     this.event.broadcastEvent(FrameEventsService.EVENT_REST_RESPONSE,result);
   }
 
