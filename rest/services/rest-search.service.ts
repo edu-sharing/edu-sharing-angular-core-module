@@ -5,18 +5,17 @@ import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import { NodeRef, Node, NodeWrapper, NodePermissions, LocalPermissions, NodeVersions, NodeVersion, NodeList} from "../data-object";
-import {RequestObject} from "../request-object";
 import {AbstractRestService} from "./abstract-rest-service";
-import {MdsComponent} from "../../../common/ui/mds/mds.component";
 import {Helper} from "../helper";
+import {MdsHelper} from "../mds-helper";
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{
-    static convertCritierias(properties:any[],mdsRef:MdsComponent){
+    static convertCritierias(properties:any[],mdsWidgets:any){
         let criterias=[];
         properties=Helper.deepCopy(properties);
         for (let property in properties) {
-            let widget=mdsRef.getWidget(property);
+            let widget=MdsHelper.getWidget(property,null,mdsWidgets);
             if(widget && widget.type=='multivalueTree'){
                 let attach=RestSearchService.unfoldTreeChilds(properties[property],widget);
                 if(attach)
