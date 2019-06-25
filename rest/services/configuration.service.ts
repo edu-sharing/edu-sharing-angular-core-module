@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {Observable, Observer} from "rxjs";
 import {RestLocatorService} from "./rest-locator.service";
-import {BridgeService, MessageType} from "../../../core-bridge-module/bridge.service";
+import {BridgeService} from "../../../core-bridge-module/bridge.service";
+import {MessageType} from '../../ui/message-type';
 
 /**
  Service to get configuration data while running (e.g. loaded extension)
