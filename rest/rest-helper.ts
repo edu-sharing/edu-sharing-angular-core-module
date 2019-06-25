@@ -18,10 +18,11 @@ import {RestConnectorService} from './services/rest-connector.service';
 import {RestIamService} from './services/rest-iam.service';
 import {UIConstants} from "../ui/ui-constants";
 import {ConfigurationService} from "./services/configuration.service";
-import {BridgeService, MessageType} from "../../core-bridge-module/bridge.service";
+import {BridgeService} from "../../core-bridge-module/bridge.service";
 import NumberFormat = Intl.NumberFormat;
 import NumberFormatOptions = Intl.NumberFormatOptions;
 import {Helper} from "./helper";
+import {MessageType} from '../ui/message-type';
 
 export class RestHelper{
     private static SPACES_STORE_REF = "workspace://SpacesStore/";
