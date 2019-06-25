@@ -17,6 +17,7 @@ export class FrameEventsService {
   public static EVENT_INVALIDATE_HEIGHT="INVALIDATE_HEIGHT";
   public static EVENT_SESSION_TIMEOUT="SESSION_TIMEOUT";
   public static EVENT_APPLY_NODE="APPLY_NODE";
+  public static EVENT_POST_DATA="POST_DATA";
   public static EVENT_NODE_SAVED="NODE_SAVED";
     /**
      * Hint to ng that the content has changed (e.g. via a connector) and should be reloaded
@@ -38,6 +39,7 @@ export class FrameEventsService {
   public static EVENT_PARENT_SCROLL="PARENT_SCROLL";
   public static EVENT_PARENT_SEARCH="PARENT_SEARCH";
   public static EVENT_PARENT_ADD_NODE_URL="PARENT_ADD_NODE_URL";
+  public static EVENT_PARENT_FETCH_DATA="PARENT_FETCH_DATA";
   public static EVENT_PARENT_REST_REQUEST="PARENT_REST_REQUEST";
   public static EVENT_UPDATE_SESSION_TIMEOUT="UPDATE_SESSION_TIMEOUT";
 
