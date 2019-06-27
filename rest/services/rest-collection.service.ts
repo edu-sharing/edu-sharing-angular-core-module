@@ -19,10 +19,11 @@ export class RestCollectionService extends AbstractRestService{
     let query=this.connector.createUrl("collection/:version/collections/:repository/:collection",repository,[[":collection",collection]]);
     return this.connector.delete(query,this.connector.getRequestOptions());
   }
-  public addNodeToCollection = (collection : string,node:string,repository=RestConstants.HOME_REPOSITORY): Observable<Response> => {
-    let query=this.connector.createUrl("collection/:version/collections/:repository/:collection/references/:node",repository,[
+  public addNodeToCollection = (collection : string,node:string,sourceRepo:string,repository=RestConstants.HOME_REPOSITORY): Observable<Response> => {
+    let query=this.connector.createUrl("collection/:version/collections/:repository/:collection/references/:node?sourceRepo=:sourceRepo",repository,[
       [":collection",collection],
       [":node",node],
+      [":sourceRepo",sourceRepo]
     ]);
     return this.connector.put(query,null,this.connector.getRequestOptions());
   }
