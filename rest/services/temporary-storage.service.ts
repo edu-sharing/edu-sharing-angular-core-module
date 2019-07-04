@@ -14,7 +14,10 @@ export class TemporaryStorageService {
     public static COLLECTION_ADD_NODES = "collection_add_nodes";
     public static SESSION_INFO = "SESSION_INFO";
     public static LIST_DRAG_DATA = "list_drag";
-    public static OPTION_HIDE_MAINNAV: "option-hide_mainnav";
+    // default: false
+    public static OPTION_HIDE_MAINNAV: "option_hide_mainnav";
+    // default: false
+    public static OPTION_DISABLE_SCROLL_LAYOUT: "option_disable_scroll_layout";
 
     public static MAIN_NAV_BUTTONS = "main_nav_buttons";
     private data : any={};
