@@ -5,8 +5,8 @@ import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {
-  ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, ServerUpdate, CacheInfo, NetworkRepositories, Application
+    ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
+    IamUsers, IamUser, UserProfile, UserCredentials, ServerUpdate, CacheInfo, NetworkRepositories, Application, NodeStatistics, Statistics
 } from "../data-object";
 import {Observer} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
@@ -235,5 +235,22 @@ export class RestAdminService extends AbstractRestService{
       ]);
       return this.connector.post(query,null,this.connector.getRequestOptions());
   }
+
+    public getStatisticsNode(from:Date,to:Date,grouping='None'){
+        let query=this.connector.createUrl("admin/:version/statistics/nodes?dateFrom=:from&dateTo=:to&grouping=:grouping",null,[
+            [":from",""+from.getTime()],
+            [":to",""+to.getTime()],
+            [":grouping",grouping]
+        ]);
+        return this.connector.post<NodeStatistics[]>(query,null,this.connector.getRequestOptions());
+    }
+    public getStatisticsUser(from:Date,to:Date,grouping='None'){
+        let query=this.connector.createUrl("admin/:version/statistics/users?dateFrom=:from&dateTo=:to&grouping=:grouping",null,[
+            [":from",""+from.getTime()],
+            [":to",""+to.getTime()],
+            [":grouping",grouping]
+        ]);
+        return this.connector.post<Statistics[]>(query,null,this.connector.getRequestOptions());
+    }
 }
 

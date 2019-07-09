@@ -26,6 +26,8 @@ export class ConfigurationHelper {
   }
   static getPersonWithConfigDisplayName(person: any, config: ConfigurationService) {
     let field=config.instant("userDisplayName","fullName");
+    if(person==null)
+      return null;
     if(field=="authorityName"){
       if(person.authorityName==null)
         field="fullName";

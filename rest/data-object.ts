@@ -1097,3 +1097,10 @@ export class PersonalProfile {
   homeFolder:Reference;
   sharedFolders:Array<Reference>;
 }
+export class Statistics {
+  counts: any;
+  date: string;
+}
+export class NodeStatistics extends Statistics{
+  node: Node;
+}
