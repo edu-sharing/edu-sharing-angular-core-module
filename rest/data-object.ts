@@ -1097,6 +1097,13 @@ export class PersonalProfile {
   homeFolder:Reference;
   sharedFolders:Array<Reference>;
 }
+export interface WebsiteInformation{
+  title: string;
+  page: string;
+  description: string;
+  license: string;
+  keywords: string[];
+}
 export class Statistics {
   counts: any;
   date: string;

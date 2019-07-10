@@ -3,6 +3,7 @@ import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import {RestConnectorService} from "./rest-connector.service";
 import {AbstractRestService} from "./abstract-rest-service";
+import {WebsiteInformation} from "../data-object";
 
 @Injectable()
 export class RestUtilitiesService extends AbstractRestService{
@@ -14,6 +15,6 @@ export class RestUtilitiesService extends AbstractRestService{
       [
         [":url",url],
       ]);
-    return this.connector.get<any>(query,this.connector.getRequestOptions());
+    return this.connector.get<WebsiteInformation>(query,this.connector.getRequestOptions());
   }
 }
