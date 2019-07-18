@@ -3,7 +3,7 @@ import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
 import {Observable, Observer} from 'rxjs';
 import {RequestObject} from '../request-object';
-import {OAuthResult, LoginResult, AccessScope} from '../data-object';
+import {OAuthResult, LoginResult, AccessScope, About} from '../data-object';
 import {Router, ActivatedRoute} from '@angular/router';
 import {RestLocatorService} from './rest-locator.service';
 import {HttpClient} from '@angular/common/http';
