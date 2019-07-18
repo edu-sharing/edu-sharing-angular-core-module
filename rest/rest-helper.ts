@@ -213,8 +213,11 @@ export class RestHelper{
     public static getName(node:any):string {
         if(node.reference)
           node=node.reference;
-        if (node.name) return node.name;
-        return node.title;
+        if(node.name) return node.name;
+        if(node.title) return node.title;
+        if(node.ref)
+            return node.ref.id;
+        return null;
     }
     public static getDurationInSeconds(node:any) : number {
         // PT1H5M23S

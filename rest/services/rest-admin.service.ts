@@ -236,21 +236,22 @@ export class RestAdminService extends AbstractRestService{
       return this.connector.post(query,null,this.connector.getRequestOptions());
   }
 
-    public getStatisticsNode(from:Date,to:Date,grouping='None'){
-        let query=this.connector.createUrl("admin/:version/statistics/nodes?dateFrom=:from&dateTo=:to&grouping=:grouping",null,[
-            [":from",""+from.getTime()],
-            [":to",""+to.getTime()],
-            [":grouping",grouping]
-        ]);
-        return this.connector.post<NodeStatistics[]>(query,null,this.connector.getRequestOptions());
+    public getStatisticsNode(from:Date,to:Date,grouping='None',additionalFields:string[]=null,groupField:string[]=null){
+      return this.getStatistics<NodeStatistics[]>("nodes",from,to,grouping,additionalFields,groupField);
     }
-    public getStatisticsUser(from:Date,to:Date,grouping='None'){
-        let query=this.connector.createUrl("admin/:version/statistics/users?dateFrom=:from&dateTo=:to&grouping=:grouping",null,[
-            [":from",""+from.getTime()],
-            [":to",""+to.getTime()],
-            [":grouping",grouping]
+    public getStatisticsUser(from:Date,to:Date,grouping='None',additionalFields:string[]=null,groupField:string[]=null){
+        return this.getStatistics<NodeStatistics[]>("users",from,to,grouping,additionalFields,groupField);
+    }
+    private getStatistics<T extends Statistics[]>(type:string,from:Date,to:Date,grouping='None',additionalFields:string[]=null,groupField:string[]=null){
+        let query=this.connector.createUrlNoEscape("admin/:version/statistics/:type?dateFrom=:from&dateTo=:to&grouping=:grouping&:additionalFields&:groupField",null,[
+            [":type",type],
+            [":from",encodeURIComponent(""+from.getTime())],
+            [":to",encodeURIComponent(""+to.getTime())],
+            [":grouping",encodeURIComponent(grouping)],
+            [":additionalFields",RestHelper.getQueryStringForList("additionalFields",additionalFields)],
+            [":groupField",RestHelper.getQueryStringForList("groupField",groupField)]
         ]);
-        return this.connector.post<Statistics[]>(query,null,this.connector.getRequestOptions());
+        return this.connector.post<T>(query,null,this.connector.getRequestOptions());
     }
 }
 

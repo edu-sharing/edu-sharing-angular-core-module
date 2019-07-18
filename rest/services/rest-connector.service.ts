@@ -138,7 +138,7 @@ export class RestConnectorService {
   }
   public getAbout(){
       let url=this.createUrl("_about",null);
-      return this.get<any>(url,this.getRequestOptions());
+      return this.get<About>(url,this.getRequestOptions());
   }
   public isLoggedIn(){
     let url=this.createUrl("authentication/:version/validateSession",null);

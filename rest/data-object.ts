@@ -1104,8 +1104,20 @@ export interface WebsiteInformation{
   license: string;
   keywords: string[];
 }
+export interface Version {
+  repository: string;
+  renderservice: string;
+  major: number;
+  minor: number;
+}export interface About{
+  themesUrl: string;
+  version: Version;
+  services: any;
+}
+
 export class Statistics {
   counts: any;
+  authority: string;
   date: string;
 }
 export class NodeStatistics extends Statistics{
