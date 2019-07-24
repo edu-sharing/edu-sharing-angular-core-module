@@ -27,6 +27,7 @@ import {CoreBridgeModule} from "../core-bridge-module/core.bridge.module";
 import {ConfigurationService} from "./rest/services/configuration.service";
 import {DialogButton} from "./ui/dialog-button";
 import {UIConstants} from "./ui/ui-constants";
+import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
 
 @NgModule({
     imports: [
@@ -51,6 +52,7 @@ import {UIConstants} from "./ui/ui-constants";
         RestStreamService,
         RestUsageService,
         RestOrganizationService,
+        RestMediacenterService,
         RestCommentsService,
         RestToolService,
         RestUtilitiesService,
@@ -88,6 +90,7 @@ export {RestConnectorService} from "./rest/services/rest-connector.service";
 export {RestNetworkService} from "./rest/services/rest-network.service";
 export {RestMdsService} from "./rest/services/rest-mds.service";
 export {RestOrganizationService} from "./rest/services/rest-organization.service";
+export {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
 export {RestCommentsService} from "./rest/services/rest-comments.service";
 export {RestIamService} from "./rest/services/rest-iam.service";
 export {RestArchiveService} from "./rest/services/rest-archive.service";

@@ -23,6 +23,7 @@ import NumberFormat = Intl.NumberFormat;
 import NumberFormatOptions = Intl.NumberFormatOptions;
 import {Helper} from "./helper";
 import {MessageType} from '../ui/message-type';
+import {Observable} from "rxjs";
 
 export class RestHelper{
     private static SPACES_STORE_REF = "workspace://SpacesStore/";
@@ -431,6 +432,26 @@ export class RestHelper{
         return haystack.indexOf(search);
     }
 
+    /**
+     * calls the given method and checks the result via the evaluator until the evaluator returns true
+     * Then, calls onResultReady
+     * This method might be useful if the result relies on async data stored in the solr index
+     * Interval specifies the time to wait between the calls
+     * @param call
+     * @param evaluator
+     * @param onResultReady
+     * @param interval
+     */
+    static waitForResult<T>(call : () => Observable<T>, evaluator : (result: T) => boolean,onResultReady:Function,interval=5000) {
+        call().subscribe((data)=>{
+            if(evaluator(data)){
+                onResultReady();
+            }
+            else{
+                setTimeout(()=>this.waitForResult(call,evaluator,onResultReady,interval),interval);
+            }
+        })
+    }
 }
 export interface UrlReplace{
   search:string;
