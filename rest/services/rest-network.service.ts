@@ -14,7 +14,7 @@ export class RestNetworkService extends AbstractRestService{
       return false;
       for(let r of repositories){
         if(r.id==repository) {
-          return r.repositoryType=='PIXABAY';
+          return r.repositoryType=='PIXABAY' || r.repositoryType == 'YOUTUBE';
         }
       }
       return false;
