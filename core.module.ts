@@ -28,6 +28,7 @@ import {ConfigurationService} from "./rest/services/configuration.service";
 import {DialogButton} from "./ui/dialog-button";
 import {UIConstants} from "./ui/ui-constants";
 import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
+import {RestStatisticsService} from "./rest/services/rest-statistics.service";
 
 @NgModule({
     imports: [
@@ -48,6 +49,7 @@ import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
         RestMdsService,
         RestNodeService,
         RestSearchService,
+        RestStatisticsService,
         RestRegisterService,
         RestStreamService,
         RestUsageService,
@@ -91,6 +93,7 @@ export {RestNetworkService} from "./rest/services/rest-network.service";
 export {RestMdsService} from "./rest/services/rest-mds.service";
 export {RestOrganizationService} from "./rest/services/rest-organization.service";
 export {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
+export {RestStatisticsService} from "./rest/services/rest-statistics.service";
 export {RestCommentsService} from "./rest/services/rest-comments.service";
 export {RestIamService} from "./rest/services/rest-iam.service";
 export {RestArchiveService} from "./rest/services/rest-archive.service";
