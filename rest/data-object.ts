@@ -1117,8 +1117,13 @@ export interface Version {
 
 export class Statistics {
   counts: any;
-  authority: string;
+  authority: StatisticsAuthority;
   date: string;
+}
+export class StatisticsAuthority{
+  hash: string;
+  organization: Organization[];
+  mediacenter: Group[];
 }
 export class NodeStatistics extends Statistics{
   node: Node;
