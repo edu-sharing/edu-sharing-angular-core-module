@@ -1118,6 +1118,8 @@ export interface Version {
 
 export class Statistics {
   counts: any;
+  fields: any;
+  groups: any;
   authority: StatisticsAuthority;
   date: string;
 }
