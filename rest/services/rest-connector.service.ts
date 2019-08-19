@@ -118,10 +118,12 @@ export class RestConnectorService {
   });
 
 }
-  public logout() : Observable<Response>{
+  public logout() {
     let url=this.createUrl("authentication/:version/destroySession",null);
-    this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
-    return this.get(url,this.getRequestOptions());
+    return this.get(url,this.getRequestOptions()).do(()=> {
+        this.storage.remove(TemporaryStorageService.SESSION_INFO);
+        this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
+    });
   }
   public logoutSync() : any{
     let url=this.createUrl("authentication/:version/destroySession",null);
@@ -140,9 +142,13 @@ export class RestConnectorService {
       let url=this.createUrl("_about",null);
       return this.get<About>(url,this.getRequestOptions());
   }
-  public isLoggedIn(){
+  public isLoggedIn(forceRenew=true){
     let url=this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
+        if(!forceRenew && this.getCurrentLogin()){
+            observer.next(this.getCurrentLogin());
+            observer.complete();
+        }
         this.locator.locateApi().subscribe(() => {
             this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
                 (data: LoginResult) => {
