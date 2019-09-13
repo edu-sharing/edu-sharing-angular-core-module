@@ -156,23 +156,6 @@ export class Node {
   }
 }
 
-/**
- * "rating": {
-      "overall": {
-        "sum": 4,
-        "count": 1,
-        "rating": 4
-      },
-      "user": 4,
-      "affiliation": {
-        "none": {
-          "sum": 4,
-          "count": 1,
-          "rating": 4
-        }
-      }
-    },
- */
 export interface NodeRatingDetail{
   sum:number;
   count:number;
