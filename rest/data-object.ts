@@ -150,9 +150,38 @@ export class Node {
   isDirectory: boolean;
   version : string;
   collection : Collection;
+  rating: NodeRating;
   public constructor(id:string=null){
     this.ref=new NodeRef(id);
   }
+}
+
+/**
+ * "rating": {
+      "overall": {
+        "sum": 4,
+        "count": 1,
+        "rating": 4
+      },
+      "user": 4,
+      "affiliation": {
+        "none": {
+          "sum": 4,
+          "count": 1,
+          "rating": 4
+        }
+      }
+    },
+ */
+export interface NodeRatingDetail{
+  sum:number;
+  count:number;
+  rating:number;
+}
+export interface NodeRating{
+  overall: NodeRatingDetail;
+  user: number;
+  affiliation: NodeRatingDetail;
 }
 export class SortItem extends ListItem{
   mode: string;
