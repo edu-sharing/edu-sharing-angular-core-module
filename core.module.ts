@@ -29,6 +29,7 @@ import {DialogButton} from "./ui/dialog-button";
 import {UIConstants} from "./ui/ui-constants";
 import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
 import {RestStatisticsService} from "./rest/services/rest-statistics.service";
+import {RestRatingService} from "./rest/services/rest-rating.service";
 
 @NgModule({
     imports: [
@@ -90,6 +91,7 @@ export {RestConnectorsService} from "./rest/services/rest-connectors.service";
 export {RestToolService} from "./rest/services/rest-tool.service";
 export {RestNodeService} from "./rest/services/rest-node.service";
 export {RestConnectorService} from "./rest/services/rest-connector.service";
+export {RestRatingService} from "./rest/services/rest-rating.service";
 export {RestNetworkService} from "./rest/services/rest-network.service";
 export {RestMdsService} from "./rest/services/rest-mds.service";
 export {RestOrganizationService} from "./rest/services/rest-organization.service";
