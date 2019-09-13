@@ -57,6 +57,7 @@ import {RestStatisticsService} from "./rest/services/rest-statistics.service";
         RestMediacenterService,
         RestCommentsService,
         RestToolService,
+        RestRatingService,
         RestUtilitiesService,
         RestSharingService,
         FrameEventsService,
