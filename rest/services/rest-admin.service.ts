@@ -235,5 +235,14 @@ export class RestAdminService extends AbstractRestService{
       ]);
       return this.connector.post(query,null,this.connector.getRequestOptions());
   }
+
+    public updateRepositoryConfig(config:any){
+        let query=this.connector.createUrl("admin/:version/repositoryConfig",null);
+        return this.connector.put(query,JSON.stringify(config),this.connector.getRequestOptions());
+    }
+    public getRepositoryConfig(){
+        let query=this.connector.createUrl("admin/:version/repositoryConfig",null);
+        return this.connector.get(query,this.connector.getRequestOptions());
+    }
 }
 

@@ -168,6 +168,7 @@ export class RestConstants {
   public static TO_ME_SHARED_FILES='-to_me_shared_files-';
   public static INBOX = "-inbox-";
   public static WORKFLOW_RECEIVE='-workflow_receive-';
+  public static NODES_FRONTPAGE='-frontpage-';
   public static SAFE_SCOPE="safe";
 
   public static CCM_PROP_LICENSE = 'ccm:commonlicense_key';
