@@ -46,4 +46,12 @@ export class RestMediacenterService extends AbstractRestService{
     ]);
     return this.connector.get<IamGroup[]>(query,this.connector.getRequestOptions());
   }
+
+    public importMediacenters(file : File){
+        let query=this.connector.createUrl("mediacenter/:version/import/mediacenters",null);
+        let options=this.connector.getRequestOptions();
+
+        return this.connector.sendDataViaXHR(query,file,"POST","mediacenters")
+            .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+    }
 }
