@@ -496,7 +496,7 @@ export class RestConnectorService {
     let url=this.getAbsoluteEndpointUrl();
     let split=url.split("/");
     split.splice(split.length-3,3);
-    return split.concat('/')+'/';
+    return split.join('/')+'/';
   }
   private notifyFrame(data: any,request:any, success : boolean) {
     let result={request:request,response:data,success:success};
