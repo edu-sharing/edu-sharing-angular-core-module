@@ -493,11 +493,23 @@ export class RestConnectorService {
    * It will NOT include /edu-sharing !
   */
   public getAbsoluteServerUrl(){
-    let url=this.getAbsoluteEndpointUrl();
-    let split=url.split("/");
-    split.splice(split.length-3,3);
-    return split.join('/')+'/';
+    return this.getUrlClipped(3);
   }
+  /**
+   * returns the absolute url to the current edu-sharing instance, e.g. http://localhost/edu-sharing/
+   * It will include /edu-sharing !
+   */
+  public getAbsoluteEdusharingUrl(){
+    return this.getUrlClipped(2);
+  }
+
+  private getUrlClipped(clip:number) {
+    let url = this.getAbsoluteEndpointUrl();
+    let split = url.split("/");
+    split.splice(split.length - clip, clip);
+    return split.join('/') + '/';
+  }
+
   private notifyFrame(data: any,request:any, success : boolean) {
     let result={request:request,response:data,success:success};
     this.event.broadcastEvent(FrameEventsService.EVENT_REST_RESPONSE,result);
