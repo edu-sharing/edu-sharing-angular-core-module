@@ -116,10 +116,12 @@ export interface Preview {
   width: number;
   height: number;
 }
+
 export interface License {
-    url: string;
-    icon: string;
+  icon: string;
+  url: string;
 }
+
 export class Node {
   ref: NodeRef;
   parent: Parent;
@@ -263,6 +265,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   email: string;
+  primaryAffiliation: string;
   avatar: string;
   about: string;
   skills: string[];
@@ -1124,9 +1127,9 @@ export interface Version {
   major: number;
   minor: number;
 }export interface About{
-  themesUrl: string;
-  version: Version;
-  services: any;
+    themesUrl: string;
+    version: Version;
+    services: any;
 }
 
 export class Statistics {
