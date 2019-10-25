@@ -187,6 +187,11 @@ export class RestConstants {
   public static CCM_PROP_TOOL_PRODUCER= 'ccm:tool_producer';
   public static CCM_PROP_TOOL_INSTANCE_REF= 'ccm:tool_instance_ref';
 
+  public static CCM_PROP_IO_REF_TITLE = "ccm:ref_title";
+  public static CCM_PROP_IO_REF_DESCRIPTION = "ccm:ref_description";
+  public static CCM_PROP_IO_REF_VERSION = "ccm:ref_version";
+  public static CCM_PROP_IO_REF_VIDEO_VTT = "ccm:ref_video_vtt";
+
   public static CCM_PROP_WF_RECEIVER= 'ccm:wf_receiver';
   public static CCM_PROP_WF_STATUS= 'ccm:wf_status';
   public static CCM_PROP_WF_INSTRUCTIONS= 'ccm:wf_instructions';
