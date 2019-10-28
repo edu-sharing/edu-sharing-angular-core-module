@@ -47,6 +47,7 @@ export class RestConstants {
   public static COLLECTIONSCOPE_CUSTOM = "CUSTOM";
   public static COLLECTIONSCOPE_CUSTOM_PUBLIC = "CUSTOM_PUBLIC";
   public static COLLECTIONSCOPE_TYPE_EDITORIAL = "TYPE_EDITORIAL";
+  public static COLLECTIONSCOPE_TYPE_MEDIA_CENTER = "TYPE_MEDIA_CENTER";
 
   public static CCM_ASPECT_TOOL_DEFINITION = "ccm:tool_definition";
   public static CCM_ASPECT_TOOL_OBJECT = "ccm:tool_object";
@@ -312,6 +313,7 @@ export class RestConstants {
   public static COLLECTIONTYPE_DEFAULT = "default";
   public static COLLECTIONTYPE_EDITORIAL = "EDITORIAL";
   public static COLLECTIONTYPE_CURRICULUM = "CURRICULUM";
+  public static COLLECTIONTYPE_MEDIA_CENTER = "MEDIA_CENTER";
   public static REPOSITORY_TYPE_ALFRESCO = "ALFRESCO";
   public static TYPE_ROCKETCHAT = "ROCKETCHAT";
   static COLLECTION_ORDER_MODE_CUSTOM = "custom";
