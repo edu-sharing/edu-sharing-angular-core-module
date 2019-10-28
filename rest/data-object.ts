@@ -371,6 +371,7 @@ export interface Collection {
   scope : string;
   pinned : boolean;
   orderMode: string;
+  authorFreetext: string;
 }
 
 export interface CollectionWrapper {
