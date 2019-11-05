@@ -85,9 +85,13 @@ export class RestIamService extends AbstractRestService{
     ]);
     return this.connector.get<IamUsers>(query,this.connector.getRequestOptions());
   }
-  public deleteUser = (user : string,repository=RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrl("iam/:version/people/:repository/:user",repository,[[":user",user]]);
-    return this.connector.delete(query,this.connector.getRequestOptions());
+  public updateUserStatus = (user : string,status:string,notify = true,repository=RestConstants.HOME_REPOSITORY) => {
+    let query=this.connector.createUrl("iam/:version/people/:repository/:user/status/:status?notify=:notify",repository,[
+        [":user",user],
+        [":status",status],
+        [":notify",""+notify]
+    ]);
+    return this.connector.put(query,null,this.connector.getRequestOptions());
   }
   public getNodeList = (list : string,request:any=null,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     let query=this.connector.createUrlNoEscape("iam/:version/people/:repository/:user/nodeList/:list?:request",repository,

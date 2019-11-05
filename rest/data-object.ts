@@ -271,6 +271,10 @@ export interface UserProfile {
   skills: string[];
   types: string[];
 }
+export interface UserStatus {
+  status: string;
+  date: Date;
+}
 export interface UserStats {
   nodeCount: number;
   nodeCountCC: number;
@@ -300,6 +304,7 @@ export interface UserSimple {
   authorityName: string;
   authorityType: string;
   userName: string;
+  status: UserStatus;
   profile: UserProfile;
 }
 export interface UserQuota{
