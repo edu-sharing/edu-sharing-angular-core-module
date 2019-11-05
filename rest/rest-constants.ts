@@ -274,9 +274,11 @@ export class RestConstants {
         new SortItem("NODE",RestConstants.CM_ARCHIVED_DATE),
         new SortItem("NODE",RestConstants.LOM_PROP_GENERAL_KEYWORD),
         new SortItem("NODE",RestConstants.CCM_PROP_LICENSE),
-        new SortItem("NODE",RestConstants.AUTHORITY_DISPLAYNAME),
-        new SortItem("NODE",RestConstants.AUTHORITY_FIRSTNAME),
-        new SortItem("NODE",RestConstants.AUTHORITY_GROUPTYPE),
+        new SortItem("USER",RestConstants.AUTHORITY_DISPLAYNAME),
+        new SortItem("USER",RestConstants.AUTHORITY_FIRSTNAME),
+        new SortItem("USER",RestConstants.AUTHORITY_LASTNAME),
+        new SortItem("USER",RestConstants.AUTHORITY_EMAIL),
+        new SortItem("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
     ];
   public static LICENSE_URLS={
     "CC_BY_ABOUT":"https://creativecommons.org/licenses/?lang=de",
