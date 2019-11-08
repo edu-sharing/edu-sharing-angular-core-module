@@ -107,3 +107,4 @@ export {RestStreamService} from "./rest/services/rest-stream.service";
 export {RestUsageService} from "./rest/services/rest-usage.service";
 export {RestSharingService} from "./rest/services/rest-sharing.service";
 export {DebugResultPipe} from "./rest/pipes/debug-result.pipe";
+export {DeleteMode} from "./rest/data-object";

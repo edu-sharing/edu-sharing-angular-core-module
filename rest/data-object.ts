@@ -1153,3 +1153,8 @@ export class StatisticsAuthority{
 export class NodeStatistics extends Statistics{
   node: Node;
 }
+export enum DeleteMode{
+  none='none',
+  assign='assign',
+  delete='delete',
+}

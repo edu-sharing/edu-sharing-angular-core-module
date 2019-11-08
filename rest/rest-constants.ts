@@ -311,7 +311,7 @@ export class RestConstants {
   public static GROUP_TYPE_EDITORIAL="EDITORIAL";
   public static GROUP_SCOPETYPE_GLOBAL = "global";
   public static VALID_GROUP_TYPES = [null,RestConstants.GROUP_TYPE_ADMINISTRATORS,RestConstants.GROUP_TYPE_EDITORIAL];
-  public static VALID_PERSON_STATUS_TYPES = ["active","blocked","deactivated","todelete"];
+  public static VALID_PERSON_STATUS_TYPES = ["active","blocked","todelete"];
   public static VALID_GROUP_TYPES_ORG = [null,RestConstants.GROUP_TYPE_EDITORIAL];
   public static VALID_SCOPE_TYPES = [null,RestConstants.GROUP_SCOPETYPE_GLOBAL];
   public static COLLECTIONTYPE_DEFAULT = "default";
