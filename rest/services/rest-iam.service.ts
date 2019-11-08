@@ -6,7 +6,7 @@ import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus
 } from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
 
@@ -77,10 +77,11 @@ export class RestIamService extends AbstractRestService{
       ]);
     return this.connector.put(query,"",this.connector.getRequestOptions());
   }
-  public searchUsers = (pattern="*",global=true,request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrlNoEscape("iam/:version/people/:repository?pattern=:pattern&global=:global&:request",repository,[
+  public searchUsers = (pattern="*",global=true,status:string='',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
+    let query=this.connector.createUrlNoEscape("iam/:version/people/:repository?pattern=:pattern&global=:global&status=:status&:request",repository,[
       [":pattern",encodeURIComponent(pattern)],
       [":global",global+""],
+      [":status",status],
       [":request",this.connector.createRequestString(request)]
     ]);
     return this.connector.get<IamUsers>(query,this.connector.getRequestOptions());
