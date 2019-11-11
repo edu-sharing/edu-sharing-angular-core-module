@@ -244,5 +244,12 @@ export class RestAdminService extends AbstractRestService{
         let query=this.connector.createUrl("admin/:version/repositoryConfig",null);
         return this.connector.get(query,this.connector.getRequestOptions());
     }
+
+    public deletePersons(user: string[], options: any) {
+        let query=this.connector.createUrlNoEscape("admin/:version/deletePersons?:username",null,[
+            [":username",RestHelper.getQueryStringForList("username",user)]
+        ]);
+        return this.connector.put(query,JSON.stringify(options),this.connector.getRequestOptions());
+    }
 }
 
