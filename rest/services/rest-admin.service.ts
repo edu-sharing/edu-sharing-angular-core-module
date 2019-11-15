@@ -251,5 +251,22 @@ export class RestAdminService extends AbstractRestService{
         ]);
         return this.connector.put(query,JSON.stringify(options),this.connector.getRequestOptions());
     }
+
+    public getConfigFile(filename:string) {
+        let query=this.connector.createUrl("admin/:version/configFile?filename=:filename",null,[
+            [":filename",filename]
+        ]);
+        let options:any=this.connector.getRequestOptions();
+        options.responseType='text';
+        return this.connector.get<string>(query,options);
+    }
+    public updateConfigFile(filename:string,content:string) {
+        let query=this.connector.createUrl("admin/:version/configFile?filename=:filename",null,[
+            [":filename",filename]
+        ]);
+        let options:any=this.connector.getRequestOptions();
+        options.responseType='text';
+        return this.connector.put<string>(query,content,options);
+    }
 }
 
