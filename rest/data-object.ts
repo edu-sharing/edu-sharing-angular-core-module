@@ -33,6 +33,11 @@ export interface Comment {
   created: number;
   comment: string;
 }
+export interface CollectionFeedback {
+  createdAt: Date;
+  createdBy: Person;
+  feedback: any;
+}
 export interface Parent {
   repo: string;
   id: string;
@@ -629,11 +634,16 @@ export interface Queries {
   baseQuery: string;
   queries: Query[];
 }
+export interface MdsGroup {
+  id:string;
+  views:string[];
+}
 
 export interface Mds {
   types: Type[];
   ref: Ref;
   forms: Form[];
+  groups: MdsGroup[];
   lists: List[];
   views: View[];
   queries: Queries;
