@@ -326,4 +326,5 @@ export class RestConstants {
   public static REPOSITORY_TYPE_ALFRESCO = "ALFRESCO";
   public static TYPE_ROCKETCHAT = "ROCKETCHAT";
   static COLLECTION_ORDER_MODE_CUSTOM = "custom";
+  public static AUTHORITY_DELETED_USER="DELETED_USER";
 }
