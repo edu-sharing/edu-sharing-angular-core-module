@@ -31,6 +31,12 @@ export class DialogButton {
             new DialogButton("NEXT",DialogButton.TYPE_PRIMARY,next),
         ];
     }
+    public static getSaveCancel(cancel : Function,save : Function) : DialogButton[]{
+        return [
+            new DialogButton("CANCEL",DialogButton.TYPE_CANCEL,cancel),
+            new DialogButton("SAVE",DialogButton.TYPE_PRIMARY,save),
+        ];
+    }
     public static TYPE_PRIMARY=1;
     public static TYPE_CANCEL=2;
     /**
