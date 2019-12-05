@@ -1,3 +1,4 @@
+import {OptionItem} from '../../core-ui-module/option-item';
 
 export class DialogButton {
     public disabled=false;
@@ -37,6 +38,14 @@ export class DialogButton {
             new DialogButton("SAVE",DialogButton.TYPE_PRIMARY,save),
         ];
     }
+    public static fromOptionItem(options: OptionItem[]) {
+        if(options == null) {
+            return null;
+        }
+        return options.map((o) => {
+            return new DialogButton(o.name,DialogButton.TYPE_PRIMARY,() => o.callback());
+        });
+    }
     public static TYPE_PRIMARY=1;
     public static TYPE_CANCEL=2;
     /**
@@ -46,5 +55,4 @@ export class DialogButton {
      */
     constructor(public name: string,public type : number, public callback: Function) {
     }
-
 }
