@@ -256,7 +256,7 @@ export class RestAdminService extends AbstractRestService{
         let query=this.connector.createUrlNoEscape("admin/:version/deletePersons?:username",null,[
             [":username",RestHelper.getQueryStringForList("username",user)]
         ]);
-        return this.connector.put(query,JSON.stringify(options),this.connector.getRequestOptions());
+        return this.connector.put<any>(query,JSON.stringify(options),this.connector.getRequestOptions());
     }
 
     public getConfigFile(filename:string) {
