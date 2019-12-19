@@ -63,8 +63,8 @@ export class RestMediacenterService extends AbstractRestService{
             .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
     }
 
-    public importMcOrgConnections(file : File){
-        let query=this.connector.createUrl("mediacenter/:version/import/mc_org",null);
+    public importMcOrgConnections(file : File, removeSchoolsFromMC : boolean){
+        let query=this.connector.createUrl("mediacenter/:version/import/mc_org?removeSchoolsFromMC=" + removeSchoolsFromMC,null);
         let options=this.connector.getRequestOptions();
 
         return this.connector.sendDataViaXHR(query,file,"POST","mcOrgs")
