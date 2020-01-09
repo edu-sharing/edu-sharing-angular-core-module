@@ -35,7 +35,7 @@ export interface Comment {
 }
 export interface CollectionFeedback {
   createdAt: Date;
-  createdBy: Person;
+  creator: string;
   feedback: any;
 }
 export interface Parent {
