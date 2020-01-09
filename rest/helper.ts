@@ -200,4 +200,22 @@ export class Helper {
         }
         return array;
     }
+
+    /**
+     * removes all duplicates from a given array
+     * [a, b, a, c] => [a, b, c]
+     * @param data
+     */
+     static uniqueArray <T>(data: T[]): T[] {
+        return Array.from(new Set(data));
+    }
+
+    /**
+     * converts an object to an array
+     * note: any data in the key fields is lost
+     * @param result
+     */
+    static objectToArray(result: any) {
+        return Object.keys(result).map((key) => result[key]);
+    }
 }
