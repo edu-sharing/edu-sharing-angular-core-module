@@ -6,15 +6,24 @@ import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person
 } from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
+import {TemporaryStorageService} from "./temporary-storage.service";
 
 @Injectable()
 export class RestIamService extends AbstractRestService{
-    constructor(connector : RestConnectorService) {
+    constructor(connector : RestConnectorService, private storage : TemporaryStorageService) {
         super(connector);
     }
+
+  /**
+   * Get's the currently authenticated user object (same as calling getUser)
+   * Please note that getUser() has to be called before, otherwise it will return null
+   */
+  getCurrentUser() : User{
+    return this.storage.get(TemporaryStorageService.USER_INFO);
+  }
   public searchAuthorities = (pattern="*",global=true,groupType:string="",request : any = null,repository=RestConstants.HOME_REPOSITORY) => {
     let query=this.connector.createUrlNoEscape("iam/:version/authorities/:repository?pattern=:pattern&global=:global&groupType=:groupType&:request",repository,[
       [":pattern",encodeURIComponent(pattern)],
@@ -123,7 +132,7 @@ export class RestIamService extends AbstractRestService{
   }
   public getUser = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     let query=this.connector.createUrl("iam/:version/people/:repository/:user",repository,[[":user",user]]);
-    return this.connector.get<IamUser>(query,this.connector.getRequestOptions());
+    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).do((data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data.person) : null);
   }
   public getUserGroups = (user=RestConstants.ME,pattern="*",request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
       let query=this.connector.createUrlNoEscape("iam/:version/people/:repository/:user/memberships?pattern=:pattern&:request",repository,[
