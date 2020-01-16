@@ -6,7 +6,7 @@ import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User
 } from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
 import {TemporaryStorageService} from "./temporary-storage.service";
