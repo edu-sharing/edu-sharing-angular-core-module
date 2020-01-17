@@ -9,6 +9,7 @@ import {RestConstants} from "../rest-constants";
 import * as EduData from "../data-object";
 import {CollectionFeedback, CollectionSubcollections, CollectionWrapper} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
+import {NodeWrapper} from "../data-object";
 
 @Injectable()
 export class RestCollectionService extends AbstractRestService{
@@ -19,13 +20,13 @@ export class RestCollectionService extends AbstractRestService{
     let query=this.connector.createUrl("collection/:version/collections/:repository/:collection",repository,[[":collection",collection]]);
     return this.connector.delete(query,this.connector.getRequestOptions());
   }
-  public addNodeToCollection = (collection : string,node:string,sourceRepo:string,repository=RestConstants.HOME_REPOSITORY): Observable<Response> => {
+  public addNodeToCollection = (collection : string,node:string,sourceRepo:string,repository=RestConstants.HOME_REPOSITORY) => {
     let query=this.connector.createUrl("collection/:version/collections/:repository/:collection/references/:node?sourceRepo=:sourceRepo",repository,[
       [":collection",collection],
       [":node",node],
       [":sourceRepo",sourceRepo]
     ]);
-    return this.connector.put(query,null,this.connector.getRequestOptions());
+    return this.connector.put<NodeWrapper>(query,null,this.connector.getRequestOptions());
   }
   public setPinning = (collections : string[],repository=RestConstants.HOME_REPOSITORY): Observable<Response> => {
     let query=this.connector.createUrlNoEscape("collection/:version/collections/:repository/pinning",repository);
