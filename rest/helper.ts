@@ -82,6 +82,17 @@ export class Helper {
 
   }
 
+    /**
+     * replaces all properties from the "target" with the properties from the source object
+     * @param target
+     * @param source
+     */
+  public static copyObjectProperties(target: any, source: any){
+      for (const key of Object.keys(target)){
+          target[key] = source[key];
+      }
+  }
+
   /**
    * Like the regular array.indexof, but incase-sensitive
    * @param haystack

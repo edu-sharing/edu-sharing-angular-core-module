@@ -158,6 +158,7 @@ export class Node {
   version : string;
   collection : Collection;
   rating: NodeRating;
+  virtual: boolean; // flag if this node is manually added later and didn't came from the repo
   public constructor(id:string=null){
     this.ref=new NodeRef(id);
   }

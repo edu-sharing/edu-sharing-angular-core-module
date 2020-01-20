@@ -419,7 +419,7 @@ export class RestNodeService extends AbstractRestService{
         [":node", node],
         [":comment", versionComment]
       ]);
-    return this.connector.post(query, JSON.stringify(properties), this.connector.getRequestOptions());
+    return this.connector.post<NodeWrapper>(query, JSON.stringify(properties), this.connector.getRequestOptions());
   }
   /**
    * Add one or more aspects to an existing
