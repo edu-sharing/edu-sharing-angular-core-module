@@ -12,6 +12,7 @@ export class TemporaryStorageService {
     public static NODE_RENDER_PARAMETER_LIST = "node_render_list";
     public static NODE_RENDER_PARAMETER_ORIGIN = "node_render_origin";
     public static COLLECTION_ADD_NODES = "collection_add_nodes";
+    public static USER_INFO = "USER_INFO";
     public static SESSION_INFO = "SESSION_INFO";
     public static LIST_DRAG_DATA = "list_drag";
     // default: false

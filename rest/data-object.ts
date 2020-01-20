@@ -172,7 +172,7 @@ export interface NodeRatingDetail{
 export interface NodeRating{
   overall: NodeRatingDetail;
   user: number;
-  affiliation: NodeRatingDetail;
+  affiliation: any|NodeRatingDetail;
 }
 export class SortItem extends ListItem{
   mode: string;
@@ -301,6 +301,7 @@ export interface User {
   authorityType: string;
   userName: string;
   profile: UserProfile;
+  properties: any;
   stats: UserStats;
   homeFolder: NodeRef;
   sharedFolders: NodeRef[];
