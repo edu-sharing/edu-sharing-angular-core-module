@@ -14,8 +14,12 @@ export class RestUsageService extends AbstractRestService{
         let groups:any={};
         for(let l of list.usages){
             let type=l.appSubtype;
-            if(!groups[type])
+            if (type==null) {
+                type = 'UNKNOWN';
+            }
+            if (!groups[type]) {
                 groups[type]=[];
+            }
             groups[type].push(l);
         }
         return groups;
