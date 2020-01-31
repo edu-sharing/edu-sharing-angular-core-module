@@ -3,7 +3,6 @@ import {RestConstants} from "../rest-constants";
 import {Observable} from "rxjs";
 import {RestConnectorService} from "./rest-connector.service";
 import {IamUsers, IamAuthorities, OrganizationOrganizations, RegisterInformation, RegisterExists} from '../data-object';
-import {Response} from "@angular/http";
 import {AbstractRestService} from "./abstract-rest-service";
 
 @Injectable()
