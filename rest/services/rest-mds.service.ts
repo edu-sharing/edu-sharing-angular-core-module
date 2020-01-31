@@ -15,11 +15,11 @@ export class RestMdsService extends AbstractRestService{
     constructor(connector : RestConnectorService) {
         super(connector);
     }
-  public getSets = (repository=RestConstants.HOME_REPOSITORY): Observable<MdsMetadatasets> => {
+  public getSets = (repository=RestConstants.HOME_REPOSITORY): Observable<any> => {
     let query=this.connector.createUrl("mds/:version/metadatasetsV2/:repository",repository);
     return this.connector.get<MdsMetadatasets>(query,this.connector.getRequestOptions());
   }
-  public getSet = (metadataset=RestConstants.DEFAULT,repository=RestConstants.HOME_REPOSITORY): Observable<MdsMetadataset> => {
+  public getSet = (metadataset=RestConstants.DEFAULT,repository=RestConstants.HOME_REPOSITORY): Observable<any> => {
     let query=this.connector.createUrl("mds/:version/metadatasetsV2/:repository/:metadataset",repository,[[":metadataset",metadataset]]);
     return this.connector.get<MdsMetadataset>(query,this.connector.getRequestOptions());
   }
