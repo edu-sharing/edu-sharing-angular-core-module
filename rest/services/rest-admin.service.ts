@@ -31,7 +31,7 @@ export class RestAdminService extends AbstractRestService{
         let options=this.connector.getRequestOptions();
         return this.connector.post<Node>(query,null,options);
     }
-  public getToolpermissions(authority:string){
+  public getToolpermissions(authority = RestConstants.AUTHORITY_EVERYONE){
       let query=this.connector.createUrl("admin/:version/toolpermissions/:authority",null,[
           [":authority",authority]
       ]);
