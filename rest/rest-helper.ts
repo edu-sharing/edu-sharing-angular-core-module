@@ -197,9 +197,7 @@ export class RestHelper{
     }
 
     public static hasAccessPermission(collection:Collection|CollectionReference, permission:string) : boolean {
-        if (typeof collection.access == "undefined") return true;
-        if (typeof collection.access == null) return true;
-        return collection.access.indexOf(permission)!=-1;
+        return collection.access && collection.access.indexOf(permission)!=-1;
     }
 
 
