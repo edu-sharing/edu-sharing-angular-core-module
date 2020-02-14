@@ -5,14 +5,14 @@ import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {RequestObject} from "../request-object";
-import {ArchiveRestore, ArchiveSearch, Node, Collection, UsageList, CollectionUsage} from '../data-object';
+import {ArchiveRestore, ArchiveSearch, Node, Collection, UsageList, CollectionUsage, Usage} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 
 @Injectable()
 export class RestUsageService extends AbstractRestService{
-    public static getNodeUsagesByRepositoryType(list : UsageList){
+    public static getNodeUsagesByRepositoryType(list : Usage[]) {
         let groups:any={};
-        for(let l of list.usages){
+        for(let l of list){
             let type=l.appSubtype;
             if (type==null) {
                 type = 'UNKNOWN';
