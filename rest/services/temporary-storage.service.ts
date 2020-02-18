@@ -16,7 +16,6 @@ export class TemporaryStorageService {
     static COLLECTION_ADD_NODES = 'collection_add_nodes';
     static USER_INFO = 'USER_INFO';
     static SESSION_INFO = 'SESSION_INFO';
-    static LIST_DRAG_DATA = 'list_drag';
     // default: false
     static OPTION_HIDE_MAINNAV: 'option_hide_mainnav';
     // default: false
