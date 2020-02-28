@@ -419,8 +419,12 @@ export class RestConnectorService {
               this.bridge.getCordova().exitApp();
           }));
       }
-      this.bridge.showModalDialog('LOGIN_APP.NOTINTERNET','LOGIN_APP.NOTINTERNET_TEXT',buttons,true,()=>{
-          this.bridge.getCordova().exitApp();
+      this.bridge.showModalDialog({
+          title: 'LOGIN_APP.NOTINTERNET',
+          message: 'LOGIN_APP.NOTINTERNET_TEXT',
+          buttons,
+          isCancelable: this.bridge.getCordova().isAndroid(),
+          onCancel: () => this.bridge.getCordova().exitApp()
       });
     }
 

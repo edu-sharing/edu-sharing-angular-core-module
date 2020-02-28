@@ -134,7 +134,6 @@ export class Node {
   aspects: string[];
   name: string;
   title: string;
-  description: string;
   createdAt: Date;
   createdBy: Person;
   modifiedAt: Date;
@@ -363,11 +362,8 @@ export interface Owner {
   sharedFolders: SharedFolder[];
 }
 
-export interface Collection {
-  ref: NodeRef;
-  access: string[];
+export class Collection{
   level0: boolean;
-  title: string;
   description: string;
   type: string;
   viewtype: string;
@@ -375,11 +371,9 @@ export interface Collection {
   y: number;
   z: number;
   color: string;
-  owner: Owner;
   childCollectionsCount: number;
   childReferencesCount: number;
   preview: Preview;
-  fromUser:boolean;
   scope : string;
   pinned : boolean;
   orderMode: string;
@@ -387,7 +381,7 @@ export interface Collection {
 }
 
 export interface CollectionWrapper {
-  collection: Collection;
+  collection: Node;
 }
 
 export interface Access {
@@ -931,6 +925,13 @@ export enum GETCOLLECTIONS_SCOPE {
   ALL
 }
 
+export enum NodesRightMode {
+  Local,
+  Original,
+  Both
+}
+
+
 export class Reference {
 
   repo:string;
@@ -960,66 +961,9 @@ export class Person {
   mailbox:string;
 }
 
-export class Collection {
-  /*
-   ref:Reference;                    // node behind collecition with more metadata
-   level0:boolean;                   // if a root level collection
-   title:string;                     // name of the collection
-   description:string;               // description (optional)
-   type:string;                      // type='default' at the moment
-   viewtype:string;                  // ? prefrerred type of visualisation
-   x:number;                         // between 0.0 and 1.0 - row order
-   y:number;                         // + between 0.0 and 1.0 - map order
-   z:number;                         // + between 0.0 and 1.0 - 3D order
-   color:string;                     // e.g. #FF0000 for red
-   previewUrl:string;                // preview image url
-   childCollectionsCount:number;     // count of sub collections
-   childReferencesCount:number;      // count of material in collection
-   owner:Owner;                     // information about the user owning the collection
-   access:Array<AccessPermission>;   // list of access permissions on this
-   */
-
-  permission:Permissions;           // the permissions on this collections
-
-  getPrivacyScope() : number {
-
-    // when permission information is not available
-    if (this.permission==null) {
-      return GETCOLLECTIONS_SCOPE.UNKOWN;
-    }
-
-    // check if public
-    if (this.permission.isSimplePermissionPublic()) {
-      return GETCOLLECTIONS_SCOPE.ALL;
-    }
-
-    // check if public to an organization
-    if (this.permission.isSimplePermissionOrganization()) {
-      return GETCOLLECTIONS_SCOPE.GROUPS;
-    }
-
-    // if not public & not organization - just private level access left
-    return GETCOLLECTIONS_SCOPE.MY;
-
-  }
-
-  hasAccessPermission(permission:string) : boolean {
-    if (typeof this.access == "undefined") return true;
-    if (typeof this.access == null) return true;
-    return this.access.indexOf(permission)!=-1;
-  }
-
-}
-
-export class CollectionReference {
-
-  ref:Reference;
-  reference:Node;
+export class CollectionReference extends Node{
   originalId:string;
-  access: string[];
   accessOriginal: string[];
-  previewUrl:string;
-
 }
 
 export class NodeRef {
@@ -1036,7 +980,7 @@ export interface CollectionReferences {
     pagination: Pagination;
 }
 export interface CollectionSubcollections {
-    collections:Array<Collection>;
+    collections: Node[];
     pagination: Pagination;
 }
 

@@ -2,56 +2,56 @@ import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
-import {RestConnectorService} from "./rest-connector.service";
-import {RestHelper} from "../rest-helper";
-import {RestConstants} from "../rest-constants";
+import {RestConnectorService} from './rest-connector.service';
+import {RestHelper} from '../rest-helper';
+import {RestConstants} from '../rest-constants';
 
-import * as EduData from "../data-object";
+import * as EduData from '../data-object';
 import {CollectionFeedback, CollectionSubcollections, CollectionWrapper} from '../data-object';
-import {AbstractRestService} from "./abstract-rest-service";
-import {NodeWrapper} from "../data-object";
+import {AbstractRestService} from './abstract-rest-service';
+import {NodeWrapper} from '../data-object';
 
 @Injectable()
-export class RestCollectionService extends AbstractRestService{
+export class RestCollectionService extends AbstractRestService {
     constructor(connector : RestConnectorService) {
         super(connector);
     }
   public deleteCollection = (collection : string,repository=RestConstants.HOME_REPOSITORY): Observable<void> => {
-    let query=this.connector.createUrl("collection/:version/collections/:repository/:collection",repository,[[":collection",collection]]);
+    const query=this.connector.createUrl('collection/:version/collections/:repository/:collection',repository,[[':collection',collection]]);
     return this.connector.delete(query,this.connector.getRequestOptions());
   }
   public addNodeToCollection = (collection : string,node:string,sourceRepo:string,repository=RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrl("collection/:version/collections/:repository/:collection/references/:node?sourceRepo=:sourceRepo",repository,[
-      [":collection",collection],
-      [":node",node],
-      [":sourceRepo",sourceRepo]
+    const query=this.connector.createUrl('collection/:version/collections/:repository/:collection/references/:node?sourceRepo=:sourceRepo',repository,[
+      [':collection',collection],
+      [':node',node],
+      [':sourceRepo',sourceRepo]
     ]);
     return this.connector.put<NodeWrapper>(query,null,this.connector.getRequestOptions());
   }
   public setPinning = (collections : string[],repository=RestConstants.HOME_REPOSITORY): Observable<Response> => {
-    let query=this.connector.createUrlNoEscape("collection/:version/collections/:repository/pinning",repository);
+    const query=this.connector.createUrlNoEscape('collection/:version/collections/:repository/pinning',repository);
     return this.connector.post(query,JSON.stringify(collections),this.connector.getRequestOptions());
   }
   public setOrder = (collection : string,nodes : string[]=[],repository=RestConstants.HOME_REPOSITORY): Observable<Response> => {
-    let query=this.connector.createUrlNoEscape("collection/:version/collections/:repository/:collection/order",repository,[
-      [":collection",collection],
+    const query=this.connector.createUrlNoEscape('collection/:version/collections/:repository/:collection/order',repository,[
+      [':collection',collection],
     ]);
     return this.connector.post(query,JSON.stringify(nodes),this.connector.getRequestOptions());
   }
   public getCollection = (collection : string,repository=RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrlNoEscape("collection/:version/collections/:repository/:collection",repository,[
-      [":collection",collection],
+    const query=this.connector.createUrlNoEscape('collection/:version/collections/:repository/:collection',repository,[
+      [':collection',collection],
     ]);
     return this.connector.get<CollectionWrapper>(query,this.connector.getRequestOptions());
   }
   public search = (
-      query="*",
+      query='*',
       request:any=null,
       repository=RestConstants.HOME_REPOSITORY
-  )=>{
-      let http=this.connector.createUrlNoEscape("collection/:version/collections/:repository/search?query=:query&:request",repository,[
-        [":query",encodeURIComponent(query)],
-        [":request",this.connector.createRequestString(request)]
+  )=> {
+      const http=this.connector.createUrlNoEscape('collection/:version/collections/:repository/search?query=:query&:request',repository,[
+        [':query',encodeURIComponent(query)],
+        [':request',this.connector.createRequestString(request)]
       ]);
       return this.connector.get<CollectionSubcollections>(http,this.connector.getRequestOptions());
   }
@@ -64,11 +64,11 @@ export class RestCollectionService extends AbstractRestService{
       request:any = null,
       repository=RestConstants.HOME_REPOSITORY
     ) => {
-    let query=this.connector.createUrlNoEscape("collection/:version/collections/:repository/:collection/children/collections?scope=:scope&:propertyFilter&:request",repository,[
-      [":collection",encodeURIComponent(collection)],
-      [":scope",encodeURIComponent(scope)],
-      [":request",this.connector.createRequestString(request)],
-      [":propertyFilter",RestHelper.getQueryString("propertyFilter",propertyFilter)]
+    const query=this.connector.createUrlNoEscape('collection/:version/collections/:repository/:collection/children/collections?scope=:scope&:propertyFilter&:request',repository,[
+      [':collection',encodeURIComponent(collection)],
+      [':scope',encodeURIComponent(scope)],
+      [':request',this.connector.createRequestString(request)],
+      [':propertyFilter',RestHelper.getQueryString('propertyFilter',propertyFilter)]
     ]);
     return this.connector.get<EduData.CollectionSubcollections>(query,this.connector.getRequestOptions());
   }
@@ -78,81 +78,80 @@ export class RestCollectionService extends AbstractRestService{
         request:any = null,
         repository=RestConstants.HOME_REPOSITORY
     ) => {
-        let query=this.connector.createUrlNoEscape("collection/:version/collections/:repository/:collection/children/references?:propertyFilter&:request",repository,[
-            [":collection",encodeURIComponent(collection)],
-            [":request",this.connector.createRequestString(request)],
-            [":propertyFilter",RestHelper.getQueryString("propertyFilter",propertyFilter)]
+        const query=this.connector.createUrlNoEscape('collection/:version/collections/:repository/:collection/children/references?:propertyFilter&:request',repository,[
+            [':collection',encodeURIComponent(collection)],
+            [':request',this.connector.createRequestString(request)],
+            [':propertyFilter',RestHelper.getQueryString('propertyFilter',propertyFilter)]
         ]);
         return this.connector.get<EduData.CollectionReferences>(query,this.connector.getRequestOptions());
     }
 
   public getCollectionMetadata = (collectionId:string, repository=RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrl("collection/:version/collections/:repository/:collectionid",repository,[[":collectionid",collectionId]]);
+    const query=this.connector.createUrl('collection/:version/collections/:repository/:collectionid',repository,[[':collectionid',collectionId]]);
     return this.connector.get<EduData.Collection>(query,this.connector.getRequestOptions());
   }
 
   public createCollection = (
-      collection:EduData.Collection,
+      collection:EduData.Node,
       parentCollectionId:string=RestConstants.ROOT, repository:string=RestConstants.HOME_REPOSITORY
     ) => {
 
-    let query:string = this.connector.createUrl("collection/:version/collections/:repository/:collectionid/children",repository,[[":collectionid",parentCollectionId]]);
-    let options = this.connector.getRequestOptions();
+    const query:string = this.connector.createUrl('collection/:version/collections/:repository/:collectionid/children',repository,[[':collectionid',parentCollectionId]]);
+    const options = this.connector.getRequestOptions();
     return this.connector.post<EduData.CollectionWrapper>(query, JSON.stringify(collection), options);
   }
 
   public uploadCollectionImage = (collectionId:string, file:File, mimetype:string, repository:string = RestConstants.HOME_REPOSITORY):Observable<XMLHttpRequest> => {
 
-    if(mimetype=="auto")
+    if(mimetype=='auto')
       mimetype=file.type;
-    let query=this.connector.createUrl("collection/:version/collections/:repository/:collectionid/icon?mimetype=:mime",repository,
+    const query=this.connector.createUrl('collection/:version/collections/:repository/:collectionid/icon?mimetype=:mime',repository,
       [
-        [":collectionid",collectionId],
-        [":mime",mimetype]
+        [':collectionid',collectionId],
+        [':mime',mimetype]
       ]);
-    let options=this.connector.getRequestOptions();
+    const options=this.connector.getRequestOptions();
 
     return this.connector.sendDataViaXHR(query,file);
   };
 
     public deleteCollectionImage = (collectionId:string, repository:string = RestConstants.HOME_REPOSITORY):Observable<XMLHttpRequest> => {
-        let query=this.connector.createUrl("collection/:version/collections/:repository/:collectionid/icon",repository,
+        const query=this.connector.createUrl('collection/:version/collections/:repository/:collectionid/icon',repository,
             [
-                [":collectionid",collectionId],
+                [':collectionid',collectionId],
             ]);
-        let options=this.connector.getRequestOptions();
+        const options=this.connector.getRequestOptions();
 
         return this.connector.delete(query,options);
     };
 
-  public updateCollection = (collection:EduData.Collection) => {
+  public updateCollection = (collection:EduData.Node) => {
 
     let repo:string = RestConstants.HOME_REPOSITORY;
-    if ((collection.ref.repo!=null) && (collection.ref.repo!="local")) repo = collection.ref.repo;
-
-    let query:string = this.connector.createUrl("collection/:version/collections/:repository/:collectionid",repo,[[":collectionid",collection.ref.id]]);
-
-    let body:string = JSON.stringify(collection);
-
-    let options = this.connector.getRequestOptions();
+    if ((collection.ref.repo!=null) && (collection.ref.repo !== 'local')) {
+      repo = collection.ref.repo;
+    }
+    const query = this.connector.createUrl('collection/:version/collections/:repository/:collectionid',repo,[[':collectionid',collection.ref.id]]);
+    const body = JSON.stringify(collection);
+    const options = this.connector.getRequestOptions();
     return this.connector.put(query, body, options);
 
   };
 
   public removeFromCollection = (referenceId:string, collectionId:string, repository:string = RestConstants.HOME_REPOSITORY) => {
 
-    let query:string = this.connector.createUrl("collection/:version/collections/:repository/:collectionid/references/:refid",repository,[[":collectionid",collectionId],[":refid",referenceId]]);
+    const query:string = this.connector.createUrl('collection/:version/collections/:repository/:collectionid/references/:refid',repository,[[':collectionid',collectionId],[':refid',referenceId]]);
 
     return this.connector.delete(query, this.connector.getRequestOptions());
   };
 
 
   public addFeedback(collectionId:string,feedbackData:any, repository:string = RestConstants.HOME_REPOSITORY) {
-    let query:string = this.connector.createUrl("collection/:version/collections/:repository/:collectionid/feedback",repository,[[":collectionid",collectionId]]);
+    const query:string = this.connector.createUrl('collection/:version/collections/:repository/:collectionid/feedback',repository,[[':collectionid',collectionId]]);
     return this.connector.post(query, JSON.stringify(feedbackData), this.connector.getRequestOptions());
   };
-  public getFeedbacks(collectionId:string, repository:string = RestConstants.HOME_REPOSITORY){
-    let query:string = this.connector.createUrl("collection/:version/collections/:repository/:collectionid/feedback",repository,[[":collectionid",collectionId]]);
+  public getFeedbacks(collectionId:string, repository:string = RestConstants.HOME_REPOSITORY) {
+    const query:string = this.connector.createUrl('collection/:version/collections/:repository/:collectionid/feedback',repository,[[':collectionid',collectionId]]);
     return this.connector.get<CollectionFeedback[]>(query, this.connector.getRequestOptions());
   };
 }

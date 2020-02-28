@@ -43,7 +43,7 @@ export class DialogButton {
             return null;
         }
         return options.map((o) => {
-            return new DialogButton(o.name,DialogButton.TYPE_PRIMARY,() => o.callback());
+            return new DialogButton(o.name,DialogButton.TYPE_PRIMARY,() => o.callback(null));
         });
     }
     public static TYPE_PRIMARY=1;

@@ -10,7 +10,6 @@ import { Node } from '../data-object';
 @Injectable()
 export class TemporaryStorageService {
     static APPLY_TO_LMS_PARAMETER_NODE = 'apply_to_lms_node';
-    static NODE_RENDER_PARAMETER_OPTIONS = 'node_render_options';
     static NODE_RENDER_PARAMETER_LIST = 'node_render_list';
     static NODE_RENDER_PARAMETER_ORIGIN = 'node_render_origin';
     static COLLECTION_ADD_NODES = 'collection_add_nodes';

@@ -27,7 +27,7 @@ import {Observable} from "rxjs";
 
 export class RestHelper{
     private static SPACES_STORE_REF = "workspace://SpacesStore/";
-  public static getNodeIds(nodes : Node[]|Collection[]|CollectionReference[]): Array<string>{
+  public static getNodeIds(nodes : Node[]|CollectionReference[]): Array<string>{
     let data=new Array<string>(nodes.length);
     for(let i=0;i<nodes.length;i++){
       data[i]=nodes[i].ref.id;
@@ -184,10 +184,7 @@ export class RestHelper{
 
 
 
-    public static isUserAllowedToEdit(collection:Collection, person:User) : boolean {
-
-        // if permissions missing default to false
-        if (collection.permission==null) return false;
+    public static isUserAllowedToEdit(collection: Node, person: User) : boolean {
 
         // check access permissions on collection
         if (RestHelper.hasAccessPermission(collection, 'Write')) return true;
@@ -196,8 +193,8 @@ export class RestHelper{
         return false;
     }
 
-    public static hasAccessPermission(collection:Collection|CollectionReference, permission:string) : boolean {
-        return collection.access && collection.access.indexOf(permission)!=-1;
+    public static hasAccessPermission(node: Node, permission:string) : boolean {
+        return node.access && node.access.indexOf(permission)!=-1;
     }
 
 
@@ -209,9 +206,7 @@ export class RestHelper{
         return ((node.type != null) && ((node.type == "ccm:map") || (node.type == "{http://www.campuscontent.de/model/1.0}map")));
     }
 
-    public static getName(node:any):string {
-        if(node.reference)
-          node=node.reference;
+    public static getName(node: Node):string {
         if(node.name) return node.name;
         if(node.title) return node.title;
         if(node.ref)
@@ -288,9 +283,7 @@ export class RestHelper{
       str=format.format(h)+":"+format.format(m)+":"+format.format(s);
       return str;
     }
-    public static getTitle(node:any):string {
-      if(node.reference) // for collection references
-        node=node.reference;
+    public static getTitle(node: Node):string {
       if (node.title) return node.title;
       return node.name;
     }
@@ -417,12 +410,11 @@ export class RestHelper{
     static getRestObjectPositionInArray(search: any, haystack: any[]) {
         let i=0;
         for(let node of haystack) {
-            if(node.ref) {
-                if (node.ref.id == search.ref.id)
+            if(node.ref && search.ref) {
+                if (node.ref.id === search.ref.id)
                     return i;
-            }
-            else if(node.authorityName){
-                if(node.authorityName==search.authorityName)
+            } else if (node.authorityName) {
+                if(node.authorityName === search.authorityName)
                     return i;
             }
             i++;
