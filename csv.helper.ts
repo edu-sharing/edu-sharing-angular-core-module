@@ -6,7 +6,6 @@ import {Helper} from './rest/helper';
 export class CsvHelper {
     public static fromArray(header: string[], data: string[][]|any) {
         let csv = header.map((h) => '"' + h + '"').join(';');
-        console.log(data);
         for (const d of data) {
             csv += '\n';
             const i = 0;

@@ -41,7 +41,6 @@ export class RestConnectorService {
   }
 
   set autoLogin(value: boolean) {
-    console.log(value);
     this._autoLogin = value;
   }
   get endpointUrl(): string {
@@ -229,7 +228,6 @@ export class RestConnectorService {
             observer.complete();
           },
           (error:any) =>{
-            console.log(error);
             observer.error(error);
             observer.complete();
           });
@@ -244,7 +242,6 @@ export class RestConnectorService {
             observer.complete();
           },
           (error: any) => {
-            console.log(error);
 
             observer.error(error);
             observer.complete();
@@ -330,7 +327,6 @@ export class RestConnectorService {
           }
         });
         xhr.send(formData);
-        console.log("xhr send");
       }catch(e){
         console.error(e);
         observer.error(e);
@@ -375,12 +371,10 @@ export class RestConnectorService {
                             this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
                               options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
                               this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
-                                console.log("reinit request succeeded");
                                   observer.next(data);
                                   observer.complete();
                               },(error:any)=>{
                                 this.goToLogin();
-                                console.log("reinit request failed");
                                 observer.error(error);
                                 observer.complete();
                               });
@@ -391,7 +385,6 @@ export class RestConnectorService {
                               this.goToLogin();
                           }
                       }
-                      console.log(error);
                       if (this.bridge.isRunningCordova() && error.status==0){
                           this.noConnectionDialog();
                           observer.complete();

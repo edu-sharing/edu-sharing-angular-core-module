@@ -79,8 +79,6 @@ export class MdsHelper{
         if(!widget.condition)
             return true;
         let condition=widget.condition;
-        console.log('condition:');
-        console.log(condition);
         if(condition.type=='PROPERTY' && properties) {
             if (!properties[condition.value] && !condition.negate || properties[condition.value] && condition.negate) {
                 return false;
@@ -92,7 +90,6 @@ export class MdsHelper{
                 return false;
             }
         }
-        console.log('condition is true, will display widget');
         return true;
     }
 }

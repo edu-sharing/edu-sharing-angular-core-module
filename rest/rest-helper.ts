@@ -75,9 +75,7 @@ export class RestHelper{
      */
   public static errorMatchesAny(error:any,needle:string){
     try{
-      console.log(error);
       let json=JSON.parse(error.response);
-      console.log(json);
       return json.error.indexOf(needle)!=-1 || json.message.indexOf(needle)!=-1;
     }catch(e){}
     return false;
@@ -123,7 +121,6 @@ export class RestHelper{
   }
 
   public static printError(error : any) : string {
-    console.log(error);
     return error._body;
   }
 
@@ -341,7 +338,6 @@ export class RestHelper{
         iam.addNodeList(RestConstants.NODE_STORE_LIST,selection[position].ref.id).subscribe(()=>{
             RestHelper.addToStore(selection,bridge,iam,callback,position+1,errors);
         },(error)=>{
-            console.log(error);
             if(RestHelper.errorMessageContains(error,'Node is already in list'))
                 bridge.showTemporaryMessage(MessageType.error,'SEARCH.ADDED_TO_NODE_STORE_EXISTS',{name:RestHelper.getTitle(selection[position])});
             RestHelper.addToStore(selection,bridge,iam,callback,position+1,errors+1)

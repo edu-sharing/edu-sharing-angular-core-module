@@ -156,7 +156,6 @@ export class RestLocatorService {
                     this._apiVersion=data.body.version.major+data.body.version.minor/10;
                     this.isLocating=false;
                     this.themesUrl=data.body.themesUrl;
-                    console.log("API version "+this.apiVersion+" "+this._endpointUrl);
                     observer.next(null);
                     observer.complete();
                     return;

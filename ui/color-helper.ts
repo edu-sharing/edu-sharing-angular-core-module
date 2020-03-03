@@ -3,7 +3,6 @@ export class ColorHelper{
   public static cssColorToRgb(color:string) : number[] {
     color=color.trim();
     if(color.startsWith("rgb")){
-      console.log(color);
       let result = /rgb.?\(\s*([\d]*)\s*,\s*([\d]*)\s*,\s*([\d*]*)\s*/i.exec(color);
       return result ? [
         parseInt(result[1]),

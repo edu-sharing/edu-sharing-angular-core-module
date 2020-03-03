@@ -21,7 +21,6 @@ export class RestSearchService extends AbstractRestService{
                 if(attach)
                     properties[property]=properties[property].concat(attach);
             }
-            console.log(properties[property]);
             if(properties[property] && properties[property].length)
                 criterias.push({'property':property,'values':properties[property]});
         }
