@@ -885,7 +885,7 @@ export interface UsageList {
   usages: Usage[];
 }
 export interface CollectionUsage extends Usage{
-    collection: Collection;
+    collection: Node;
 }
 export interface Filetype {
   mimetype: string;
