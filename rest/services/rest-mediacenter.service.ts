@@ -2,7 +2,8 @@ import {Injectable} from "@angular/core";
 import {RestConstants} from "../rest-constants";
 import {RestConnectorService} from "./rest-connector.service";
 import {AbstractRestService} from "./abstract-rest-service";
-import {IamGroup} from "../data-object";
+import {IamGroup, Node, NodeList} from '../data-object';
+import {RestHelper} from '../rest-helper';
 
 @Injectable()
 export class RestMediacenterService extends AbstractRestService{
@@ -46,6 +47,26 @@ export class RestMediacenterService extends AbstractRestService{
     ]);
     return this.connector.get<IamGroup[]>(query,this.connector.getRequestOptions());
   }
+
+  /*public getLicensedNodes(mediacenter:string,repository = RestConstants.HOME_REPOSITORY){
+      let query = this.connector.createUrl("mediacenter/:version/mediacenter/:repository/:mediacenter/licenses", repository,[
+          [":mediacenter",mediacenter]
+      ]);
+      return this.connector.get<Node[]>(query,this.connector.getRequestOptions());
+  }*/
+
+  public getLicensedNodes(mediacenter:string, repository = RestConstants.HOME_REPOSITORY,
+                          facettes : string[] = [],
+                          request : any = null) {
+        let query=this.connector.createUrlNoEscape("mediacenter/:version/mediacenter/:repository/:mediacenter/licenses?:facettes&:request",repository,
+            [
+                [":mediacenter",encodeURIComponent(mediacenter)],
+                [":facettes",RestHelper.getQueryStringForList("facettes",facettes)],
+                [":request",this.connector.createRequestString(request)]
+            ]);
+        return this.connector.post<NodeList>(query,"",this.connector.getRequestOptions());
+
+    }
 
     public importMediacenters(file : File){
         let query=this.connector.createUrl("mediacenter/:version/import/mediacenters",null);
