@@ -79,6 +79,13 @@ export class RestIamService extends AbstractRestService {
     const query=this.connector.createUrl('iam/:version/groups/:repository/:group/profile',repository,[[':group',group]]);
     return this.connector.put(query,JSON.stringify(profile),this.connector.getRequestOptions());
   }
+  public getSubgroupByType = (group : string,type: string,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('iam/:version/groups/:repository/:group/type/:type',repository,[
+      [':group',group],
+      [':type',type],
+    ]);
+    return this.connector.get<IamGroup>(query,this.connector.getRequestOptions());
+  }
   public getGroupMembers = (group : string,pattern='',authorityType='',request : any = null,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrlNoEscape('iam/:version/groups/:repository/:group/members/?pattern=:pattern&authorityType=:authorityType&:request',repository,[
       [':group',encodeURIComponent(group)],
