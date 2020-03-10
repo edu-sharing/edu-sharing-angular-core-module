@@ -35,7 +35,7 @@ export class VCard{
    * @param {string} data
    */
   public isValid(){
-    //return this.lines!=null && this.lines.length;
+    // return this.lines!=null && this.lines.length;
     return this.givenname || this.surname || this.org || this.street || this.city || this.zip || this.country;
   }
   public set givenname(data:string){
@@ -58,6 +58,9 @@ export class VCard{
   }
   public set email(data:string){
     this.set("EMAIL;TYPE=PREF,INTERNET",data);
+  }
+  public set uid(data:string){
+    this.set("UID:urn:uuid",data);
   }
   public set street(data:string){
     this.set("ADR;TYPE=intl,postal,parcel,work",data,2);
@@ -103,6 +106,9 @@ export class VCard{
   }
   public get email(){
     return this.get("EMAIL;TYPE=PREF,INTERNET");
+  }
+  public get uid(){
+    return this.get("UID:urn:uuid");
   }
   public get street(){
     return this.get("ADR;TYPE=intl,postal,parcel,work",2);

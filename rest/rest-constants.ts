@@ -9,7 +9,7 @@ export class RestConstants {
   static NODE_STORE_LIST = "BASKET";
   public static DUPLICATE_NODE_RESPONSE=409;
 
-  public static DEFAULT_SORT_CRITERIA : string[]=["cm:name"];
+  public static DEFAULT_SORT_CRITERIA : string[]=['cm:name'];
   public static DEFAULT_SORT_ASCENDING=true;
   public static API_VERSION="v1";
   public static API_VERSION_3_2=1.0;
@@ -75,6 +75,7 @@ export class RestConstants {
   public static CM_OWNER = "cm:owner";
   public static CM_ARCHIVED_DATE = "sys:archivedDate";
   public static CM_PROP_TITLE = "cm:title";
+  public static CM_PROP_ESUID = "cm:esuid";
   public static CM_TYPE_CONTENT = "cm:content";
   public static CM_TYPE_OBJECT = "cm:cmobject";
   public static CM_TYPE_CONTAINER = "cm:container";
