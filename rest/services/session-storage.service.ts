@@ -77,7 +77,7 @@ export class SessionStorageService {
     }
 
     set(name: string, value: any) {
-        if (!this.connector.getCurrentLogin()) {
+        if (!this.connector.getCurrentLogin() || !this.preferences) {
             setTimeout(() => this.set(name, value), 50);
             return;
         }
