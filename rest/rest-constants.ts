@@ -25,7 +25,8 @@ export class RestConstants {
     public static CORDOVA_STORAGE_SERVER_ENDPOINT:string = "server_endpoint";
     public static CORDOVA_STORAGE_SERVER_OWN:string = "server_own";
 
-    public static AUTHORITY_TYPE_USER = "USER";
+  public static AUTHORITY_ROLE_OWNER = "ROLE_OWNER";
+  public static AUTHORITY_TYPE_USER = "USER";
   public static AUTHORITY_TYPE_GROUP = "GROUP";
   public static AUTHORITY_TYPE_OWNER = "OWNER";
   public static AUTHORITY_TYPE_EVERYONE = "EVERYONE";
