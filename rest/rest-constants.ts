@@ -48,6 +48,7 @@ export class RestConstants {
   public static COLLECTIONSCOPE_MY = "MY";
   public static COLLECTIONSCOPE_ORGA = "EDU_GROUPS";
   public static COLLECTIONSCOPE_ALL = "EDU_ALL";
+  public static COLLECTIONSCOPE_RECENT = "RECENT";
   public static COLLECTIONSCOPE_CUSTOM = "CUSTOM";
   public static COLLECTIONSCOPE_CUSTOM_PUBLIC = "CUSTOM_PUBLIC";
   public static COLLECTIONSCOPE_TYPE_EDITORIAL = "TYPE_EDITORIAL";
