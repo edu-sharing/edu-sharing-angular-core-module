@@ -3,7 +3,7 @@ import {Observable, Observer} from 'rxjs';
 import 'rxjs/add/operator/do';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestConstants} from "../rest-constants";
-import {Connector, ConnectorList, Filetype, Node} from "../data-object";
+import {CollectionReference, Connector, ConnectorList, Filetype, Node} from "../data-object";
 import {RestNodeService} from "./rest-node.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {UIService} from "./ui.service";
@@ -28,14 +28,15 @@ export class RestConnectorsService extends AbstractRestService{
             .do((data)=>this.currentList=data);
     }
     public connectorSupportsEdit(node: Node) {
-        let connectors=this.getConnectors();
+        const connectors=this.getConnectors();
         if(connectors==null)
             return null;
-        for(let connector of connectors){
+        for(const connector of connectors) {
+            const access = (node as CollectionReference).accessOriginal || node.access;
             // do not allow opening on a desktop-only connector on mobile
             if(connector.onlyDesktop && this.ui.isMobile())
                 continue;
-            if(!connector.hasViewMode && node.access.indexOf(RestConstants.ACCESS_WRITE)==-1)
+            if(!connector.hasViewMode && access.indexOf(RestConstants.ACCESS_WRITE)==-1)
                 continue;
             if(RestConnectorsService.getFiletype(node,connector))
                 return connector;
