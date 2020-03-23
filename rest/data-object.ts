@@ -79,6 +79,7 @@ export class Repository {
   logo:string;
   isHomeRepo: boolean;
   repositoryType: string;
+  renderingSupported: boolean;
 }
 
 export interface NetworkRepositories {
@@ -139,9 +140,8 @@ export class Node {
   modifiedAt: Date;
   modifiedBy: Person;
   access: string[];
-  contentVersion: string;
   repositoryType: string;
-  contentUrl: string;
+  content: NodeContent;
   downloadUrl: string;
   properties: any;
   mediatype: string;
@@ -161,6 +161,12 @@ export class Node {
   public constructor(id:string=null){
     this.ref=new NodeRef(id);
   }
+}
+export interface NodeContent {
+  version: string;
+  url: string;
+  hash: string;
+
 }
 
 export interface NodeRatingDetail{
