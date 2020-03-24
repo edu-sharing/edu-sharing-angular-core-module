@@ -19,7 +19,6 @@ export class TemporaryStorageService {
     static OPTION_HIDE_MAINNAV: 'option_hide_mainnav';
     // default: false
     static OPTION_DISABLE_SCROLL_LAYOUT: 'option_disable_scroll_layout';
-    static MAIN_NAV_BUTTONS = 'main_nav_buttons';
     static CUSTOM_NODE_LIST_COMPONENT = 'custom_node_list_component';
 
     private data: any = {};
