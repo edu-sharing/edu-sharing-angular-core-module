@@ -47,6 +47,10 @@ export class MdsHelper{
      * @param widgets
      */
     static getWidget(cid: string,template:string=null,widgets:any) {
+        if(widgets == null) {
+            console.warn('Could not iterate widget '+cid+': no widgets data provided');
+            return null;
+        }
         for(let w of widgets){
             if(w.id==cid){
                 if((template==null || w.template==template)){
