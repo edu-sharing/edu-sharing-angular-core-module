@@ -12,9 +12,9 @@ import {MdsHelper} from "../mds-helper";
 @Injectable()
 export class RestSearchService extends AbstractRestService{
     static convertCritierias(properties:any[],mdsWidgets:any){
-        let criterias=[];
+        const criterias=[];
         properties=Helper.deepCopy(properties);
-        for (let property in properties) {
+        for (const property in properties) {
             let widget=MdsHelper.getWidget(property,null,mdsWidgets);
             if(widget && widget.type=='multivalueTree'){
                 let attach=RestSearchService.unfoldTreeChilds(properties[property],widget);
@@ -22,7 +22,10 @@ export class RestSearchService extends AbstractRestService{
                     properties[property]=properties[property].concat(attach);
             }
             if(properties[property] && properties[property].length)
-                criterias.push({'property':property,'values':properties[property]});
+                criterias.push({
+                    property:property,
+                    values:properties[property]
+                });
         }
         return criterias;
     }
