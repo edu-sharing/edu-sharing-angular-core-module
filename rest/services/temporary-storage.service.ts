@@ -13,6 +13,7 @@ export class TemporaryStorageService {
     static NODE_RENDER_PARAMETER_LIST = 'node_render_list';
     static NODE_RENDER_PARAMETER_ORIGIN = 'node_render_origin';
     static COLLECTION_ADD_NODES = 'collection_add_nodes';
+    static WORKSPACE_LAST_LOCATION = 'WORKSPACE_LAST_LOCATION';
     static USER_INFO = 'USER_INFO';
     static SESSION_INFO = 'SESSION_INFO';
     // default: false
