@@ -4,7 +4,7 @@ The core module provides all essential services, objects and interfaces to acces
 
 Also, multiple helper and common formatting features are included to provide continous user experience across ui's that use this module.
 
-This module is a subtree in the edu-sharing main repository, found at Frontend/src/app/core-module
+This repository is a submodule in the edu-sharing main repository, found at Frontend/src/app/core-module
 
 
 This module also has dependencies to the RouterModule and HttpClientModule from Angular:
