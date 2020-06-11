@@ -10,14 +10,14 @@ export class CsvHelper {
             csv += '\n';
             const i = 0;
             let line: string[] = [];
-            if (d instanceof Array){
+            if (d instanceof Array) {
                 line = d;
-            }else{
+            } else {
                 for (const h of header) {
                     line.push(d[h]);
                 }
             }
-            csv += line.map((l) => '"' + (l ? l : '') + '"').join(';');
+            csv += line.map((l) => '"' + (l ? (l + '').replace(/"/g,'""') : '') + '"').join(';');
         }
         return csv;
     }
