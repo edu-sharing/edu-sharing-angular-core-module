@@ -428,14 +428,15 @@ export class RestHelper{
      * @param onResultReady
      * @param interval
      */
-    static waitForResult<T>(call : () => Observable<T>, evaluator : (result: T) => boolean,onResultReady:Function,interval=5000) {
-        call().subscribe((data)=>{
-            if(evaluator(data)){
+    static waitForResult<T>(call : () => Observable<T>, evaluator : (result: T) => boolean,onResultReady:() => void,interval = 5000) {
+        call().subscribe((data) => {
+            if(evaluator(data)) {
                 onResultReady();
+            } else {
+                setTimeout(() => this.waitForResult(call,evaluator,onResultReady,interval),interval);
             }
-            else{
-                setTimeout(()=>this.waitForResult(call,evaluator,onResultReady,interval),interval);
-            }
+        }, error => {
+            setTimeout(() => this.waitForResult(call,evaluator,onResultReady,interval),interval);
         })
     }
 }
