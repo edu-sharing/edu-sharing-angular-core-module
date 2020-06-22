@@ -33,6 +33,23 @@ export interface Comment {
   created: number;
   comment: string;
 }
+export interface Mediacenter extends Group {
+  profile: MediacenterProfile;
+}
+export interface MediacenterProfile extends GroupProfile {
+  mediacenter: MediacenterGroupExtension;
+}
+export interface MediacenterGroupExtension {
+  id: string;
+  location: string;
+  districtAbbreviation: string;
+  mainUrl: string;
+  catalogs: MediacenterCatalog[];
+}
+export interface MediacenterCatalog {
+  name: string;
+  url: string;
+}
 export interface CollectionFeedback {
   createdAt: Date;
   creator: string;

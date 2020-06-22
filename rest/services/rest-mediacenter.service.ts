@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {RestConstants} from "../rest-constants";
 import {RestConnectorService} from "./rest-connector.service";
 import {AbstractRestService} from "./abstract-rest-service";
-import {IamGroup, Node, NodeList} from '../data-object';
+import {IamGroup, Mediacenter, Node, NodeList} from '../data-object';
 import {RestHelper} from '../rest-helper';
 
 @Injectable()
@@ -13,19 +13,19 @@ export class RestMediacenterService extends AbstractRestService{
   }
   public getMediacenters(repository = RestConstants.HOME_REPOSITORY){
     let query = this.connector.createUrl("mediacenter/:version/mediacenter/:repository", repository);
-    return this.connector.get<any[]>(query, this.connector.getRequestOptions());
+    return this.connector.get<Mediacenter[]>(query, this.connector.getRequestOptions());
   }
   public addMediacenter(mediacenter:string,profile:any,repository = RestConstants.HOME_REPOSITORY){
     let query = this.connector.createUrl("mediacenter/:version/mediacenter/:repository/:mediacenter", repository,[
       [":mediacenter",mediacenter]
     ]);
-    return this.connector.post(query,JSON.stringify(profile),this.connector.getRequestOptions());
+    return this.connector.post<Mediacenter>(query,JSON.stringify(profile),this.connector.getRequestOptions());
   }
   public editMediacenter(mediacenter:string,profile:any,repository = RestConstants.HOME_REPOSITORY){
     let query = this.connector.createUrl("mediacenter/:version/mediacenter/:repository/:mediacenter", repository,[
         [":mediacenter",mediacenter]
     ]);
-    return this.connector.put(query,JSON.stringify(profile),this.connector.getRequestOptions());
+    return this.connector.put<Mediacenter>(query,JSON.stringify(profile),this.connector.getRequestOptions());
   }
   public addManagedGroup(mediacenter:string,group:string,repository = RestConstants.HOME_REPOSITORY){
     let query = this.connector.createUrl("mediacenter/:version/mediacenter/:repository/:mediacenter/manages/:group", repository,[
