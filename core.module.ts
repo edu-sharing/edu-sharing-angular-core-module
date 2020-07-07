@@ -30,6 +30,7 @@ import {UIConstants} from "./ui/ui-constants";
 import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
 import {RestStatisticsService} from "./rest/services/rest-statistics.service";
 import {RestRatingService} from "./rest/services/rest-rating.service";
+import {RestTrackingService} from "./rest/services/rest-tracking.service";
 
 @NgModule({
     imports: [
@@ -57,6 +58,7 @@ import {RestRatingService} from "./rest/services/rest-rating.service";
         RestOrganizationService,
         RestMediacenterService,
         RestCommentsService,
+        RestTrackingService,
         RestToolService,
         RestRatingService,
         RestUtilitiesService,
@@ -108,3 +110,4 @@ export {RestUsageService} from "./rest/services/rest-usage.service";
 export {RestSharingService} from "./rest/services/rest-sharing.service";
 export {DebugResultPipe} from "./rest/pipes/debug-result.pipe";
 export {DeleteMode} from "./rest/data-object";
+export {EventType} from "./rest/data-object";
