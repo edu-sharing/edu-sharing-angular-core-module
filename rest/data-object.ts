@@ -1137,3 +1137,6 @@ export enum DeleteMode{
   assign='assign',
   delete='delete',
 }
+export enum EventType {
+  VIEW_MATERIAL_PLAY_MEDIA = 'VIEW_MATERIAL_PLAY_MEDIA'
+}
