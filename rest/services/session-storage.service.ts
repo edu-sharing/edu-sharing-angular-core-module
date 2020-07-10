@@ -12,9 +12,11 @@ import { RestConnectorService } from './rest-connector.service';
  */
 @Injectable()
 export class SessionStorageService {
+    static KEY_WORKSPACE_SORT = 'workspace_sort';
+    // default we store session cookies about 24 hours
+    private static EXPIRE_TIME_SESSION = 24 * 60 * 60;
     private preferences: any;
     private authorityName: string;
-
     constructor(
         private iam: RestIamService,
         private connector: RestConnectorService,
@@ -26,7 +28,7 @@ export class SessionStorageService {
         this.preferences = null;
     }
 
-    get(name: string, fallback: any = null): Observable<any> {
+    get(name: string, fallback: any = null, store = Store.UserProfile): Observable<any> {
         return Observable.create((observer: Observer<any>) => {
             if (
                 !this.connector.getCurrentLogin() ||
@@ -35,7 +37,8 @@ export class SessionStorageService {
             ) {
                 this.connector.isLoggedIn().subscribe((data: LoginResult) => {
                     if (
-                        data.statusCode != RestConstants.STATUS_CODE_OK ||
+                        store === Store.Session ||
+                        data.statusCode !== RestConstants.STATUS_CODE_OK ||
                         data.isGuest
                     ) {
                         observer.next(this.getCookie(name, fallback));
@@ -62,9 +65,9 @@ export class SessionStorageService {
                 });
                 return;
             } else if (
-                this.connector.getCurrentLogin().statusCode ==
-                    RestConstants.STATUS_CODE_OK &&
-                !this.connector.getCurrentLogin().isGuest
+                store !== Store.Session && (
+                this.connector.getCurrentLogin().statusCode === RestConstants.STATUS_CODE_OK &&
+                !this.connector.getCurrentLogin().isGuest)
             ) {
                 observer.next(
                     this.preferences[name] ? this.preferences[name] : fallback,
@@ -76,9 +79,13 @@ export class SessionStorageService {
         });
     }
 
-    set(name: string, value: any) {
+    set(name: string, value: any, store = Store.UserProfile) {
         if (!this.connector.getCurrentLogin() || !this.preferences) {
             setTimeout(() => this.set(name, value), 50);
+            return;
+        }
+        if(store === Store.Session) {
+            this.setCookie(name, value, SessionStorageService.EXPIRE_TIME_SESSION);
             return;
         }
         if (
@@ -113,8 +120,13 @@ export class SessionStorageService {
 
         for (let i = 0; i < caLen; i += 1) {
             c = ca[i].replace(/^\s\+/g, '').trim();
-            if (c.indexOf(cookieName) == 0) {
-                return c.substring(cookieName.length, c.length);
+            if (c.indexOf(cookieName) === 0) {
+                const value = c.substring(cookieName.length, c.length);
+                try {
+                    JSON.parse(value);
+                } catch(e) {
+                    return value;
+                }
             }
         }
         return fallback;
@@ -124,16 +136,22 @@ export class SessionStorageService {
         this.setCookie(name, '', -1);
     }
 
-    setCookie(name: string, value: string, expireDays = 60, path = '/') {
+    setCookie(name: string, value: string, expireSeconds = 60 * 24 * 60 * 60, path = '/') {
         let d: Date = new Date();
-        d.setTime(d.getTime() + expireDays * 24 * 60 * 60 * 1000);
+        d.setTime(d.getTime() + expireSeconds * 1000);
         let expires: string = 'expires=' + d.toUTCString();
         document.cookie =
             name +
             '=' +
-            value +
+            JSON.stringify(value) +
             '; ' +
             expires +
             (path.length > 0 ? '; path=' + path : '');
     }
+}
+export enum Store {
+    // the user profile, if available, otherwise as a cookie
+    UserProfile,
+    // Only the current running session (via cookie with timeout
+    Session,
 }
