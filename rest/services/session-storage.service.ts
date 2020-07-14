@@ -117,13 +117,12 @@ export class SessionStorageService {
         let caLen: number = ca.length;
         let cookieName = name + '=';
         let c: string;
-
         for (let i = 0; i < caLen; i += 1) {
             c = ca[i].replace(/^\s\+/g, '').trim();
             if (c.indexOf(cookieName) === 0) {
                 const value = c.substring(cookieName.length, c.length);
                 try {
-                    JSON.parse(value);
+                    return JSON.parse(value);
                 } catch(e) {
                     return value;
                 }
