@@ -1,6 +1,7 @@
 import {RestConstants} from "./rest-constants";
 import {ListItem} from "../ui/list-item";
 import {RestConnectorService} from "./services/rest-connector.service";
+import {Collection, Mds} from './data-object';
 
 export class MdsHelper{
     static getSortInfo(mdsSet: any, name: string) {
@@ -95,5 +96,24 @@ export class MdsHelper{
             }
         }
         return true;
+    }
+    /**
+     * Find a template by id in the given mds
+     */
+    static findTemplate(mds: Mds, id: string) {
+       return mds.views.find((v) => v.id === id);
+    }
+    /**
+     * Returns all widgets used by the given template
+     */
+    static getUsedWidgets(mds: Mds, template:string=null) {
+        const used: any = [];
+        const templateData = MdsHelper.findTemplate(mds, template);
+        for(const w of mds.widgets) {
+            if(templateData.html.indexOf('<' + w.id) !== -1 && !used.find((w2: any) => w2.id === w.id)){
+                used.push(w);
+            }
+        }
+        return used;
     }
 }

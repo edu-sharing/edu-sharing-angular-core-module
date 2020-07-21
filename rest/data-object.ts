@@ -600,7 +600,11 @@ export interface Property4 {
 
 export interface View {
   id: string;
-  properties: Property4[];
+  caption: string;
+  html: string;
+  icon: string;
+  rel: string;
+  hideIfEmpty: boolean;
 }
 
 export interface Parameter4 {
@@ -666,6 +670,7 @@ export interface Mds {
   lists: List[];
   views: View[];
   queries: Queries;
+  widgets: any;
 }
 
 export interface MdsMetadataset {
