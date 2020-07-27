@@ -59,8 +59,9 @@ export class ConfigurationHelper {
     let validMds=config.instant("availableMds");
     if(validMds && validMds.length){
       for(let mds of validMds){
-        if(!(mds.repository==repository || mds.repository==(repository as Repository).id || mds.repository==RestConstants.HOME_REPOSITORY && (repository as Repository).isHomeRepo))
+        if(!(mds.repository==repository || mds.repository==(repository as Repository).id || mds.repository==RestConstants.HOME_REPOSITORY && (repository == RestConstants.HOME_REPOSITORY ||(repository as Repository).isHomeRepo))) {
           continue;
+        }
         // no metadatasets provided (happens for "all" search -> simply return the allowed list)
         if(metadatasets==null){
           return mds.mds;

@@ -661,7 +661,19 @@ export interface MdsGroup {
   id:string;
   views:string[];
 }
-
+export interface SortColumn {
+  id: string;
+  mode: string;
+}
+export interface SortDefault {
+  sortBy: string;
+  sortAscending: boolean;
+}
+export interface Sort {
+  id: string;
+  default: SortDefault;
+  columns:SortColumn[];
+}
 export interface Mds {
   types: Type[];
   ref: Ref;
@@ -671,6 +683,7 @@ export interface Mds {
   views: View[];
   queries: Queries;
   widgets: any;
+  sorts: Sort[];
 }
 
 export interface MdsMetadataset {

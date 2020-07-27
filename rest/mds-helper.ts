@@ -1,13 +1,13 @@
 import {RestConstants} from "./rest-constants";
 import {ListItem} from "../ui/list-item";
 import {RestConnectorService} from "./services/rest-connector.service";
-import {Collection, Mds} from './data-object';
+import {Collection, Mds, Sort} from './data-object';
 
 export class MdsHelper{
-    static getSortInfo(mdsSet: any, name: string) {
+    static getSortInfo(mdsSet: Mds, name: string): Sort{
         if(mdsSet) {
             if (mdsSet.sorts) {
-                for (let list of mdsSet.sorts) {
+                for (const list of mdsSet.sorts) {
                     if (list.id == name) {
                         return list;
                     }
