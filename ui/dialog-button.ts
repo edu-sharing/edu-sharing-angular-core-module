@@ -48,6 +48,7 @@ export class DialogButton {
     }
     public static TYPE_PRIMARY=1;
     public static TYPE_CANCEL=2;
+    public static TYPE_DANGER=3;
     /**
      * @param name the button name, which is used for the translation
      * @param type the button type, use one of the constants
