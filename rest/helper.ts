@@ -229,4 +229,12 @@ export class Helper {
     static objectToArray(result: any) {
         return Object.keys(result).map((key) => result[key]);
     }
+
+    /**
+     *convert an array into map and return value and index
+     * @param values Array
+     */
+    public static toEntries<T>(values: T[]) {
+      return values.map((value, index) => [index, value] as const);
+    }
 }
