@@ -231,10 +231,10 @@ export class Helper {
     }
 
     /**
-     *convert an array into map and return value and index
+     * convert an array into map and return value and index
      * @param values Array
      */
     public static toEntries<T>(values: T[]) {
-      return values.map((value, index) => [index, value] as const);
+        return values.map((value, index) => [index, value] as const);
     }
 }
