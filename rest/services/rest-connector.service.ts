@@ -313,7 +313,9 @@ export class RestConnectorService {
            xhr.setRequestHeader(key, options.headers[key]);
         }
         let formData = new FormData();
-        formData.append(fieldName, file, file.name);
+        if(file) {
+            formData.append(fieldName, file, file.name);
+        }
         let progress:any={start:new Date().getTime()};
         xhr.upload.addEventListener("progress",(event:any)=>{
           if (event.lengthComputable) {

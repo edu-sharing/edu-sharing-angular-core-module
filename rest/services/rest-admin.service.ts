@@ -195,14 +195,34 @@ export class RestAdminService extends AbstractRestService{
     ]);
     return this.connector.get<any>(query,this.connector.getRequestOptions());
   }
-  public startJob(job:string,params:string){
+  public startJob(job:string,params:any, file: File = null){
       let query=this.connector.createUrl("admin/:version/job/:job",null,[
           [":job",job],
       ]);
-      if(!params || !params.trim()){
-        params="{}";
+      if(!params) {
+        params = {};
       }
-      return this.connector.post(query,params,this.connector.getRequestOptions());
+      if(file) {
+          return new Observable((observer) => {
+              const reader = new FileReader();
+              console.log(reader);
+              reader.addEventListener('load', (event) => {
+                  const result = event.target.result;
+                  console.log(result);
+                  params.FILE_DATA = result;
+                  this.startJob(job, params).subscribe(() => {
+                      observer.next();
+                      observer.complete();
+                  }, error => {
+                      observer.error(error);
+                      observer.complete();
+                  } );
+              });
+              reader.readAsText(file);
+          });
+      } else {
+          return this.connector.post(query, JSON.stringify(params), this.connector.getRequestOptions());
+      }
   }
   public removeDeletedImports(baseUrl:string,set:string,metadataPrefix:string){
     let query=this.connector.createUrl("admin/:version/import/oai/?baseUrl=:baseUrl&set=:set&metadataPrefix=:metadataPrefix",null,[
