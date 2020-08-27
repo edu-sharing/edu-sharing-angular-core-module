@@ -18,7 +18,9 @@ export class RestConstants {
   public static CM_NAME = "cm:name";
   public static SORT_BY_FIELDS=[RestConstants.CM_NAME];
 
-    /**
+  public static BASIC_PERMISSIONS = ['Consumer', 'Collaborator', 'Coordinator'];
+
+  /**
      * cordova oauth storage
      */
     public static CORDOVA_STORAGE_OAUTHTOKENS:string = "oauth";
@@ -103,6 +105,7 @@ export class RestConstants {
   public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = "ccm:metadatacontributer_creatorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR = "ccm:lifecyclecontributer_author";
   public static CCM_PROP_AUTHOR_FREETEXT = "ccm:author_freetext";
+  public static CCM_PROP_PUBLISH_MODE = "ccm:publishMode";
   public static CCM_PROP_EAF_PRODUCTIONYEAR = "ccm:eaf_productionyear";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR_FN = "ccm:lifecyclecontributer_authorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_PUBLISHER_FN = "ccm:lifecyclecontributer_publisherFN";
@@ -270,6 +273,7 @@ export class RestConstants {
   public static TOOLPERMISSION_USAGE_STATISTIC="TOOLPERMISSION_USAGE_STATISTIC";
   public static TOOLPERMISSION_MEDIACENTER_MANAGE="TOOLPERMISSION_MEDIACENTER_MANAGE";
   public static TOOLPERMISSION_HANDLESERVICE="TOOLPERMISSION_HANDLESERVICE";
+  public static TOOLPERMISSION_PUBLISH_COPY="TOOLPERMISSION_PUBLISH_COPY";
   public static TOOLPERMISSION_GLOBAL_STATISTICS_USER="TOOLPERMISSION_GLOBAL_STATISTICS_USER";
   public static TOOLPERMISSION_GLOBAL_STATISTICS_NODES="TOOLPERMISSION_GLOBAL_STATISTICS_NODES";
   public static TOOLPERMISSION_CONNECTOR_PREFIX="TOOLPERMISSION_CONNECTOR_";
