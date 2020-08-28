@@ -41,6 +41,29 @@ export class RestNodeService extends AbstractRestService{
    }
 
 
+    /** get all published copies of this node
+     *
+     */
+    public getPublishedCopies = (node : string,
+                          repository = RestConstants.HOME_REPOSITORY) => {
+        let query=this.connector.createUrl("node/:version/nodes/:repository/:node/publish",repository,
+            [
+                [":node",node],
+            ]);
+        return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
+
+    }
+    /** Publish a copy of this node
+     *
+     */
+    public publishCopy = (node : string,
+                          repository = RestConstants.HOME_REPOSITORY) => {
+        let query=this.connector.createUrl("node/:version/nodes/:repository/:node/publish",repository,
+            [
+                [":node",node],
+            ]);
+        return this.connector.post<NodeWrapper>(query,null, this.connector.getRequestOptions());
+    }
   /** Searches for nodes in the repositroy
    *
    * @param searchQuery A lucence query string, see https://community.alfresco.com/docs/DOC-4673-search

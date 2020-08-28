@@ -98,6 +98,7 @@ export class RestConstants {
   public static LOM_PROP_TECHNICAL_DURATION = "cclom:duration";
   public static LOM_PROP_GENERAL_DESCRIPTION = "cclom:general_description";
   public static LOM_PROP_LIFECYCLE_VERSION = "cclom:version";
+  public static CCM_PROP_LIFECYCLE_VERSION_COMMENT = "ccm:version_comment";
   public static LOM_PROP_TECHNICAL_FORMAT = "cclom:format";
   public static LOM_PROP_DESCRIPTION = "cclom:general_description";
   public static LOM_PROP_TITLE = "cclom:title";
@@ -105,7 +106,7 @@ export class RestConstants {
   public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = "ccm:metadatacontributer_creatorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR = "ccm:lifecyclecontributer_author";
   public static CCM_PROP_AUTHOR_FREETEXT = "ccm:author_freetext";
-  public static CCM_PROP_PUBLISH_MODE = "ccm:publishMode";
+  public static CCM_PROP_PUBLISHED_MODE = "ccm:published_mode";
   public static CCM_PROP_EAF_PRODUCTIONYEAR = "ccm:eaf_productionyear";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR_FN = "ccm:lifecyclecontributer_authorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_PUBLISHER_FN = "ccm:lifecyclecontributer_publisherFN";
@@ -125,6 +126,7 @@ export class RestConstants {
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
   public static CCM_PROP_CHILDOBJECT_ORDER = "ccm:childobject_order";
   public static CCM_PROP_PUBLISHED_HANDLE_ID="ccm:published_handle_id";
+  public static CCM_PROP_PUBLISHED_ORIGINAL="ccm:published_original";
   public static CCM_PROP_TOOL_INSTANCE_KEY="ccm:tool_instance_key";
   public static CCM_PROP_TOOL_INSTANCE_SECRET="ccm:tool_instance_secret";
   public static CCM_PROP_FORKED_ORIGIN="ccm:forked_origin";
