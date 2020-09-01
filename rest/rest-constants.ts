@@ -126,6 +126,7 @@ export class RestConstants {
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
   public static CCM_PROP_CHILDOBJECT_ORDER = "ccm:childobject_order";
   public static CCM_PROP_PUBLISHED_HANDLE_ID="ccm:published_handle_id";
+  public static CCM_PROP_PUBLISHED_DATE="ccm:published_date";
   public static CCM_PROP_PUBLISHED_ORIGINAL="ccm:published_original";
   public static CCM_PROP_TOOL_INSTANCE_KEY="ccm:tool_instance_key";
   public static CCM_PROP_TOOL_INSTANCE_SECRET="ccm:tool_instance_secret";
