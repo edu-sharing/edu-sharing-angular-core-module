@@ -7,7 +7,7 @@ import {RestConstants} from "../rest-constants";
 import { NodeRef, Node, NodeWrapper, NodePermissions, LocalPermissions, NodeVersions, NodeVersion, NodeList} from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
 import {Helper} from "../helper";
-import {MdsHelper} from "../mds-helper";
+import {MdsHelper} from '../mds-helper';
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{

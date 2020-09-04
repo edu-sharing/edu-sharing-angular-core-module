@@ -2,6 +2,7 @@ import {RestConstants} from "./rest-constants";
 import {ListItem} from "../ui/list-item";
 import {RestConnectorService} from "./services/rest-connector.service";
 import {Collection, Mds, Sort} from './data-object';
+import {TranslateService} from '@ngx-translate/core';
 
 export class MdsHelper{
     static getSortInfo(mdsSet: Mds, name: string): Sort{
@@ -17,7 +18,7 @@ export class MdsHelper{
         }
         return null;
     }
-  static getColumns(mdsSet: any, name: string) {
+  static getColumns(translate: TranslateService, mdsSet: any, name: string) {
     let columns:ListItem[]=[];
     if(mdsSet) {
       for (let list of mdsSet.lists) {
@@ -27,17 +28,30 @@ export class MdsHelper{
             item.format = column.format;
             columns.push(item);
           }
-          return columns;
+          break;
         }
       }
-      console.warn('mds does not define columns for ' + name + ', invalid configuration!');
     }
-    if(name=='search' || name=='collectionReferences') {
-      columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
-      columns.push(new ListItem("NODE", RestConstants.CM_MODIFIED_DATE));
-      columns.push(new ListItem("NODE", RestConstants.CCM_PROP_LICENSE));
-      columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
+    if(!columns.length) {
+        console.warn('mds does not define columns for ' + name + ', invalid configuration!');
+        if (name == 'search' || name == 'collectionReferences') {
+            columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
+            columns.push(new ListItem("NODE", RestConstants.CM_MODIFIED_DATE));
+            columns.push(new ListItem("NODE", RestConstants.CCM_PROP_LICENSE));
+            columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
+        } else if (name == 'mediacenterManaged') {
+            columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
+            columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCEID));
+            columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
+        }
     }
+      columns.map((c) => {
+          const key = c.type + '.' +c.name;
+          if(c.type === 'NODE' && translate.instant(key) === key) {
+              c.label = mdsSet.widgets.filter((w: any) => w.id === c.name)?.[0]?.caption;
+          }
+          return c;
+      });
     return columns;
   }
 

@@ -189,6 +189,7 @@ export class RestConstants {
   public static CCM_PROP_LICENSE_CC_VERSION = 'ccm:commonlicense_cc_version';
   public static CCM_PROP_LICENSE_CC_LOCALE = 'ccm:commonlicense_cc_locale';
   public static CCM_PROP_REPLICATIONSOURCE = 'ccm:replicationsource';
+  public static CCM_PROP_REPLICATIONSOURCEID = 'ccm:replicationsourceid';
   public static LOM_PROP_RIGHTS_DESCRIPTION= 'cclom:rights_description';
   public static CCM_PROP_QUESTIONSALLOWED= 'ccm:questionsallowed';
   public static CM_PROP_METADATASET_EDU_METADATASET="cm:edu_metadataset";

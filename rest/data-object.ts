@@ -45,6 +45,7 @@ export interface MediacenterGroupExtension {
   districtAbbreviation: string;
   mainUrl: string;
   catalogs: MediacenterCatalog[];
+  contentStatus: string;
 }
 export interface MediacenterCatalog {
   name: string;
@@ -567,6 +568,7 @@ export interface List {
   id: string;
   label: string;
   properties: Property3[];
+  columns: any[];
 }
 
 export interface Parameter3 {
