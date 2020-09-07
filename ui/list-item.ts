@@ -12,6 +12,11 @@ export class ListItem{
   public visible=true;
 
   /**
+   * Label to display, if set, should be preferred instead of automatic i18n
+   */
+  public label: string;
+
+  /**
    * custom format string for date fields, may be null
    */
   public format:string;
