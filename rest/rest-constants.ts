@@ -196,6 +196,7 @@ export class RestConstants {
   public static CCM_PROP_LICENSE_CC_LOCALE = 'ccm:commonlicense_cc_locale';
   public static CCM_PROP_REPLICATIONSOURCE = 'ccm:replicationsource';
   public static CCM_PROP_REPLICATIONSOURCEID = 'ccm:replicationsourceid';
+  public static CCM_PROP_IMPORT_BLOCKED = 'ccm:importblocked';
   public static LOM_PROP_RIGHTS_DESCRIPTION= 'cclom:rights_description';
   public static CCM_PROP_QUESTIONSALLOWED= 'ccm:questionsallowed';
   public static CM_PROP_METADATASET_EDU_METADATASET="cm:edu_metadataset";
@@ -227,6 +228,7 @@ export class RestConstants {
   public static COMMENT_BULK_CREATE="BULK_CREATE";
   public static COMMENT_BULK_UPDATE="BULK_UPDATE";
   public static COMMENT_BULK_UPDATE_RESYNC="BULK_UPDATE_RESYNC";
+  public static COMMENT_BLOCKED_IMPORT="IMPORT_BLOCKED";
   public static ACCESS_ADD_CHILDREN="AddChildren";
   public static ACCESS_WRITE="Write";
   public static ACCESS_DELETE="Delete";
