@@ -27,6 +27,7 @@ import {AbstractRestService} from "./abstract-rest-service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {FrameEventsService} from './frame-events.service';
 import {MessageType} from '../../ui/message-type';
+import {Values} from '../../../common/ui/mds-editor/types';
 
 @Injectable()
 export class RestNodeService extends AbstractRestService{
@@ -174,7 +175,7 @@ export class RestNodeService extends AbstractRestService{
   public createNode = (parent : string,
                         type : string,
                         aspects : string[] = [],
-                        properties : any[],
+                        properties : any[]|Values,
                         renameIfExists = false,
                         versionComment = "",
                         assocType = "",
