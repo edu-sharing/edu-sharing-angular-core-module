@@ -172,6 +172,32 @@ export class RestIamService extends AbstractRestService {
     return this.connector.get<any>(query,this.connector.getRequestOptions())
       .map((response) => JSON.parse(response.preferences));
   }
+
+  /**
+   * get showHideEmail values from API
+   * @param user user login exp: -me-|example@domain.com
+   * @param repository 
+   * @returns boolean true|false
+   */
+  public getUserEmailConfiguration = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('iam/:version/people/:repository/:user/showhideemail',repository,[[':user',user]]);
+    return this.connector.get<any>(query,this.connector.getRequestOptions())
+      .map((response) => JSON.parse(response.showHideEmail));
+  }
+
+  /**
+   * snt showHideEmail values to backend.
+   * @param showOrHideEmail value to send 
+   * @param user user login exp: -me-|example@domain.com
+   * @param repository
+   */
+  public setUserEmailConfiguration = (showOrHideEmail:boolean,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('iam/:version/people/:repository/:user/showhideemail/?showHideEmail=:showHideEmail',repository,[
+      [':user',user],
+      [':showHideEmail',showOrHideEmail.toString()]
+    ]);
+    return this.connector.put(query,null,this.connector.getRequestOptions());
+  }
   public setUserPreferences = (preferences:any,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/preferences',repository,[[':user',user]]);
     return this.connector.put(query,JSON.stringify(preferences),this.connector.getRequestOptions());
