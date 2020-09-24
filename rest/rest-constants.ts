@@ -41,6 +41,7 @@ export class RestConstants {
   public static PERMISSION_COLLABORATOR = "Collaborator";
   public static PERMISSION_COORDINATOR = "Coordinator";
   public static PERMISSION_ALL = "All";
+  public static PERMISSION_WRITE = "Write";
   public static PERMISSION_DELETE = "Delete";
   public static PERMISSION_FEEDBACK = "Feedback"; // Giving feedback for collections
   public static PERMISSION_RATE = "Rate";
