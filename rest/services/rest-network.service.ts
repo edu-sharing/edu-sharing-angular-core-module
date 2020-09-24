@@ -22,6 +22,9 @@ export class RestNetworkService extends AbstractRestService{
   static allFromHomeRepo(nodes: Node[], repositories=this.currentRepositories) {
     if(!nodes)
       return true;
+    if(repositories == null){
+        console.warn('repository list is empty, home repo might not be detected');
+    }
     for(let node of nodes) {
       if (!RestNetworkService.isHomeRepo(node.ref.repo, repositories))
         return false;
