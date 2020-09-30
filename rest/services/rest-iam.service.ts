@@ -182,7 +182,7 @@ export class RestIamService extends AbstractRestService {
   public getUserEmailConfiguration = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/profilesettings',repository,[[':user',user]]);
     return this.connector.get<any>(query,this.connector.getRequestOptions())
-      .map((response) => JSON.parse(response.showHideEmail));
+      .map((response) => JSON.parse(response.showEmail));
   }
 
   /**
