@@ -133,10 +133,11 @@ export class VCard{
       this.set("FN",this.get("Givenname",-1,"")+" "+this.get("Surname",-1,""));
     return this.lines.join("\n");
   }
-  public getDisplayName(){
-    let string=this.givenname+" "+this.surname;
-    if(string.trim()=='')
-      return this.org;
+  public getDisplayName() {
+    const string = (this.givenname ?? '') + ' ' + (this.surname ?? '');
+    if(string.trim() === '') {
+      return this.org || '';
+    }
     return string;
   }
   public get(key:string,splitIndex=-1,fallback:string=null){
