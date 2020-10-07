@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
 import {Observable, Observer} from 'rxjs';
@@ -64,6 +64,7 @@ export class RestConnectorService {
   }
   constructor(private router:Router,
               private http : HttpClient,
+              private ngZone : NgZone,
               private config: ConfigurationService,
               private locator: RestLocatorService,
               private bridge: BridgeService,
@@ -447,21 +448,22 @@ export class RestConnectorService {
    * Fires the observer as soon as all requests are done
    * @returns {Observable<void>|"../../../Observable".Observable<void>|"../../Observable".Observable<void>}
    */
-  public onAllRequestsReady() : Observable<void>{
+  public onAllRequestsReady() : Observable<void> {
     return new Observable<void>((observer : Observer<void>) => {
       this.onAllRequestsReadyObserver(observer);
     });
   }
-  public onAllRequestsReadyObserver(observer:Observer<void>){
-    setTimeout(()=>{
-      if(this._currentRequestCount>0){
-        this.onAllRequestsReadyObserver(observer);
-      }
-      else{
-        observer.next(null);
-        observer.complete();
-      }
-    },50);
+  private onAllRequestsReadyObserver(observer:Observer<void>){
+      this.ngZone.runOutsideAngular(() => {
+          setTimeout(() => {
+              if (this._currentRequestCount > 0) {
+                  this.onAllRequestsReadyObserver(observer);
+              } else {
+                  observer.next(null);
+                  observer.complete();
+              }
+          }, 50);
+      });
   }
 
   /**
