@@ -1160,3 +1160,10 @@ export enum DeleteMode{
 export enum EventType {
   VIEW_MATERIAL_PLAY_MEDIA = 'VIEW_MATERIAL_PLAY_MEDIA'
 }
+
+/**
+ * Object for Profile settings
+ */
+export class ProfileSettings {
+  showEmail:boolean;
+}
