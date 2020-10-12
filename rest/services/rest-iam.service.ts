@@ -6,7 +6,7 @@ import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, ProfileSettings
 } from '../data-object';
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
@@ -178,29 +178,29 @@ export class RestIamService extends AbstractRestService {
   }
 
   /**
-   * get showEmail values from API
-   * @param user user login exp: -me-|example@domain.com
-   * @param repository 
-   * @returns boolean true|false
+   * get profileSettings configuration from API
+   * @param profileSettings Object with profile configuration
+   * @param user current User
+   * @param repository current Repository
+   * @returns profileSettings object.
    */
-  public getUserEmailConfiguration = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
-    const query=this.connector.createUrl('iam/:version/people/:repository/:user/profilesettings',repository,[[':user',user]]);
-    return this.connector.get<any>(query,this.connector.getRequestOptions())
-      .map((response) => JSON.parse(response.showEmail));
+  public getProfileSettings = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('iam/:version/people/:repository/:user/profileSettings',repository,[[':user',user]]);
+    return this.connector.get<ProfileSettings>(query,this.connector.getRequestOptions());
   }
 
   /**
-   * set showEmail values to backend.
-   * @param showOrHideEmail value to send 
-   * @param user user login exp: -me-|example@domain.com
-   * @param repository
+   * set Configuration for profileSettings to backend.
+   * @param profileSettings Object with profile configuration
+   * @param user current User
+   * @param repository current Repository
+   * @returns Https code Status 200=OK.
    */
-  public setUserEmailConfiguration = (showEmail:boolean,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
-    const query=this.connector.createUrl('iam/:version/people/:repository/:user/profilesettings/?showEmail=:showEmail',repository,[
-      [':user',user],
-      [':showEmail',showEmail.toString()]
+  public setProfileSettings = (profileSettings:ProfileSettings,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('iam/:version/people/:repository/:user/profileSettings/',repository,[
+      [':user',user]
     ]);
-    return this.connector.put(query,null,this.connector.getRequestOptions());
+    return this.connector.put(query,JSON.stringify(profileSettings),this.connector.getRequestOptions());
   }
 
 
