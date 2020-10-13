@@ -11,7 +11,7 @@ import {MdsHelper} from '../mds-helper';
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{
-    static convertCritierias(properties:any[],mdsWidgets:any){
+    static convertCritierias(properties:any,mdsWidgets:any){
         const criterias=[];
         properties=Helper.deepCopy(properties);
         for (const property in properties) {
