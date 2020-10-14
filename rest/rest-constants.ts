@@ -64,6 +64,7 @@ export class RestConstants {
   public static CCM_ASPECT_METADATA_PRESETTING= "ccm:metadataPresetting";
   public static CCM_ASPECT_PUBLISHED = "ccm:published";
   public static CCM_ASPECT_COLLECTION = "ccm:collection";
+  public static CCM_ASPECT_MAP_REF = "ccm:map_ref";
   public static CCM_ASPECT_LOMREPLICATION = "ccm:lomreplication";
   public static CCM_ASPECT_CCLOM_GENERAL = "cclom:general";
   public static CCM_ASPECT_IO_CHILDOBJECT = "ccm:io_childobject";
@@ -122,6 +123,7 @@ export class RestConstants {
   public static CCM_PROP_IO_WWWURL = "ccm:wwwurl";
   public static CCM_PROP_LINKTYPE = "ccm:linktype";
   public static CCM_PROP_IO_ORIGINAL = "ccm:original";
+  public static CCM_PROP_MAP_REF_TARGET = "ccm:map_ref_target";
   public static CCM_PROP_AUTHORITY_GROUPTYPE="ccm:groupType";
   public static CCM_PROP_TRACKING_VIEWS="ccm:tracking_views";
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
@@ -281,6 +283,7 @@ export class RestConstants {
   public static TOOLPERMISSION_MEDIACENTER_MANAGE="TOOLPERMISSION_MEDIACENTER_MANAGE";
   public static TOOLPERMISSION_HANDLESERVICE="TOOLPERMISSION_HANDLESERVICE";
   public static TOOLPERMISSION_PUBLISH_COPY="TOOLPERMISSION_PUBLISH_COPY";
+  public static TOOLPERMISSION_CREATE_MAP_LINK="TOOLPERMISSION_CREATE_MAP_LINK";
   public static TOOLPERMISSION_GLOBAL_STATISTICS_USER="TOOLPERMISSION_GLOBAL_STATISTICS_USER";
   public static TOOLPERMISSION_GLOBAL_STATISTICS_NODES="TOOLPERMISSION_GLOBAL_STATISTICS_NODES";
   public static TOOLPERMISSION_CONNECTOR_PREFIX="TOOLPERMISSION_CONNECTOR_";
