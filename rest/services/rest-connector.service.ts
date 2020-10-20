@@ -1,7 +1,7 @@
-import {Injectable, NgZone} from '@angular/core';
+import {EventEmitter, Injectable, NgZone} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
-import {Observable, Observer} from 'rxjs';
+import {BehaviorSubject, Observable, Observer} from 'rxjs';
 import {RequestObject} from '../request-object';
 import {OAuthResult, LoginResult, AccessScope, About} from '../data-object';
 import {Router, ActivatedRoute} from '@angular/router';
@@ -28,7 +28,7 @@ export class RestConnectorService {
   public _scope: string;
   private toolPermissions: string[];
   private themesUrl="../themes/default/";
-
+  currentLogin = new BehaviorSubject<LoginResult>(null);
   get autoLogin(): boolean {
     return this._autoLogin;
   }
@@ -135,25 +135,33 @@ export class RestConnectorService {
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
-  public getCurrentLogin() : LoginResult{
-    return this.storage.get(TemporaryStorageService.SESSION_INFO);
+  public getCurrentLogin() : LoginResult {
+    return this.currentLogin.value;
   }
   public getAbout(){
       let url=this.createUrl("_about",null);
       return this.get<About>(url,this.getRequestOptions());
   }
   public isLoggedIn(forceRenew=true){
-    let url=this.createUrl("authentication/:version/validateSession",null);
+    const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
-        if(!forceRenew && this.getCurrentLogin()){
-            observer.next(this.getCurrentLogin());
-            observer.complete();
+        if(!forceRenew) {
+            if(this.getCurrentLogin()) {
+                observer.next(this.getCurrentLogin());
+                observer.complete();
+            } else {
+                this.currentLogin.first().subscribe((data) => {
+                    observer.next(data);
+                    observer.complete();
+                });
+            }
         }
         this.locator.locateApi().subscribe(() => {
             this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
                 (data: LoginResult) => {
                     this.toolPermissions = data.toolPermissions;
                     this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
+                    this.currentLogin.next(data);
                     this.storage.set(TemporaryStorageService.SESSION_INFO, data);
                     this._logoutTimeout = data.sessionTimeout;
                     if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
