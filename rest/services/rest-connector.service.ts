@@ -150,7 +150,7 @@ export class RestConnectorService {
                 observer.next(this.getCurrentLogin());
                 observer.complete();
             } else {
-                this.currentLogin.first().subscribe((data) => {
+                this.currentLogin.filter((data) => !!data).first().subscribe((data) => {
                     observer.next(data);
                     observer.complete();
                 });
