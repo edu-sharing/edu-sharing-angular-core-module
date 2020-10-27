@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Observer } from 'rxjs';
+import {BehaviorSubject, Observable, Observer} from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
@@ -13,23 +13,18 @@ export class RestLocatorService {
 
     numberPerRequest = RestLocatorService.DEFAULT_NUMBER_PER_REQUEST;
 
-    get endpointUrl(): string {
-        return this._endpointUrl;
-    }
-    set endpointUrl(value: string) {
-        this._endpointUrl = value;
-    }
-
     get apiVersion(): number {
         return this._apiVersion;
     }
 
-    private _endpointUrl: string;
     private _apiVersion = -1;
     private ticket: string;
     private themesUrl: any;
-    private isLocating = false;
-
+    private apiUrl = new BehaviorSubject<string>(null);
+    // @DEPRECATED
+    get endpointUrl(){
+        return this.apiUrl.value;
+    }
     /**
      * Replaces jokers inside the url and escapes them. The default joker
      * :version and :repository is always replaced!
@@ -85,7 +80,7 @@ export class RestLocatorService {
         return new Observable((observer: Observer<OAuthResult>) => {
             this.bridge
                 .getCordova()
-                .loginOAuth(this.endpointUrl, null, null, 'client_credentials')
+                .loginOAuth(this.apiUrl.value, null, null, 'client_credentials')
                 .subscribe(
                     oauthTokens => {
                         this.bridge
@@ -115,7 +110,7 @@ export class RestLocatorService {
                 );
                 this.http
                     .get<any>(
-                        this.endpointUrl + query,
+                        this.apiUrl.value + query,
                         this.getRequestOptions(),
                     )
                     .subscribe(
@@ -142,7 +137,7 @@ export class RestLocatorService {
                 );
                 this.http
                     .get<any>(
-                        this.endpointUrl + query,
+                        this.apiUrl.value + query,
                         this.getRequestOptions(),
                     )
                     .subscribe(
@@ -169,7 +164,7 @@ export class RestLocatorService {
                 );
                 this.http
                     .get<any>(
-                        this.endpointUrl + query,
+                        this.apiUrl.value + query,
                         this.getRequestOptions('application/json'),
                     )
                     .subscribe(
@@ -195,7 +190,7 @@ export class RestLocatorService {
                 );
                 this.http
                     .get(
-                        this.endpointUrl + query,
+                        this.apiUrl.value + query,
                         this.getRequestOptions(
                             'application/json',
                             null,
@@ -226,7 +221,7 @@ export class RestLocatorService {
                 );
                 this.http
                     .get(
-                        this.endpointUrl + query,
+                        this.apiUrl.value + query,
                         this.getRequestOptions(
                             'application/json',
                             null,
@@ -289,27 +284,12 @@ export class RestLocatorService {
         }; // Warn: withCredentials true will ignore a Bearer from OAuth!
     }
 
-    locateApi(): Observable<void> {
-        if (this.isLocating) {
-            return new Observable<void>((observer: Observer<void>) => {
-                setTimeout(() => {
-                    this.locateApi().subscribe(() => {
-                        observer.next(null);
-                        observer.complete();
-                    });
-                }, 20);
-            });
+    locateApi(): Observable<string> {
+        if (this.apiUrl.value === null) {
+            this.apiUrl.next('');
+            this.testApi(true);
         }
-        if (this.endpointUrl != null) {
-            return new Observable<void>((observer: Observer<void>) => {
-                observer.next(null);
-                observer.complete();
-            });
-        }
-        this.isLocating = true;
-        return new Observable<void>((observer: Observer<void>) => {
-            this.testApi(true, observer);
-        });
+        return this.apiUrl.filter((a) => a !== null && a !== '');
     }
 
     setRoute(route: ActivatedRoute): Observable<void> {
@@ -327,28 +307,22 @@ export class RestLocatorService {
         return this.bridge;
     }
 
-    private testEndpoint(url: string, local = true, observer: Observer<void>) {
+    private testEndpoint(url: string, local = true) {
         this.http.get<any>(url + '_about', this.getRequestOptions()).subscribe(
             data => {
-                this._endpointUrl = url;
                 this._apiVersion =
                     data.body.version.major + data.body.version.minor / 10;
-                this.isLocating = false;
+                this.apiUrl.next(url);
                 this.themesUrl = data.body.themesUrl;
-                observer.next(null);
-                observer.complete();
                 return;
             },
             error => {
                 if (error.status === RestConstants.HTTP_UNAUTHORIZED) {
-                    this._endpointUrl = url;
-                    this.isLocating = false;
-                    observer.next(null);
-                    observer.complete();
+                    this.apiUrl.next(url);
                     return;
                 }
                 if (local === true) {
-                    this.testApi(false, observer);
+                    this.testApi(false);
                 } else {
                     console.error(
                         'Could not contact rest api at location ' + url,
@@ -358,10 +332,10 @@ export class RestLocatorService {
         );
     }
 
-    private testApi(local = true, observer: Observer<void>): void {
+    private testApi(local = true): void {
         if (local) {
             const url = 'rest/';
-            this.testEndpoint(url, true, observer);
+            this.testEndpoint(url, true);
         } else {
             if (environment.production) {
                 console.error(
@@ -373,7 +347,7 @@ export class RestLocatorService {
                     .get('assets/endpoint.txt', { responseType: 'text' })
                     .subscribe(
                         (data: any) => {
-                            this.testEndpoint(data, false, observer);
+                            this.testEndpoint(data, false);
                         },
                         (error: any) => {
                             console.error(

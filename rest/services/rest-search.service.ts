@@ -8,10 +8,11 @@ import { NodeRef, Node, NodeWrapper, NodePermissions, LocalPermissions, NodeVers
 import {AbstractRestService} from "./abstract-rest-service";
 import {Helper} from "../helper";
 import {MdsHelper} from '../mds-helper';
+import {Values} from '../../../common/ui/mds-editor/types';
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{
-    static convertCritierias(properties:any[],mdsWidgets:any){
+    static convertCritierias(properties:Values,mdsWidgets:any){
         const criterias=[];
         properties=Helper.deepCopy(properties);
         for (const property in properties) {

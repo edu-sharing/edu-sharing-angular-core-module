@@ -264,6 +264,7 @@ export interface Group {
   groupName: string;
   groupType: string;
   profile: GroupProfile;
+  organizations: Organization[];
   administrationAccess: boolean;
 }
 
@@ -324,6 +325,7 @@ export interface User {
   authorityType: string;
   userName: string;
   profile: UserProfile;
+  organizations: Organization[];
   properties: any;
   stats: UserStats;
   homeFolder: NodeRef;
@@ -336,6 +338,7 @@ export interface UserSimple {
   userName: string;
   status: UserStatus;
   profile: UserProfile;
+  organizations: Organization[];
 }
 export interface UserQuota{
     enabled:boolean;

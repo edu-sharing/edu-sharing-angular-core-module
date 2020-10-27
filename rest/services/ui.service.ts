@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, NgZone} from "@angular/core";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {HttpClient} from "@angular/common/http";
 import {RestConnectorService} from "./rest-connector.service";
@@ -40,28 +40,53 @@ export class UIService {
   }
   constructor(
       private bridge : BridgeService,
+      private ngZone : NgZone,
       private http: HttpClient,
       private connector: RestConnectorService,
   ) {
     // HostListener not working, so use window
-    window.addEventListener('keydown', (event) => {
-      if (event.key == 'Shift') {
-        this.shiftCmd = true;
-      }
-      if (event.keyCode == 91 || event.keyCode == 93) {
-        this.appleCmd = true;
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    });
-    window.addEventListener('keyup', (event) => {
-      if (event.keyCode == 91 || event.keyCode == 93)
-        this.appleCmd = false;
-      if (event.key == 'Shift') {
-        this.shiftCmd = false;
-      }
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('keydown', (event) => {
+        if (event.key == 'Shift') {
+          this.shiftCmd = true;
+        }
+        if (event.keyCode == 91 || event.keyCode == 93) {
+          this.appleCmd = true;
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode == 91 || event.keyCode == 93)
+          this.appleCmd = false;
+        if (event.key == 'Shift') {
+          this.shiftCmd = false;
+        }
+      });
     });
   }
+
+  /**
+   * waits until the given component/object is not null and available
+   * @param clz the class where the component is attached (usually "this")
+   * @param componentName The name of the property
+   */
+  waitForComponent(clz: any, componentName: string) {
+    return new Observable((observer: Observer<any>) => {
+      this.ngZone.runOutsideAngular(() => {
+        const interval = setInterval(() => {
+          if (clz[componentName]) {
+            observer.next(clz[componentName]);
+            observer.complete();
+            clearInterval(interval);
+          } else if (!clz) {
+            clearInterval(interval);
+          }
+        }, 1000 / 60);
+      });
+    });
+  }
+
 
   hideKeyboardIfMobile() {
     if(this.isMobile()) {

@@ -18,7 +18,9 @@ export class RestConstants {
   public static CM_NAME = "cm:name";
   public static SORT_BY_FIELDS=[RestConstants.CM_NAME];
 
-    /**
+  public static BASIC_PERMISSIONS = ['Consumer', 'Collaborator', 'Coordinator'];
+
+  /**
      * cordova oauth storage
      */
     public static CORDOVA_STORAGE_OAUTHTOKENS:string = "oauth";
@@ -62,6 +64,7 @@ export class RestConstants {
   public static CCM_ASPECT_METADATA_PRESETTING= "ccm:metadataPresetting";
   public static CCM_ASPECT_PUBLISHED = "ccm:published";
   public static CCM_ASPECT_COLLECTION = "ccm:collection";
+  public static CCM_ASPECT_MAP_REF = "ccm:map_ref";
   public static CCM_ASPECT_LOMREPLICATION = "ccm:lomreplication";
   public static CCM_ASPECT_CCLOM_GENERAL = "cclom:general";
   public static CCM_ASPECT_IO_CHILDOBJECT = "ccm:io_childobject";
@@ -97,6 +100,7 @@ export class RestConstants {
   public static LOM_PROP_TECHNICAL_DURATION = "cclom:duration";
   public static LOM_PROP_GENERAL_DESCRIPTION = "cclom:general_description";
   public static LOM_PROP_LIFECYCLE_VERSION = "cclom:version";
+  public static CCM_PROP_LIFECYCLE_VERSION_COMMENT = "ccm:version_comment";
   public static LOM_PROP_TECHNICAL_FORMAT = "cclom:format";
   public static LOM_PROP_DESCRIPTION = "cclom:general_description";
   public static LOM_PROP_TITLE = "cclom:title";
@@ -104,6 +108,7 @@ export class RestConstants {
   public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = "ccm:metadatacontributer_creatorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR = "ccm:lifecyclecontributer_author";
   public static CCM_PROP_AUTHOR_FREETEXT = "ccm:author_freetext";
+  public static CCM_PROP_PUBLISHED_MODE = "ccm:published_mode";
   public static CCM_PROP_EAF_PRODUCTIONYEAR = "ccm:eaf_productionyear";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR_FN = "ccm:lifecyclecontributer_authorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_PUBLISHER_FN = "ccm:lifecyclecontributer_publisherFN";
@@ -118,11 +123,14 @@ export class RestConstants {
   public static CCM_PROP_IO_WWWURL = "ccm:wwwurl";
   public static CCM_PROP_LINKTYPE = "ccm:linktype";
   public static CCM_PROP_IO_ORIGINAL = "ccm:original";
+  public static CCM_PROP_MAP_REF_TARGET = "ccm:map_ref_target";
   public static CCM_PROP_AUTHORITY_GROUPTYPE="ccm:groupType";
   public static CCM_PROP_TRACKING_VIEWS="ccm:tracking_views";
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
   public static CCM_PROP_CHILDOBJECT_ORDER = "ccm:childobject_order";
   public static CCM_PROP_PUBLISHED_HANDLE_ID="ccm:published_handle_id";
+  public static CCM_PROP_PUBLISHED_DATE="ccm:published_date";
+  public static CCM_PROP_PUBLISHED_ORIGINAL="ccm:published_original";
   public static CCM_PROP_TOOL_INSTANCE_KEY="ccm:tool_instance_key";
   public static CCM_PROP_TOOL_INSTANCE_SECRET="ccm:tool_instance_secret";
   public static CCM_PROP_FORKED_ORIGIN="ccm:forked_origin";
@@ -141,6 +149,7 @@ export class RestConstants {
     "educational_validator","script_writer","instructional_designer","subject_matter_expert"];
   public static CONTRIBUTOR_ROLES_METADATA=["creator","validator","provider"];
   public static CONTENT_QUOTA_EXCEPTION="DAOQuotaException";
+  public static CONTENT_VIRUS_EXCEPTION="DAOVirusDetectedException";
   public static USER_PRIMARY_AFFILIATIONS = ["teacher","student","employee","extern","system","function"];
   public static getAllVCardFields(){
       let list=[];
@@ -191,6 +200,7 @@ export class RestConstants {
   public static CCM_PROP_LICENSE_CC_LOCALE = 'ccm:commonlicense_cc_locale';
   public static CCM_PROP_REPLICATIONSOURCE = 'ccm:replicationsource';
   public static CCM_PROP_REPLICATIONSOURCEID = 'ccm:replicationsourceid';
+  public static CCM_PROP_IMPORT_BLOCKED = 'ccm:importblocked';
   public static LOM_PROP_RIGHTS_DESCRIPTION= 'cclom:rights_description';
   public static CCM_PROP_QUESTIONSALLOWED= 'ccm:questionsallowed';
   public static CM_PROP_METADATASET_EDU_METADATASET="cm:edu_metadataset";
@@ -222,6 +232,7 @@ export class RestConstants {
   public static COMMENT_BULK_CREATE="BULK_CREATE";
   public static COMMENT_BULK_UPDATE="BULK_UPDATE";
   public static COMMENT_BULK_UPDATE_RESYNC="BULK_UPDATE_RESYNC";
+  public static COMMENT_BLOCKED_IMPORT="IMPORT_BLOCKED";
   public static ACCESS_ADD_CHILDREN="AddChildren";
   public static ACCESS_WRITE="Write";
   public static ACCESS_DELETE="Delete";
@@ -263,6 +274,9 @@ export class RestConstants {
   public static TOOLPERMISSION_COMMENT_WRITE="TOOLPERMISSION_COMMENT_WRITE";
   public static TOOLPERMISSION_LICENSE="TOOLPERMISSION_LICENSE";
   public static TOOLPERMISSION_WORKSPACE="TOOLPERMISSION_WORKSPACE";
+  public static TOOLPERMISSION_CREATE_ELEMENTS_FOLDERS="TOOLPERMISSION_CREATE_ELEMENTS_FOLDERS";
+  public static TOOLPERMISSION_CREATE_ELEMENTS_FILES="TOOLPERMISSION_CREATE_ELEMENTS_FILES";
+  public static TOOLPERMISSION_CREATE_ELEMENTS_COLLECTIONS="TOOLPERMISSION_CREATE_ELEMENTS_COLLECTIONS";
   public static TOOLPERMISSION_UNCHECKEDCONTENT="TOOLPERMISSION_UNCHECKEDCONTENT";
   public static TOOLPERMISSION_COLLECTION_CHANGE_OWNER="TOOLPERMISSION_COLLECTION_CHANGE_OWNER";
   public static TOOLPERMISSION_COLLECTION_EDITORIAL="TOOLPERMISSION_COLLECTION_EDITORIAL";
@@ -272,6 +286,8 @@ export class RestConstants {
   public static TOOLPERMISSION_USAGE_STATISTIC="TOOLPERMISSION_USAGE_STATISTIC";
   public static TOOLPERMISSION_MEDIACENTER_MANAGE="TOOLPERMISSION_MEDIACENTER_MANAGE";
   public static TOOLPERMISSION_HANDLESERVICE="TOOLPERMISSION_HANDLESERVICE";
+  public static TOOLPERMISSION_PUBLISH_COPY="TOOLPERMISSION_PUBLISH_COPY";
+  public static TOOLPERMISSION_CREATE_MAP_LINK="TOOLPERMISSION_CREATE_MAP_LINK";
   public static TOOLPERMISSION_GLOBAL_STATISTICS_USER="TOOLPERMISSION_GLOBAL_STATISTICS_USER";
   public static TOOLPERMISSION_GLOBAL_STATISTICS_NODES="TOOLPERMISSION_GLOBAL_STATISTICS_NODES";
   public static TOOLPERMISSION_CONNECTOR_PREFIX="TOOLPERMISSION_CONNECTOR_";

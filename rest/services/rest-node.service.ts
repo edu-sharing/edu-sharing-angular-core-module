@@ -27,6 +27,7 @@ import {AbstractRestService} from "./abstract-rest-service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {FrameEventsService} from './frame-events.service';
 import {MessageType} from '../../ui/message-type';
+import {Values} from '../../../common/ui/mds-editor/types';
 
 @Injectable()
 export class RestNodeService extends AbstractRestService{
@@ -41,6 +42,29 @@ export class RestNodeService extends AbstractRestService{
    }
 
 
+    /** get all published copies of this node
+     *
+     */
+    public getPublishedCopies = (node : string,
+                          repository = RestConstants.HOME_REPOSITORY) => {
+        let query=this.connector.createUrl("node/:version/nodes/:repository/:node/publish",repository,
+            [
+                [":node",node],
+            ]);
+        return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
+
+    }
+    /** Publish a copy of this node
+     *
+     */
+    public publishCopy = (node : string,
+                          repository = RestConstants.HOME_REPOSITORY) => {
+        let query=this.connector.createUrl("node/:version/nodes/:repository/:node/publish",repository,
+            [
+                [":node",node],
+            ]);
+        return this.connector.post<NodeWrapper>(query,null, this.connector.getRequestOptions());
+    }
   /** Searches for nodes in the repositroy
    *
    * @param searchQuery A lucence query string, see https://community.alfresco.com/docs/DOC-4673-search
@@ -151,7 +175,7 @@ export class RestNodeService extends AbstractRestService{
   public createNode = (parent : string,
                         type : string,
                         aspects : string[] = [],
-                        properties : any[],
+                        properties : any[]|Values,
                         renameIfExists = false,
                         versionComment = "",
                         assocType = "",
