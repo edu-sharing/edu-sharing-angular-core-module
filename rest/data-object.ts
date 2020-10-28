@@ -320,11 +320,7 @@ export interface NodeRef {
   archived: boolean;
 }
 
-export interface User {
-  authorityName: string;
-  authorityType: string;
-  userName: string;
-  profile: UserProfile;
+export interface User extends UserSimple {
   organizations: Organization[];
   properties: any;
   stats: UserStats;
@@ -340,7 +336,7 @@ export interface UserSimple {
   profile: UserProfile;
   organizations: Organization[];
 }
-export interface UserQuota{
+export interface UserQuota {
     enabled:boolean;
     sizeCurrent:number;
     sizeQuota:number;
