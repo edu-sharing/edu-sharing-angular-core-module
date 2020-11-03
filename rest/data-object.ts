@@ -257,6 +257,7 @@ export interface GroupProfile {
   groupType: string;
   scopeType: string;
 }
+export type GroupSignupResult = 'InvalidPassword' | 'AlreadyInList' | 'AlreadyMember' | 'Ok';
 
 export interface Group {
   authorityName: string;
@@ -266,6 +267,7 @@ export interface Group {
   profile: GroupProfile;
   organizations: Organization[];
   administrationAccess: boolean;
+  signupMethod:string;
 }
 
 export interface IamGroups {
@@ -1092,12 +1094,12 @@ export class AccessPermission {
   hasRight:boolean;   // signaling if the user has the right above
 }
 
-export class Organization {
-  authorityName:string;
-  authorityType:string;
-  groupName:string;
-  profile:Profile;
+export interface Organization extends Group {
   sharedFolder:Reference;
+}
+export interface GroupSignupDetails {
+  signupMethod:string;
+  signupPassword:string;
 }
 
 export class Organizations {
