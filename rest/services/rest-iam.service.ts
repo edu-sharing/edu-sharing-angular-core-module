@@ -6,7 +6,7 @@ import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, GroupSignupDetails, Group, GroupSignupResult
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, GroupSignupDetails, Group, GroupSignupResult, UserSimple
 } from '../data-object';
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
@@ -96,12 +96,28 @@ export class RestIamService extends AbstractRestService {
         ]);
     return this.connector.post<GroupSignupResult>(query, null, this.connector.getRequestOptions());
   }
+  public confirmSignup = (group: string, user: string, repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/list/:user', repository,
+        [
+          [':group',group],
+          [':user',user]
+        ]);
+    return this.connector.put<void>(query, null, this.connector.getRequestOptions());
+  }
+  public rejectSignup = (group: string, user: string, repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/list/:user', repository,
+        [
+          [':group',group],
+          [':user',user]
+        ]);
+    return this.connector.delete<void>(query, this.connector.getRequestOptions());
+  }
   public getGroupSignupList = (group: string, repository = RestConstants.HOME_REPOSITORY) => {
     const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/list', repository,
         [
           [':group',group]
         ]);
-    return this.connector.get<IamUsers>(query, this.connector.getRequestOptions());
+    return this.connector.get<UserSimple[]>(query, this.connector.getRequestOptions());
   }
   public getSubgroupByType = (group : string,type: string,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/groups/:repository/:group/type/:type',repository,[
