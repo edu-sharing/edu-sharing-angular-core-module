@@ -1161,3 +1161,16 @@ export enum DeleteMode{
 export enum EventType {
   VIEW_MATERIAL_PLAY_MEDIA = 'VIEW_MATERIAL_PLAY_MEDIA'
 }
+
+export interface JobFieldDescription {
+  name: string;
+  type: string;
+  file: boolean;
+  description: string;
+}
+
+export interface JobDescription {
+  name: string;
+  description: string;
+  params: JobFieldDescription[];
+}

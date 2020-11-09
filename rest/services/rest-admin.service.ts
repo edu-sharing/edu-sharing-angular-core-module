@@ -6,7 +6,7 @@ import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {
     ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-    IamUsers, IamUser, UserProfile, UserCredentials, ServerUpdate, CacheInfo, NetworkRepositories, Application, NodeStatistics, Statistics
+    IamUsers, IamUser, UserProfile, UserCredentials, ServerUpdate, CacheInfo, NetworkRepositories, Application, NodeStatistics, Statistics, JobDescription
 } from "../data-object";
 import {Observer} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
@@ -19,6 +19,10 @@ export class RestAdminService extends AbstractRestService{
     public getJobs(){
         let query=this.connector.createUrl("admin/:version/jobs",null);
         return this.connector.get<any>(query,this.connector.getRequestOptions())
+    }
+    public getAllJobs(){
+        let query=this.connector.createUrl("admin/:version/jobs/all",null);
+        return this.connector.get<JobDescription[]>(query,this.connector.getRequestOptions())
     }
     public cancelJob(job:string){
         let query=this.connector.createUrl("admin/:version/jobs/:job",null,[[":job",job]]);
