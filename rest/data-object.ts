@@ -1164,9 +1164,11 @@ export enum EventType {
 
 export interface JobFieldDescription {
   name: string;
-  type: string;
+  type?: string;
   file: boolean;
-  description: string;
+  description?: string;
+  sampleValue?: string;
+  values?: JobFieldDescription[];
 }
 
 export interface JobDescription {
