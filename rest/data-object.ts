@@ -269,10 +269,12 @@ export interface Group {
 
 export interface IamGroups {
   groups: Group[];
+  pagination: Pagination;
 }
 export interface OrganizationOrganizations {
   canCreate: boolean;
   organizations: Group[];
+  pagination: Pagination;
 }
 export interface IamGroup {
   group: Group;
@@ -289,6 +291,7 @@ export interface AuthorityProfile {
 
 export interface IamAuthorities {
   authorities: AuthorityProfile[];
+  pagination: Pagination;
 }
 export interface UserProfile {
   firstName: string;
@@ -352,6 +355,7 @@ export interface IamPreferences {
 
 export interface IamUsers {
   users: User[];
+  pagination: Pagination;
 }
 
 export interface Access {
