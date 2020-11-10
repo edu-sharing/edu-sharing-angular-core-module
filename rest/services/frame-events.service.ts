@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 export interface EventListener {
   onEvent(event:string, data:any) : void;
 }
@@ -47,12 +47,15 @@ export class FrameEventsService {
   private eventSelfListeners :EventListener[]=[];
   private windows: Window[]=[];
 
-  constructor() {
-    let t=this;
-    window.addEventListener('message', (event:any)=>this.onEvent(event), false);
-      setInterval(()=>{
-        this.broadcastEvent(FrameEventsService.EVENT_CONTENT_HEIGHT,document.body.scrollHeight);
-      },250);
+  constructor(
+      private ngZone: NgZone
+  ) {
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('message', (event:any)=>this.onEvent(event), false);
+      setInterval(() => {
+        this.broadcastEvent(FrameEventsService.EVENT_CONTENT_HEIGHT, document.body.scrollHeight);
+      }, 250);
+    });
   }
 
   /**

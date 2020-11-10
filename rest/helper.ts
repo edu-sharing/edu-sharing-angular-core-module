@@ -229,4 +229,17 @@ export class Helper {
     static objectToArray(result: any) {
         return Object.keys(result).map((key) => result[key]);
     }
+
+    /**
+     * Searches all keys of both objects and returns a new object with all keys which are different in the second one
+     */
+    static getDifferentKeys(params1: any, params2: any) {
+        const result: any = {};
+        for(const key of Object.keys(params2)) {
+            if(params1?.[key] !== params2?.[key]) {
+                result[key] = params2[key];
+            }
+        }
+        return result;
+    }
 }
