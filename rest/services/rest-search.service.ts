@@ -11,7 +11,7 @@ import {MdsHelper} from '../mds-helper';
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{
-    static readonly MAX_QUERY_CONCAT_PARAMS = 50;
+    static readonly MAX_QUERY_CONCAT_PARAMS = 100;
     static convertCritierias(properties:any[],mdsWidgets:any){
         const criterias=[];
         properties=Helper.deepCopy(properties);
