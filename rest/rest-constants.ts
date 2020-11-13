@@ -308,6 +308,7 @@ export class RestConstants {
         new SortItem("USER",RestConstants.AUTHORITY_LASTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_EMAIL),
         new SortItem("USER",RestConstants.AUTHORITY_STATUS),
+        new SortItem("GROUP",RestConstants.AUTHORITY_DISPLAYNAME),
         new SortItem("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
     ];
   public static LICENSE_URLS={
