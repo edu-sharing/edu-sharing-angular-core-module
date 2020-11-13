@@ -245,6 +245,7 @@ export class RestConstants {
   public static AUTHORITY_LASTNAME="lastName";
   public static AUTHORITY_EMAIL="email";
   public static AUTHORITY_STATUS="status";
+  public static CM_ESPERSONSTATUS="espersonstatus";
   public static AUTHORITY_GROUPTYPE="groupType";
 
 
@@ -301,10 +302,12 @@ export class RestConstants {
         new SortItem("NODE",RestConstants.CM_ARCHIVED_DATE),
         new SortItem("NODE",RestConstants.LOM_PROP_GENERAL_KEYWORD),
         new SortItem("NODE",RestConstants.CCM_PROP_LICENSE),
-        new SortItem("USER",RestConstants.AUTHORITY_DISPLAYNAME),
+        // not supported by alfresco/solr atm
+        //new SortItem("USER",RestConstants.AUTHORITY_NAME),
         new SortItem("USER",RestConstants.AUTHORITY_FIRSTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_LASTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_EMAIL),
+        new SortItem("USER",RestConstants.AUTHORITY_STATUS),
         new SortItem("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
     ];
   public static LICENSE_URLS={
