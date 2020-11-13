@@ -118,6 +118,7 @@ export class RestConstants {
   public static CCM_PROP_IO_WWWURL = "ccm:wwwurl";
   public static CCM_PROP_LINKTYPE = "ccm:linktype";
   public static CCM_PROP_IO_ORIGINAL = "ccm:original";
+  public static CM_PROP_AUTHORITY_DISPLAYNAME="cm:authorityDisplayName";
   public static CCM_PROP_AUTHORITY_GROUPTYPE="ccm:groupType";
   public static CCM_PROP_TRACKING_VIEWS="ccm:tracking_views";
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
