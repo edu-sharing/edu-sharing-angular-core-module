@@ -123,9 +123,9 @@ export class RestAdminService extends AbstractRestService{
     let query=this.connector.createUrl("admin/:version/catalina",null);
     return this.connector.get<string[]>(query,this.connector.getRequestOptions());
   }
-  public importOAI(baseUrl:string,set:string,metadataPrefix:string,className:string,importerClassName:string,recordHandlerClassName:string,binaryHandlerClassName="",metadataset="",fileUrl="",ids="",forceUpdate="false",from="",until=""){
+  public importOAI(baseUrl:string,set:string,metadataPrefix:string,className:string,importerClassName:string,recordHandlerClassName:string,binaryHandlerClassName="",metadataset="",fileUrl="",ids="",forceUpdate="false",from="",until="",periodInDays=""){
     let query=this.connector.createUrl("admin/:version/import/oai?baseUrl=:baseUrl&set=:set&metadataPrefix=:metadataPrefix&className=:className&importerClassName=:importerClassName" +
-        "&recordHandlerClassName=:recordHandlerClassName&binaryHandlerClassName=:binaryHandlerClassName&metadataset=:metadataset&fileUrl=:fileUrl&oaiIds=:ids&forceUpdate=:forceUpdate&from=:from&until=:until",null,[
+        "&recordHandlerClassName=:recordHandlerClassName&binaryHandlerClassName=:binaryHandlerClassName&metadataset=:metadataset&fileUrl=:fileUrl&oaiIds=:ids&forceUpdate=:forceUpdate&from=:from&until=:until&periodInDays=:periodInDays",null,[
       [":baseUrl",baseUrl],
       [":set",set],
       [":metadataPrefix",metadataPrefix],
@@ -138,7 +138,8 @@ export class RestAdminService extends AbstractRestService{
       [":ids",ids],
       [":forceUpdate",forceUpdate],
       [":from",from],
-      [":until",until]
+      [":until",until],
+      [":periodInDays",periodInDays]
     ]);
     return this.connector.post(query,null,this.connector.getRequestOptions());
   }
