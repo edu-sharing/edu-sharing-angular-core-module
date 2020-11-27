@@ -3,9 +3,10 @@ import {ListItem} from "../ui/list-item";
 import {RestConnectorService} from "./services/rest-connector.service";
 import {Collection, Mds, Sort} from './data-object';
 import {TranslateService} from '@ngx-translate/core';
+import {MdsDefinition} from '../../common/ui/mds-editor/types';
 
 export class MdsHelper{
-    static getSortInfo(mdsSet: Mds, name: string): Sort{
+    static getSortInfo(mdsSet: Mds|MdsDefinition, name: string): Sort{
         if(mdsSet) {
             if (mdsSet.sorts) {
                 for (const list of mdsSet.sorts) {
@@ -114,13 +115,13 @@ export class MdsHelper{
     /**
      * Find a template by id in the given mds
      */
-    static findTemplate(mds: Mds, id: string) {
+    static findTemplate(mds: Mds|MdsDefinition, id: string) {
        return mds.views.find((v) => v.id === id);
     }
     /**
      * Returns all widgets used by the given template
      */
-    static getUsedWidgets(mds: Mds, template:string=null) {
+    static getUsedWidgets(mds: Mds|MdsDefinition, template:string=null) {
         const used: any = [];
         const templateData = MdsHelper.findTemplate(mds, template);
         for(const w of mds.widgets) {
