@@ -62,12 +62,11 @@ export class RestMediacenterService extends AbstractRestService {
   }*/
 
   public getLicensedNodes(mediacenter:string, criterias: any[], repository = RestConstants.HOME_REPOSITORY,
-                          facettes : string[] = [],
                           request : any = null) {
-        const query=this.connector.createUrlNoEscape('mediacenter/:version/mediacenter/:repository/:mediacenter/licenses?:searchword&:facettes&:request',repository,
+        const query=this.connector.createUrlNoEscape('mediacenter/:version/mediacenter/:repository/:mediacenter/licenses?:request',repository,
             [
                 [':mediacenter',encodeURIComponent(mediacenter)],
-                [':facettes',RestHelper.getQueryStringForList('facettes',facettes)],
+                //[':facettes',RestHelper.getQueryStringForList('facettes',facettes)],
                 [':request',this.connector.createRequestString(request)]
             ]);
         return this.connector.post<NodeList>(query,JSON.stringify({

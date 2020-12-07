@@ -12,6 +12,7 @@ import {Values} from '../../../common/ui/mds-editor/types';
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{
+    static readonly MAX_QUERY_CONCAT_PARAMS = 100;
     static convertCritierias(properties:Values,mdsWidgets:any){
         const criterias=[];
         properties=Helper.deepCopy(properties);
@@ -19,8 +20,13 @@ export class RestSearchService extends AbstractRestService{
             let widget=MdsHelper.getWidget(property,null,mdsWidgets);
             if(widget && widget.type=='multivalueTree'){
                 let attach=RestSearchService.unfoldTreeChilds(properties[property],widget);
-                if(attach)
-                    properties[property]=properties[property].concat(attach);
+                if(attach) {
+                    if(attach.length > RestSearchService.MAX_QUERY_CONCAT_PARAMS){
+                        console.info('param ' + property + ' has too many unfold childs (' + attach.length+ '), falling back to basic prefix-based search');
+                    } else {
+                        properties[property] = properties[property].concat(attach);
+                    }
+                }
             }
             if(properties[property] && properties[property].length)
                 criterias.push({

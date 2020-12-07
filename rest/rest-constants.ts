@@ -124,6 +124,7 @@ export class RestConstants {
   public static CCM_PROP_LINKTYPE = "ccm:linktype";
   public static CCM_PROP_IO_ORIGINAL = "ccm:original";
   public static CCM_PROP_MAP_REF_TARGET = "ccm:map_ref_target";
+  public static CM_PROP_AUTHORITY_DISPLAYNAME="cm:authorityDisplayName";
   public static CCM_PROP_AUTHORITY_GROUPTYPE="ccm:groupType";
   public static CCM_PROP_TRACKING_VIEWS="ccm:tracking_views";
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
@@ -208,6 +209,7 @@ export class RestConstants {
   public static CCM_PROP_TOOL_CATEGORY= 'ccm:tool_category';
   public static CCM_PROP_TOOL_PRODUCER= 'ccm:tool_producer';
   public static CCM_PROP_TOOL_INSTANCE_REF= 'ccm:tool_instance_ref';
+  public static CCM_PROP_IO_EDITORIAL_STATE = "ccm:editorial_state";
 
   public static CCM_PROP_IO_REF_TITLE = "ccm:ref_title";
   public static CCM_PROP_IO_REF_DESCRIPTION = "ccm:ref_description";
@@ -254,6 +256,7 @@ export class RestConstants {
   public static AUTHORITY_LASTNAME="lastName";
   public static AUTHORITY_EMAIL="email";
   public static AUTHORITY_STATUS="status";
+  public static CM_ESPERSONSTATUS="espersonstatus";
   public static AUTHORITY_GROUPTYPE="groupType";
 
 
@@ -316,10 +319,14 @@ export class RestConstants {
         new SortItem("NODE",RestConstants.CM_ARCHIVED_DATE),
         new SortItem("NODE",RestConstants.LOM_PROP_GENERAL_KEYWORD),
         new SortItem("NODE",RestConstants.CCM_PROP_LICENSE),
-        new SortItem("USER",RestConstants.AUTHORITY_DISPLAYNAME),
+        new SortItem("NODE",RestConstants.CCM_PROP_IO_EDITORIAL_STATE),
+        // not supported by alfresco/solr atm
+        //new SortItem("USER",RestConstants.AUTHORITY_NAME),
         new SortItem("USER",RestConstants.AUTHORITY_FIRSTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_LASTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_EMAIL),
+        new SortItem("USER",RestConstants.AUTHORITY_STATUS),
+        new SortItem("GROUP",RestConstants.AUTHORITY_DISPLAYNAME),
         new SortItem("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
     ];
   public static LICENSE_URLS={
