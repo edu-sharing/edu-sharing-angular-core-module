@@ -3,10 +3,11 @@ import {Observable, Observer} from 'rxjs';
 import 'rxjs/add/operator/do';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestConstants} from "../rest-constants";
-import {CollectionReference, Connector, ConnectorList, Filetype, Node} from "../data-object";
+import {CollectionReference, Connector, ConnectorList, Filetype, Node, NodesRightMode} from "../data-object";
 import {RestNodeService} from "./rest-node.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {UIService} from "./ui.service";
+import {NodeHelper} from '../../../core-ui-module/node-helper';
 
 @Injectable()
 export class RestConnectorsService extends AbstractRestService{
@@ -36,8 +37,9 @@ export class RestConnectorsService extends AbstractRestService{
             // do not allow opening on a desktop-only connector on mobile
             if(connector.onlyDesktop && this.ui.isMobile())
                 continue;
-            if(!connector.hasViewMode && access.indexOf(RestConstants.ACCESS_WRITE)==-1)
+            if(!connector.hasViewMode && NodeHelper.getNodesRight([node], RestConstants.ACCESS_WRITE, NodesRightMode.Original)) {
                 continue;
+            }
             if(RestConnectorsService.getFiletype(node,connector))
                 return connector;
         }
