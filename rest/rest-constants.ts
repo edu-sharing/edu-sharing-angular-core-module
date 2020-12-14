@@ -327,6 +327,7 @@ export class RestConstants {
   }
 
   public static DEFAULT_QUERY_NAME="ngsearch";
+  public static QUERY_NAME_COLLECTIONS="collections";
 
   public static HTTP_UNAUTHORIZED = 401;
   public static HTTP_FORBIDDEN = 403;
