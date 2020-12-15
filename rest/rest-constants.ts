@@ -299,6 +299,7 @@ export class RestConstants {
   public static TOOLPERMISSION_RATE="TOOLPERMISSION_RATE";
   public static TOOLPERMISSION_SIGNUP_GROUP="TOOLPERMISSION_SIGNUP_GROUP";
 
+  public static TOOLPERMISSION_CONTROL_RESTRICTED_ACCESS="TOOLPERMISSION_CONTROL_RESTRICTED_ACCESS";
   public static SHARE_LINK = "LINK";
   public static SHARE_EXPIRY_UNLIMITED = -1;
 
@@ -343,6 +344,7 @@ export class RestConstants {
   }
 
   public static DEFAULT_QUERY_NAME="ngsearch";
+  public static QUERY_NAME_COLLECTIONS="collections";
 
   public static HTTP_UNAUTHORIZED = 401;
   public static HTTP_FORBIDDEN = 403;
