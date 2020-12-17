@@ -4,6 +4,7 @@
  */
 
 import {ListItem} from "../ui/list-item";
+import {VCard} from '../ui/VCard';
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -1179,4 +1180,8 @@ export interface JobDescription {
   name: string;
   description: string;
   params: JobFieldDescription[];
+}
+export class VCardResult {
+  property: string;
+  vcard: VCard;
 }

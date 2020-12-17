@@ -4,11 +4,13 @@ import { Observable } from 'rxjs/Observable';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
-import { NodeRef, Node, NodeWrapper, NodePermissions, LocalPermissions, NodeVersions, NodeVersion, NodeList} from "../data-object";
+import {NodeRef, Node, NodeWrapper, NodePermissions, LocalPermissions, NodeVersions, NodeVersion, NodeList, VCardResult} from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
 import {Helper} from "../helper";
 import {MdsHelper} from '../mds-helper';
 import {Values} from '../../../common/ui/mds-editor/types';
+import {map} from 'rxjs/operators';
+import {VCard} from '../../ui/VCard';
 
 @Injectable()
 export class RestSearchService extends AbstractRestService{
@@ -114,6 +116,22 @@ export class RestSearchService extends AbstractRestService{
             [":request",this.connector.createRequestString(request)]
         ]);
         return this.connector.post<NodeList>(q,null,this.connector.getRequestOptions());
+    }
+
+    searchContributors(searchWord: string,fields: string[] = [],
+                       contributorProperties: string[] = [],
+                       repository = RestConstants.HOME_REPOSITORY): Observable<VCardResult[]> {
+        let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/contributor?searchWord=:searchWord&:fields&:contributorProperties',repository,[
+            [":searchWord", encodeURIComponent(searchWord)],
+            [":fields", RestHelper.getQueryString("fields", fields)],
+            [":contributorProperties",RestHelper.getQueryString("contributorProperties", fields)],
+        ]);
+        return this.connector.get<any>(q,this.connector.getRequestOptions()).pipe(
+            map((result) => {
+                result.vcard = new VCard(result.vcard);
+                return result;
+            })
+        );
     }
 
     getRelevant(request: any=null, repository = RestConstants.HOME_REPOSITORY) {

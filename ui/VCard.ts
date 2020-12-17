@@ -68,6 +68,12 @@ export class VCard {
   public set gnduri(data:string) {
     this.set('X-GND-URI',data);
   }
+  public set ror(data:string) {
+    this.set('X-ROR',data);
+  }
+  public set wikidata(data:string) {
+    this.set('X-Wikidata',data);
+  }
   public set street(data:string) {
     this.set('ADR;TYPE=intl,postal,parcel,work',data,2);
   }
@@ -97,6 +103,12 @@ export class VCard {
   }
   public get gnduri() {
     return this.get('X-GND-URI');
+  }
+  public get ror() {
+    return this.get('X-ROR');
+  }
+  public get wikidata() {
+    return this.get('X-Wikidata');
   }
   public get title() {
     return this.get('TITLE');
