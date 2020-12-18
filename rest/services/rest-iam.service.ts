@@ -11,6 +11,7 @@ import {
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
 import {VCard} from '../../ui/VCard';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class RestIamService extends AbstractRestService {
@@ -35,6 +36,10 @@ export class RestIamService extends AbstractRestService {
       vcard.givenname = this.getCurrentUser().profile.firstName;
       vcard.surname = this.getCurrentUser().profile.lastName;
       vcard.email = this.getCurrentUser().profile.email;
+      if(this.getCurrentUser().profile.vcard) {
+        vcard.orcid = this.getCurrentUser().profile.vcard.orcid;
+        vcard.gnduri = this.getCurrentUser().profile.vcard.gnduri;
+      }
     }
     vcard.uid = this.getCurrentUser() &&
           this.getCurrentUser().properties &&
@@ -197,7 +202,13 @@ export class RestIamService extends AbstractRestService {
   }
   public getUser = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user',repository,[[':user',user]]);
-    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).do((data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data.person) : null);
+    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).
+        map((u) => {
+          u.person.profile.vcard = new VCard((u.person.profile.vcard as unknown as string));
+          return u;
+        }).do(
+          (data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data.person) : null
+        );
   }
   public getUserGroups = (user=RestConstants.ME,pattern='*',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
       const query=this.connector.createUrlNoEscape('iam/:version/people/:repository/:user/memberships?pattern=:pattern&:request',repository,[
@@ -235,6 +246,7 @@ export class RestIamService extends AbstractRestService {
   }
   public editUser = (user : string,profile : UserProfile,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/profile',repository,[[':user',user]]);
+    (profile.vcard as unknown) = profile.vcard.toVCardString();
     return this.connector.put(query,JSON.stringify(profile),this.connector.getRequestOptions());
   }
   public editUserCredentials = (user : string,credentials : UserCredentials,repository=RestConstants.HOME_REPOSITORY) => {

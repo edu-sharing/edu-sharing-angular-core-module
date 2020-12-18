@@ -306,6 +306,7 @@ export interface UserProfile {
   about: string;
   skills: string[];
   types: string[];
+  vcard: VCard;
 }
 export interface UserStatus {
   status: string;
