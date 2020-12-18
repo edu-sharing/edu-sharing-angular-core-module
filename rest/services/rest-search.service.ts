@@ -118,19 +118,23 @@ export class RestSearchService extends AbstractRestService{
         return this.connector.post<NodeList>(q,null,this.connector.getRequestOptions());
     }
 
-    searchContributors(searchWord: string,fields: string[] = [],
+    searchContributors(searchWord: string,
+                       contributorKind: 'PERSON' | 'ORGANIZATION',
+                       fields: string[] = [],
                        contributorProperties: string[] = [],
                        repository = RestConstants.HOME_REPOSITORY): Observable<VCardResult[]> {
-        let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/contributor?searchWord=:searchWord&:fields&:contributorProperties',repository,[
+        let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/contributor?searchWord=:searchWord&contributorKind=:contributorKind&:fields&:contributorProperties',repository,[
             [":searchWord", encodeURIComponent(searchWord)],
+            [":contributorKind", encodeURIComponent(contributorKind)],
             [":fields", RestHelper.getQueryString("fields", fields)],
             [":contributorProperties",RestHelper.getQueryString("contributorProperties", fields)],
         ]);
         return this.connector.get<any>(q,this.connector.getRequestOptions()).pipe(
-            map((result) => {
-                result.vcard = new VCard(result.vcard);
-                return result;
-            })
+            map((result) =>
+                result.map((r: any) => {
+                r.vcard = new VCard(r.vcard);
+                return r;
+            }))
         );
     }
 
