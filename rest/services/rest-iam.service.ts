@@ -6,7 +6,7 @@ import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, GroupSignupDetails, Group, GroupSignupResult, UserSimple
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, GroupSignupDetails, Group, GroupSignupResult, UserSimple, UserStats
 } from '../data-object';
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
@@ -209,6 +209,10 @@ export class RestIamService extends AbstractRestService {
         }).do(
           (data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data.person) : null
         );
+  }
+  public getUserStats = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('iam/:version/people/:repository/:user/stats',repository,[[':user',user]]);
+    return this.connector.get<UserStats>(query,this.connector.getRequestOptions());
   }
   public getUserGroups = (user=RestConstants.ME,pattern='*',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
       const query=this.connector.createUrlNoEscape('iam/:version/people/:repository/:user/memberships?pattern=:pattern&:request',repository,[
