@@ -169,6 +169,7 @@ export class RestConstants {
   public static STATUS_CODE_PREVIOUS_SESSION_REQUIRED = "PREVIOUS_SESSION_REQUIRED";
   public static STATUS_CODE_PREVIOUS_USER_WRONG = "PREVIOUS_USER_WRONG";
   public static STATUS_CODE_PASSWORD_EXPIRED = "PASSWORD_EXPIRED";
+  public static STATUS_CODE_PERSON_BLOCKED = "PERSON_BLOCKED";
 
   public static FILTER_FILES="files";
   public static FILTER_SPECIAL="special";
