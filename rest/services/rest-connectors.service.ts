@@ -7,8 +7,7 @@ import {CollectionReference, Connector, ConnectorList, Filetype, Node, NodesRigh
 import {RestNodeService} from "./rest-node.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {UIService} from "./ui.service";
-import {NodeHelper} from '../../../core-ui-module/node-helper';
-
+import {NodeHelperService} from '../../../core-ui-module/node-helper.service';
 @Injectable()
 export class RestConnectorsService extends AbstractRestService{
     private static MODE_NONE=0;
@@ -18,6 +17,7 @@ export class RestConnectorsService extends AbstractRestService{
     private currentList: ConnectorList;
     constructor(connector : RestConnectorService,
                 public nodeApi : RestNodeService,
+                private nodeHelper: NodeHelperService,
                 public ui : UIService) {
         super(connector);
     }
@@ -37,7 +37,7 @@ export class RestConnectorsService extends AbstractRestService{
             // do not allow opening on a desktop-only connector on mobile
             if(connector.onlyDesktop && this.ui.isMobile())
                 continue;
-            if(!connector.hasViewMode && NodeHelper.getNodesRight([node], RestConstants.ACCESS_WRITE, NodesRightMode.Original)) {
+            if(!connector.hasViewMode && this.nodeHelper.getNodesRight([node], RestConstants.ACCESS_WRITE, NodesRightMode.Original)) {
                 continue;
             }
             if(RestConnectorsService.getFiletype(node,connector))

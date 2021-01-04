@@ -134,7 +134,7 @@ export interface Service {
 }
 
 export interface Preview {
-  data: Blob; // image, may null, see @NodeHelper.appendImageData
+  data: Blob; // image, may null, see @this.nodeHelper.appendImageData
   url: string;
   isGenerated: boolean;
   isIcon: boolean;
