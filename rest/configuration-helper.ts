@@ -7,6 +7,7 @@ import {RestConstants} from "./rest-constants";
 import {RestHelper} from "./rest-helper";
 import {RestNetworkService} from "./services/rest-network.service";
 import {ConfigurationService} from "../core.module";
+import {NodePersonNamePipe} from '../../core-ui-module/pipes/node-person-name.pipe';
 
 export class ConfigurationHelper {
   public static getBanner(config: ConfigurationService){
@@ -25,35 +26,7 @@ export class ConfigurationHelper {
     return hide.indexOf(button) == -1;
   }
   static getPersonWithConfigDisplayName(person: any, config: ConfigurationService) {
-    let field=config.instant("userDisplayName","fullName");
-    if(person==null)
-      return null;
-    if(field=="authorityName"){
-      if(person.authorityName==null)
-        field="fullName";
-      else
-        return person.authorityName;
-    }
-    if(field=="fullName"){
-      if(person.profile){
-        return ((person.profile.firstName ? person.profile.firstName : "")+" "+(person.profile.lastName ? person.profile.lastName : "")).trim();
-      }
-      return ((person.firstName ? person.firstName : "")+" "+(person.lastName ? person.lastName : "")).trim();
-    }
-    if(field=="firstName" || field=="lastName"){
-      if(person.profile){
-        return person.profile[field];
-      }
-      return person[field];
-    }
-    if(field=="email"){
-      if(person.profile && person.profile.email)
-        return person.profile.email;
-      if(person.email==null)
-        return person.mailbox;
-      return person.email;
-    }
-    return person[field];
+    return new NodePersonNamePipe(config).transform(person);
   }
   public static filterValidMds(repository:string|Repository,metadatasets: MdsInfo[], config: ConfigurationService) {
     let validMds=config.instant("availableMds");

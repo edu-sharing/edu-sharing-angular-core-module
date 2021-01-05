@@ -252,7 +252,7 @@ export class RestNodeService extends AbstractRestService{
       [
         [":node",node],
         [":email",email],
-      ]);;
+      ]);
     return this.connector.get<NodeShare[]>(query,this.connector.getRequestOptions())
   }
   public createNodeShare = (node : string,
