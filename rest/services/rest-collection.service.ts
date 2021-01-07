@@ -20,11 +20,12 @@ export class RestCollectionService extends AbstractRestService {
     const query=this.connector.createUrl('collection/:version/collections/:repository/:collection',repository,[[':collection',collection]]);
     return this.connector.delete(query,this.connector.getRequestOptions());
   }
-  public addNodeToCollection = (collection : string,node:string,sourceRepo:string,repository=RestConstants.HOME_REPOSITORY) => {
-    const query=this.connector.createUrl('collection/:version/collections/:repository/:collection/references/:node?sourceRepo=:sourceRepo',repository,[
+  public addNodeToCollection = (collection : string,node:string,sourceRepo:string, allowDuplicate = false,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrl('collection/:version/collections/:repository/:collection/references/:node?sourceRepo=:sourceRepo&allowDuplicate=:allowDuplicate',repository,[
       [':collection',collection],
       [':node',node],
-      [':sourceRepo',sourceRepo]
+      [':sourceRepo',sourceRepo],
+      [':allowDuplicate',''+allowDuplicate]
     ]);
     return this.connector.put<NodeWrapper>(query,null,this.connector.getRequestOptions());
   }
