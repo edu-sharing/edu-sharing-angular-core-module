@@ -132,11 +132,12 @@ export interface Service {
     interfaces: any[];
     statisticsInterface: string;
 }
-
+export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
 export interface Preview {
   data: Blob; // image, may null, see @this.nodeHelper.appendImageData
   url: string;
   isGenerated: boolean;
+  type: PreviewType;
   isIcon: boolean;
   width: number;
   height: number;
