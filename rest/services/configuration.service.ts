@@ -77,7 +77,7 @@ export class ConfigurationService {
       });
     });
   }
-  public instantInternal(name:string,defaultValue:any=null,object:any=this.data) : any{
+  public instantInternal<T>(name:string,defaultValue:T=null,object: any=this.data) : T{
     if(!object)
       return defaultValue;
     let parts=name.split(".");
@@ -100,7 +100,7 @@ export class ConfigurationService {
    * It is the responsibility of the caller to assure that the configuration is initialized! If you
    * are not sure, use `get` instead.
    */
-  public instant(name:string,defaultValue:any=null) : any {
+  public instant<T = string>(name:string,defaultValue:T=null) : T {
     return this.instantInternal(name, defaultValue);
   }
 }

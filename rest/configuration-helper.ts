@@ -8,10 +8,11 @@ import {RestHelper} from "./rest-helper";
 import {RestNetworkService} from "./services/rest-network.service";
 import {ConfigurationService} from "../core.module";
 import {NodePersonNamePipe} from '../../core-ui-module/pipes/node-person-name.pipe';
+import {ConfigOptionItem} from '../../core-ui-module/node-helper.service';
 
 export class ConfigurationHelper {
   public static getBanner(config: ConfigurationService){
-    let banner=config.instant("banner");
+    let banner=config.instant<any>("banner");
     if(!banner)
       banner={};
     if(!banner.components || !banner.components.length)
@@ -29,7 +30,7 @@ export class ConfigurationHelper {
     return new NodePersonNamePipe(config).transform(person);
   }
   public static filterValidMds(repository:string|Repository,metadatasets: MdsInfo[], config: ConfigurationService) {
-    let validMds=config.instant("availableMds");
+    let validMds=config.instant<any>("availableMds");
     if(validMds && validMds.length){
       for(let mds of validMds){
         if(!(mds.repository==repository || mds.repository==(repository as Repository).id || mds.repository==RestConstants.HOME_REPOSITORY && (repository == RestConstants.HOME_REPOSITORY ||(repository as Repository).isHomeRepo))) {
@@ -50,7 +51,7 @@ export class ConfigurationHelper {
     return metadatasets;
   }
   public static filterValidRepositories(repositories: Repository[], config: ConfigurationService,onlyLocal : boolean) {
-    let validRepositories = config.instant("availableRepositories");
+    let validRepositories = config.instant<string[]>("availableRepositories");
     if (validRepositories && validRepositories.length) {
       for (let i = 0; i < repositories.length; i++) {
         if(validRepositories.indexOf(RestConstants.HOME_REPOSITORY)!=-1 && repositories[i].isHomeRepo)
