@@ -189,6 +189,7 @@ export class RestConstants {
   public static SHARED_FILES='-shared_files-';
   public static MY_SHARED_FILES='-my_shared_files-';
   public static TO_ME_SHARED_FILES='-to_me_shared_files-';
+  public static TO_ME_SHARED_FILES_PERSONAL='-to_me_shared_files_personal-';
   public static INBOX = "-inbox-";
   public static WORKFLOW_RECEIVE='-workflow_receive-';
   public static NODES_FRONTPAGE='-frontpage-';

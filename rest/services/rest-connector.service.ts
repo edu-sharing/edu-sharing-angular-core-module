@@ -377,24 +377,42 @@ export class RestConnectorService {
 
                       if (!this._autoLogin) {
 
-                      }else if (error.status == RestConstants.HTTP_UNAUTHORIZED) {
-                          if(this.bridge.isRunningCordova() && options.headers['Authorization']){
-                            this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
-                              options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
-                              this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
-                                  observer.next(data);
-                                  observer.complete();
-                              },(error:any)=>{
-                                this.goToLogin();
-                                observer.error(error);
-                                observer.complete();
+                      }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || error.status === RestConstants.HTTP_FORBIDDEN) {
+                          let callback=() => {
+                              if(this.bridge.isRunningCordova() && options.headers['Authorization']){
+                                  this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
+                                      options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
+                                      this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
+                                          observer.next(data);
+                                          observer.complete();
+                                      },(error:any)=>{
+                                          this.goToLogin();
+                                          observer.error(error);
+                                          observer.complete();
+                                      });
+                                  });
+                                  return;
+                              }
+                              else {
+                                  this.goToLogin();
+                              }
+                          };
+                          if(error.status === RestConstants.HTTP_FORBIDDEN){
+                              this.isLoggedIn(true).subscribe((result) => {
+                                  if(result.statusCode !== RestConstants.STATUS_CODE_OK){
+                                      console.log('forbidden request and user session is lost -> go to login');
+                                      callback();
+                                  } else {
+                                      // login is okay, person has no access, throw error
+                                      observer.error(error);
+                                      observer.complete();
+                                  }
                               });
-                            });
-                            return;
+                              return;
+                          } else {
+                              callback();
                           }
-                          else {
-                              this.goToLogin();
-                          }
+
                       }
                       if (this.bridge.isRunningCordova() && error.status==0){
                           this.noConnectionDialog();
