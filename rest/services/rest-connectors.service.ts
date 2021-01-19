@@ -32,12 +32,13 @@ export class RestConnectorsService extends AbstractRestService{
         const connectors=this.getConnectors();
         if(connectors==null)
             return null;
+        console.log(connectors);
         for(const connector of connectors) {
             const access = (node as CollectionReference).accessOriginal || node.access;
             // do not allow opening on a desktop-only connector on mobile
             if(connector.onlyDesktop && this.ui.isMobile())
                 continue;
-            if(!connector.hasViewMode && NodeHelper.getNodesRight([node], RestConstants.ACCESS_WRITE, NodesRightMode.Original)) {
+            if(!connector.hasViewMode && !NodeHelper.getNodesRight([node], RestConstants.ACCESS_WRITE, NodesRightMode.Original)) {
                 continue;
             }
             if(RestConnectorsService.getFiletype(node,connector))
