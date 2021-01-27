@@ -145,7 +145,7 @@ export class RestConstants {
 
   public static CONTRIBUTOR_LIFECYCLE_PREFIX="ccm:lifecyclecontributer_";
   public static CONTRIBUTOR_METADATA_PREFIX="ccm:metadatacontributer_";
-  public static CONTRIBUTOR_ROLES_LIFECYCLE=["publisher","author","unknown","initiator","terminator","validator",
+  public static CONTRIBUTOR_ROLES_LIFECYCLE=["author","publisher","unknown","initiator","terminator","validator",
     "editor","graphical_designer","technical_implementer","content_provider",
     "educational_validator","script_writer","instructional_designer","subject_matter_expert"];
   public static CONTRIBUTOR_ROLES_METADATA=["creator","validator","provider"];
