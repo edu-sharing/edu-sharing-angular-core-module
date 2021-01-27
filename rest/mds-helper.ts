@@ -37,12 +37,12 @@ export class MdsHelper{
     if(!columns.length) {
         console.warn('mds does not define columns for ' + name + ', invalid configuration!');
         if (name == 'search' || name == 'collectionReferences') {
-            columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
+            columns.push(new ListItem("NODE", RestConstants.LOM_PROP_TITLE));
             columns.push(new ListItem("NODE", RestConstants.CM_MODIFIED_DATE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_LICENSE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
         } else if (name == 'mediacenterManaged') {
-            columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
+            columns.push(new ListItem("NODE", RestConstants.LOM_PROP_TITLE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCEID));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
         }
