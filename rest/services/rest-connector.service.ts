@@ -377,7 +377,8 @@ export class RestConnectorService {
 
                       if (!this._autoLogin) {
 
-                      }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || error.status === RestConstants.HTTP_FORBIDDEN) {
+                      }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || (
+                          error.status === RestConstants.HTTP_FORBIDDEN && ['POST','PUT','DELETE'].indexOf(method) !== -1)) {
                           let callback=() => {
                               if(this.bridge.isRunningCordova() && options.headers['Authorization']){
                                   this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
