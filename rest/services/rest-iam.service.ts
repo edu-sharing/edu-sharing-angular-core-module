@@ -24,7 +24,12 @@ export class RestIamService extends AbstractRestService {
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.storage.get(TemporaryStorageService.USER_INFO);
+    return this.storage.get(TemporaryStorageService.USER_INFO)?.person;
+  }
+
+  getCurrentUserAsync() : Promise<IamUser> {
+      return this.getCurrentUser() ? Promise.resolve(this.storage.get(TemporaryStorageService.USER_INFO)) :
+          this.getUser().toPromise();
   }
 
   /**
@@ -207,7 +212,7 @@ export class RestIamService extends AbstractRestService {
           u.person.profile.vcard = new VCard((u.person.profile.vcard as unknown as string));
           return u;
         }).do(
-          (data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data.person) : null
+          (data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data) : null
         );
   }
   public getUserStats = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
