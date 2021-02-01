@@ -1,3 +1,5 @@
+export type ListItemType = 'NODE' | 'COLLECTION' | 'ORG' | 'GROUP' | 'USER';
+
 /**
  * A list item info, which is basically a column
  * Example:
@@ -20,7 +22,7 @@ export class ListItem{
    * custom format string for date fields, may be null
    */
   public format:string;
-  constructor(public type : string,public name : string) {
+  constructor(public type : ListItemType,public name : string) {
   }
 
     static getCollectionDefaults() {

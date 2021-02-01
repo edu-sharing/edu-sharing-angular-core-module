@@ -124,6 +124,7 @@ export class RestConstants {
   public static CCM_PROP_LINKTYPE = "ccm:linktype";
   public static CCM_PROP_IO_ORIGINAL = "ccm:original";
   public static CCM_PROP_MAP_REF_TARGET = "ccm:map_ref_target";
+  public static CM_PROP_AUTHORITY_DISPLAYNAME="cm:authorityDisplayName";
   public static CCM_PROP_AUTHORITY_GROUPTYPE="ccm:groupType";
   public static CCM_PROP_TRACKING_VIEWS="ccm:tracking_views";
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
@@ -144,7 +145,7 @@ export class RestConstants {
 
   public static CONTRIBUTOR_LIFECYCLE_PREFIX="ccm:lifecyclecontributer_";
   public static CONTRIBUTOR_METADATA_PREFIX="ccm:metadatacontributer_";
-  public static CONTRIBUTOR_ROLES_LIFECYCLE=["publisher","author","unknown","initiator","terminator","validator",
+  public static CONTRIBUTOR_ROLES_LIFECYCLE=["author","publisher","unknown","initiator","terminator","validator",
     "editor","graphical_designer","technical_implementer","content_provider",
     "educational_validator","script_writer","instructional_designer","subject_matter_expert"];
   public static CONTRIBUTOR_ROLES_METADATA=["creator","validator","provider"];
@@ -176,6 +177,7 @@ export class RestConstants {
   public static STATUS_CODE_PREVIOUS_SESSION_REQUIRED = "PREVIOUS_SESSION_REQUIRED";
   public static STATUS_CODE_PREVIOUS_USER_WRONG = "PREVIOUS_USER_WRONG";
   public static STATUS_CODE_PASSWORD_EXPIRED = "PASSWORD_EXPIRED";
+  public static STATUS_CODE_PERSON_BLOCKED = "PERSON_BLOCKED";
 
   public static FILTER_FILES="files";
   public static FILTER_SPECIAL="special";
@@ -187,6 +189,7 @@ export class RestConstants {
   public static SHARED_FILES='-shared_files-';
   public static MY_SHARED_FILES='-my_shared_files-';
   public static TO_ME_SHARED_FILES='-to_me_shared_files-';
+  public static TO_ME_SHARED_FILES_PERSONAL='-to_me_shared_files_personal-';
   public static INBOX = "-inbox-";
   public static WORKFLOW_RECEIVE='-workflow_receive-';
   public static NODES_FRONTPAGE='-frontpage-';
@@ -208,6 +211,7 @@ export class RestConstants {
   public static CCM_PROP_TOOL_CATEGORY= 'ccm:tool_category';
   public static CCM_PROP_TOOL_PRODUCER= 'ccm:tool_producer';
   public static CCM_PROP_TOOL_INSTANCE_REF= 'ccm:tool_instance_ref';
+  public static CCM_PROP_IO_EDITORIAL_STATE = "ccm:editorial_state";
 
   public static CCM_PROP_IO_REF_TITLE = "ccm:ref_title";
   public static CCM_PROP_IO_REF_DESCRIPTION = "ccm:ref_description";
@@ -254,6 +258,7 @@ export class RestConstants {
   public static AUTHORITY_LASTNAME="lastName";
   public static AUTHORITY_EMAIL="email";
   public static AUTHORITY_STATUS="status";
+  public static CM_ESPERSONSTATUS="espersonstatus";
   public static AUTHORITY_GROUPTYPE="groupType";
 
 
@@ -296,6 +301,7 @@ export class RestConstants {
   public static TOOLPERMISSION_RATE="TOOLPERMISSION_RATE";
   public static TOOLPERMISSION_SIGNUP_GROUP="TOOLPERMISSION_SIGNUP_GROUP";
 
+  public static TOOLPERMISSION_CONTROL_RESTRICTED_ACCESS="TOOLPERMISSION_CONTROL_RESTRICTED_ACCESS";
   public static SHARE_LINK = "LINK";
   public static SHARE_EXPIRY_UNLIMITED = -1;
 
@@ -316,10 +322,14 @@ export class RestConstants {
         new SortItem("NODE",RestConstants.CM_ARCHIVED_DATE),
         new SortItem("NODE",RestConstants.LOM_PROP_GENERAL_KEYWORD),
         new SortItem("NODE",RestConstants.CCM_PROP_LICENSE),
-        new SortItem("USER",RestConstants.AUTHORITY_DISPLAYNAME),
+        new SortItem("NODE",RestConstants.CCM_PROP_IO_EDITORIAL_STATE),
+        // not supported by alfresco/solr atm
+        //new SortItem("USER",RestConstants.AUTHORITY_NAME),
         new SortItem("USER",RestConstants.AUTHORITY_FIRSTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_LASTNAME),
         new SortItem("USER",RestConstants.AUTHORITY_EMAIL),
+        new SortItem("USER",RestConstants.AUTHORITY_STATUS),
+        new SortItem("GROUP",RestConstants.AUTHORITY_DISPLAYNAME),
         new SortItem("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
     ];
   public static LICENSE_URLS={
@@ -336,6 +346,7 @@ export class RestConstants {
   }
 
   public static DEFAULT_QUERY_NAME="ngsearch";
+  public static QUERY_NAME_COLLECTIONS="collections";
 
   public static HTTP_UNAUTHORIZED = 401;
   public static HTTP_FORBIDDEN = 403;

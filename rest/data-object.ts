@@ -4,6 +4,7 @@
  */
 
 import {ListItem} from "../ui/list-item";
+import {VCard} from '../ui/VCard';
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -131,11 +132,12 @@ export interface Service {
     interfaces: any[];
     statisticsInterface: string;
 }
-
+export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
 export interface Preview {
-  data: Blob; // image, may null, see @NodeHelper.appendImageData
+  data: Blob; // image, may null, see @this.nodeHelper.appendImageData
   url: string;
   isGenerated: boolean;
+  type: PreviewType;
   isIcon: boolean;
   width: number;
   height: number;
@@ -272,10 +274,12 @@ export interface Group {
 
 export interface IamGroups {
   groups: Group[];
+  pagination: Pagination;
 }
 export interface OrganizationOrganizations {
   canCreate: boolean;
   organizations: Group[];
+  pagination: Pagination;
 }
 export interface IamGroup {
   group: Group;
@@ -292,6 +296,7 @@ export interface AuthorityProfile {
 
 export interface IamAuthorities {
   authorities: AuthorityProfile[];
+  pagination: Pagination;
 }
 export interface UserProfile {
   firstName: string;
@@ -302,6 +307,7 @@ export interface UserProfile {
   about: string;
   skills: string[];
   types: string[];
+  vcard: VCard;
 }
 export interface UserStatus {
   status: string;
@@ -325,7 +331,6 @@ export interface NodeRef {
 export interface User extends UserSimple {
   organizations: Organization[];
   properties: any;
-  stats: UserStats;
   homeFolder: NodeRef;
   sharedFolders: NodeRef[];
   quota: UserQuota;
@@ -353,6 +358,7 @@ export interface IamPreferences {
 
 export interface IamUsers {
   users: User[];
+  pagination: Pagination;
 }
 
 export interface Access {
@@ -775,7 +781,7 @@ export interface SearchList extends NodeList {
   ignored : string[];
 }
 export interface ParentList extends NodeList{
-  scope:string;
+  scope?: 'MY_FILES' | 'SHARED_FILES' | 'COLLECTION';
 }
 export interface NodeProperties{
   name:string;
@@ -1182,4 +1188,8 @@ export interface JobDescription {
   name: string;
   description: string;
   params: JobFieldDescription[];
+}
+export class VCardResult {
+  property: string;
+  vcard: VCard;
 }

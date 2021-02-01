@@ -2,30 +2,30 @@
  * Created by Torsten on 28.02.2017.
  */
 
-export class VCard{
+export class VCard {
   // was the vcard altered
   private isDirty=false;
   private lines:string[];
-  constructor(vcard:string=null){
-    if(vcard){
-      this.lines=vcard.split("\n");
-      //this.remove("FN");
-      if(!this.get("BEGIN")){
-        this.lines.splice(0,0,"BEGIN:VCARD");
+  constructor(vcard:string=null) {
+    if(vcard) {
+      this.lines=vcard.split('\n');
+      // this.remove("FN");
+      if(!this.get('BEGIN')) {
+        this.lines.splice(0,0,'BEGIN:VCARD');
       }
-      if(!this.get("VERSION")){
-        this.lines.splice(1,0,"VERSION:3.0");
+      if(!this.get('VERSION')) {
+        this.lines.splice(1,0,'VERSION:3.0');
       }
-      if(!this.get("END")){
-        this.lines.splice(this.lines.length,0,"END:VCARD");
+      if(!this.get('END')) {
+        this.lines.splice(this.lines.length,0,'END:VCARD');
       }
       this.isDirty=true;
     }
     else {
       this.lines = [];
-      this.lines.push("BEGIN:VCARD");
-      this.lines.push("VERSION:3.0");
-      this.lines.push("END:VCARD");
+      this.lines.push('BEGIN:VCARD');
+      this.lines.push('VERSION:3.0');
+      this.lines.push('END:VCARD');
       this.isDirty=false;
     }
   }
@@ -34,104 +34,128 @@ export class VCard{
    * returns true if this vcard seems to have valid data
    * @param {string} data
    */
-  public isValid(){
+  public isValid() {
     // return this.lines!=null && this.lines.length;
     return this.givenname || this.surname || this.org || this.street || this.city || this.zip || this.country;
   }
-  public set givenname(data:string){
-    this.set("Givenname",data);
+  public set givenname(data:string) {
+    this.set('Givenname',data);
   }
-  public set surname(data:string){
-    this.set("Surname",data);
+  public set surname(data:string) {
+    this.set('Surname',data);
   }
-  public set title(data:string){
-    this.set("TITLE",data);
+  public set title(data:string) {
+    this.set('TITLE',data);
   }
-  public set org(data:string){
-    this.set("ORG",data);
+  public set org(data:string) {
+    this.set('ORG',data);
   }
-  public set orgPhone(data:string){
-    this.set("TEL;TYPE=WORK,VOICE",data);
+  public set orgPhone(data:string) {
+    this.set('TEL;TYPE=WORK,VOICE',data);
   }
-  public set url(data:string){
-    this.set("URL",data);
+  public set url(data:string) {
+    this.set('URL',data);
   }
-  public set email(data:string){
-    this.set("EMAIL;TYPE=PREF,INTERNET",data);
+  public set email(data:string) {
+    this.set('EMAIL;TYPE=PREF,INTERNET',data);
   }
-  public set uid(data:string){
-    this.set("UID:urn:uuid",data);
+  public set uid(data:string) {
+    this.set('UID:urn:uuid',data);
   }
-  public set street(data:string){
-    this.set("ADR;TYPE=intl,postal,parcel,work",data,2);
+  public set orcid(data:string) {
+    this.set('X-ORCID',data);
   }
-  public set city(data:string){
-    this.set("ADR;TYPE=intl,postal,parcel,work",data,3);
+  public set gnduri(data:string) {
+    this.set('X-GND-URI',data);
   }
-  public set region(data:string){
-    this.set("ADR;TYPE=intl,postal,parcel,work",data,4);
+  public set ror(data:string) {
+    this.set('X-ROR',data);
   }
-  public set zip(data:string){
-    this.set("ADR;TYPE=intl,postal,parcel,work",data,5);
+  public set wikidata(data:string) {
+    this.set('X-Wikidata',data);
   }
-  public set country(data:string){
-    this.set("ADR;TYPE=intl,postal,parcel,work",data,6);
+  public set street(data:string) {
+    this.set('ADR;TYPE=intl,postal,parcel,work',data,2);
   }
-  public set contributeDate(data:string){
-    this.set("X-ES-LOM-CONTRIBUTE-DATE",data);
+  public set city(data:string) {
+    this.set('ADR;TYPE=intl,postal,parcel,work',data,3);
   }
-  public get givenname(){
-    return this.get("Givenname");
+  public set region(data:string) {
+    this.set('ADR;TYPE=intl,postal,parcel,work',data,4);
   }
-  public get surname(){
-    return this.get("Surname");
+  public set zip(data:string) {
+    this.set('ADR;TYPE=intl,postal,parcel,work',data,5);
   }
-  public get title(){
-    return this.get("TITLE");
+  public set country(data:string) {
+    this.set('ADR;TYPE=intl,postal,parcel,work',data,6);
   }
-  public get org(){
-    return this.get("ORG");
+  public set contributeDate(data:string) {
+    this.set('X-ES-LOM-CONTRIBUTE-DATE',data);
   }
-  public get contributeDate(){
-    let string=this.get("X-ES-LOM-CONTRIBUTE-DATE");
+  public get givenname() {
+    return this.get('Givenname');
+  }
+  public get surname() {
+    return this.get('Surname');
+  }
+  public get orcid() {
+    return this.get('X-ORCID');
+  }
+  public get gnduri() {
+    return this.get('X-GND-URI');
+  }
+  public get ror() {
+    return this.get('X-ROR');
+  }
+  public get wikidata() {
+    return this.get('X-Wikidata');
+  }
+  public get title() {
+    return this.get('TITLE');
+  }
+  public get org() {
+    return this.get('ORG');
+  }
+  public get contributeDate() {
+    const string=this.get('X-ES-LOM-CONTRIBUTE-DATE');
     if(string)
-      return string.split("T")[0];
+      return string.split('T')[0];
     return string;
   }
-  public get url(){
-    return this.get("URL");
+  public get url() {
+    return this.get('URL');
   }
-  public get orgPhone(){
-    return this.get("TEL;TYPE=WORK,VOICE");
+  public get orgPhone() {
+    return this.get('TEL;TYPE=WORK,VOICE');
   }
-  public get email(){
-    return this.get("EMAIL;TYPE=PREF,INTERNET");
+  public get email() {
+    return this.get('EMAIL;TYPE=PREF,INTERNET');
   }
-  public get uid(){
-    return this.get("UID:urn:uuid");
+  public get uid() {
+    return this.get('UID:urn:uuid');
   }
-  public get street(){
-    return this.get("ADR;TYPE=intl,postal,parcel,work",2);
+  public get street() {
+    return this.get('ADR;TYPE=intl,postal,parcel,work',2);
   }
-  public get city(){
-    return this.get("ADR;TYPE=intl,postal,parcel,work",3);
+  public get city() {
+    return this.get('ADR;TYPE=intl,postal,parcel,work',3);
   }
-  public get region(){
-    return this.get("ADR;TYPE=intl,postal,parcel,work",4);
+  public get region() {
+    return this.get('ADR;TYPE=intl,postal,parcel,work',4);
   }
-  public get zip(){
-    return this.get("ADR;TYPE=intl,postal,parcel,work",5);
+  public get zip() {
+    return this.get('ADR;TYPE=intl,postal,parcel,work',5);
   }
-  public get country(){
-    return this.get("ADR;TYPE=intl,postal,parcel,work",6);
+  public get country() {
+    return this.get('ADR;TYPE=intl,postal,parcel,work',6);
   }
-  public toVCardString(){
+  public toVCardString() {
     // unaltered -> so return a null value
     if(!this.isDirty)
       return null;
-    if(this.get("Givenname") || this.get("Surname"))
-      this.set("FN",this.get("Givenname",-1,"")+" "+this.get("Surname",-1,""));
-    return this.lines.join("\n");
+    if(this.get('Givenname') || this.get('Surname'))
+      this.set('FN',this.get('Givenname',-1,'')+' '+this.get('Surname',-1,''));
+    return this.lines.join('\n');
   }
   public getDisplayName() {
     const string = (this.givenname ?? '') + ' ' + (this.surname ?? '');
@@ -140,58 +164,58 @@ export class VCard{
     }
     return string;
   }
-  public get(key:string,splitIndex=-1,fallback:string=null){
-    if(key=="Surname"){
+  public get(key:string,splitIndex=-1,fallback:string=null) {
+    if(key=='Surname') {
       splitIndex=0;
-      key="N";
+      key='N';
     }
-    if(key=="Givenname"){
+    if(key=='Givenname') {
       splitIndex=1;
-      key="N";
+      key='N';
     }
-      for(let line of this.lines){
+      for(let line of this.lines) {
       line=line.trim();
-      if(line.startsWith(key+":")){
-        let value=line.substring(key.length+1).trim();
+      if(line.startsWith(key+':')) {
+        const value=line.substring(key.length+1).trim();
         if(splitIndex!=-1)
-          return this.deEscape(value.split(";")[splitIndex]);
+          return this.deEscape(value.split(';')[splitIndex]);
         return this.deEscape(value);
       }
     }
     return fallback;
   }
-  public remove(key:string){
-    for(let i=0;i<this.lines.length;i++){
-      if(this.lines[i].startsWith(key+":")) {
+  public remove(key:string) {
+    for(let i=0;i<this.lines.length;i++) {
+      if(this.lines[i].startsWith(key+':')) {
         this.lines.splice(i, 1);
         return true;
       }
     }
     return false;
   }
-  public set(key:string,value:string,splitIndex=-1){
+  public set(key:string,value:string,splitIndex=-1) {
     // no value and empty vcard -> do nothing
     if(!this.isDirty && !value)
       return;
-    if(key=="Surname"){
+    if(key=='Surname') {
       splitIndex=0;
-      key="N";
+      key='N';
     }
-    if(key=="Givenname"){
+    if(key=='Givenname') {
       splitIndex=1;
-      key="N";
+      key='N';
     }
     let i=0;
-    for(let line of this.lines){
+    for(let line of this.lines) {
       line=line.trim();
-      if(line.startsWith(key+":")){
+      if(line.startsWith(key+':')) {
         let lineValue=line.substring(key.length+1).trim();
         if(splitIndex!=-1) {
-          let split=lineValue.split(";");
+          const split=lineValue.split(';');
           split[splitIndex]=this.escape(value);
-          lineValue=split.join(";");
+          lineValue=split.join(';');
         }
-        else{
+        else {
           lineValue=this.escape(value);
         }
         this.lines[i]=line.substring(0,key.length+1)+lineValue;
@@ -200,34 +224,34 @@ export class VCard{
       i++;
     }
     let lineValue=this.escape(value);
-    if(splitIndex>=0){
-      lineValue="";
+    if(splitIndex>=0) {
+      lineValue='';
       while(lineValue.length<splitIndex)
-        lineValue+=";"
+        lineValue+=';'
       lineValue+=this.escape(value);
     }
-    this.lines.splice(this.getNextLine(),0,key+":"+lineValue);
+    this.lines.splice(this.getNextLine(),0,key+':'+lineValue);
     this.isDirty=true;
   }
 
   private getNextLine() {
     let i=0;
-    for(let line of this.lines){
-      if(line.trim()=="END:VCARD")
+    for(const line of this.lines) {
+      if(line.trim()=='END:VCARD')
         return i-1;
       i++;
     }
     return this.lines.length-1;
   }
-  private deEscape(value:string){
+  private deEscape(value:string) {
     if(value==null)
-      return "";
-    return value.replace('\\\\','\\').replace("\\,",",");
+      return '';
+    return value.replace('\\\\','\\').replace('\\,',',');
   }
   private escape(value: string) {
     if(value==null)
-      return "";
-    return value.replace('\\','\\\\').replace(",","\\,").replace(";"," ");
+      return '';
+    return value.replace('\\','\\\\').replace(',','\\,').replace(';',' ');
   }
 
   public copy() {

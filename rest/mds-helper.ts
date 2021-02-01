@@ -3,9 +3,11 @@ import {ListItem} from "../ui/list-item";
 import {RestConnectorService} from "./services/rest-connector.service";
 import {Collection, Mds, Sort} from './data-object';
 import {TranslateService} from '@ngx-translate/core';
+import {MdsDefinition, MdsWidget, MdsWidgetValue, Values} from '../../common/ui/mds-editor/types';
+import {Widget} from '../../common/ui/mds-editor/mds-editor-instance.service';
 
 export class MdsHelper{
-    static getSortInfo(mdsSet: Mds, name: string): Sort{
+    static getSortInfo(mdsSet: Mds|MdsDefinition, name: string): Sort{
         if(mdsSet) {
             if (mdsSet.sorts) {
                 for (const list of mdsSet.sorts) {
@@ -35,12 +37,12 @@ export class MdsHelper{
     if(!columns.length) {
         console.warn('mds does not define columns for ' + name + ', invalid configuration!');
         if (name == 'search' || name == 'collectionReferences') {
-            columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
+            columns.push(new ListItem("NODE", RestConstants.LOM_PROP_TITLE));
             columns.push(new ListItem("NODE", RestConstants.CM_MODIFIED_DATE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_LICENSE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
         } else if (name == 'mediacenterManaged') {
-            columns.push(new ListItem("NODE", RestConstants.CM_PROP_TITLE));
+            columns.push(new ListItem("NODE", RestConstants.LOM_PROP_TITLE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCEID));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
         }
@@ -61,7 +63,7 @@ export class MdsHelper{
      * @param template
      * @param widgets
      */
-    static getWidget(cid: string,template:string=null,widgets:any) {
+    static getWidget(cid: string,template:string=null,widgets:MdsWidget[]) {
         if(widgets == null) {
             console.warn('Could not iterate widget '+cid+': no widgets data provided');
             return null;
@@ -114,13 +116,13 @@ export class MdsHelper{
     /**
      * Find a template by id in the given mds
      */
-    static findTemplate(mds: Mds, id: string) {
+    static findTemplate(mds: Mds|MdsDefinition, id: string) {
        return mds.views.find((v) => v.id === id);
     }
     /**
      * Returns all widgets used by the given template
      */
-    static getUsedWidgets(mds: Mds, template:string=null) {
+    static getUsedWidgets(mds: Mds|MdsDefinition, template:string=null) {
         const used: any = [];
         const templateData = MdsHelper.findTemplate(mds, template);
         for(const w of mds.widgets) {

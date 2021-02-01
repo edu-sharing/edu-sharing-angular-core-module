@@ -7,10 +7,12 @@ import {RestConstants} from "./rest-constants";
 import {RestHelper} from "./rest-helper";
 import {RestNetworkService} from "./services/rest-network.service";
 import {ConfigurationService} from "../core.module";
+import {NodePersonNamePipe} from '../../core-ui-module/pipes/node-person-name.pipe';
+import {ConfigOptionItem} from '../../core-ui-module/node-helper.service';
 
 export class ConfigurationHelper {
   public static getBanner(config: ConfigurationService){
-    let banner=config.instant("banner");
+    let banner=config.instant<any>("banner");
     if(!banner)
       banner={};
     if(!banner.components || !banner.components.length)
@@ -25,38 +27,10 @@ export class ConfigurationHelper {
     return hide.indexOf(button) == -1;
   }
   static getPersonWithConfigDisplayName(person: any, config: ConfigurationService) {
-    let field=config.instant("userDisplayName","fullName");
-    if(person==null)
-      return null;
-    if(field=="authorityName"){
-      if(person.authorityName==null)
-        field="fullName";
-      else
-        return person.authorityName;
-    }
-    if(field=="fullName"){
-      if(person.profile){
-        return ((person.profile.firstName ? person.profile.firstName : "")+" "+(person.profile.lastName ? person.profile.lastName : "")).trim();
-      }
-      return ((person.firstName ? person.firstName : "")+" "+(person.lastName ? person.lastName : "")).trim();
-    }
-    if(field=="firstName" || field=="lastName"){
-      if(person.profile){
-        return person.profile[field];
-      }
-      return person[field];
-    }
-    if(field=="email"){
-      if(person.profile && person.profile.email)
-        return person.profile.email;
-      if(person.email==null)
-        return person.mailbox;
-      return person.email;
-    }
-    return person[field];
+    return new NodePersonNamePipe(config).transform(person);
   }
   public static filterValidMds(repository:string|Repository,metadatasets: MdsInfo[], config: ConfigurationService) {
-    let validMds=config.instant("availableMds");
+    let validMds=config.instant<any>("availableMds");
     if(validMds && validMds.length){
       for(let mds of validMds){
         if(!(mds.repository==repository || mds.repository==(repository as Repository).id || mds.repository==RestConstants.HOME_REPOSITORY && (repository == RestConstants.HOME_REPOSITORY ||(repository as Repository).isHomeRepo))) {
@@ -77,7 +51,7 @@ export class ConfigurationHelper {
     return metadatasets;
   }
   public static filterValidRepositories(repositories: Repository[], config: ConfigurationService,onlyLocal : boolean) {
-    let validRepositories = config.instant("availableRepositories");
+    let validRepositories = config.instant<string[]>("availableRepositories");
     if (validRepositories && validRepositories.length) {
       for (let i = 0; i < repositories.length; i++) {
         if(validRepositories.indexOf(RestConstants.HOME_REPOSITORY)!=-1 && repositories[i].isHomeRepo)
