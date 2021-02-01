@@ -6,7 +6,7 @@ import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, ProfileSettings
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User,ProfileSettings, GroupSignupDetails, Group, GroupSignupResult, UserSimple
 } from '../data-object';
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
@@ -42,20 +42,22 @@ export class RestIamService extends AbstractRestService {
           this.getCurrentUser().properties[RestConstants.CM_PROP_ESUID][0] : null;
     return vcard;
   }
-  public searchAuthorities = (pattern='*',global=true,groupType:string='',request : any = null,repository=RestConstants.HOME_REPOSITORY) => {
-    const query=this.connector.createUrlNoEscape('iam/:version/authorities/:repository?pattern=:pattern&global=:global&groupType=:groupType&:request',repository,[
+  public searchAuthorities = (pattern='*',global=true,groupType:string='', signupMethod:string = '',request : any = null,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrlNoEscape('iam/:version/authorities/:repository?pattern=:pattern&global=:global&groupType=:groupType&signupMethod=:signupMethod&:request',repository,[
       [':pattern',encodeURIComponent(pattern)],
       [':global',global+''],
       [':groupType',encodeURIComponent(groupType)],
+      [':signupMethod',encodeURIComponent(signupMethod)],
       [':request',this.connector.createRequestString(request)]
     ]);
     return this.connector.get<IamAuthorities>(query,this.connector.getRequestOptions());
   }
-  public searchGroups = (pattern='*',global=true,groupType='',request : any = null,repository=RestConstants.HOME_REPOSITORY) => {
-    const query=this.connector.createUrlNoEscape('iam/:version/groups/:repository?pattern=:pattern&global=:global&groupType=:groupType&:request',repository,[
+  public searchGroups = (pattern='*',global=true,groupType='', signupMethod:string = '',request : any = null,repository=RestConstants.HOME_REPOSITORY) => {
+    const query=this.connector.createUrlNoEscape('iam/:version/groups/:repository?pattern=:pattern&global=:global&groupType=:groupType&signupMethod=:signupMethod&:request',repository,[
       [':pattern',encodeURIComponent(pattern)],
       [':global',global+''],
       [':groupType',encodeURIComponent(groupType)],
+      [':signupMethod',encodeURIComponent(signupMethod)],
       [':request',this.connector.createRequestString(request)]
     ]);
     return this.connector.get<IamGroups>(query,this.connector.getRequestOptions());
@@ -78,6 +80,44 @@ export class RestIamService extends AbstractRestService {
   public editGroup = (group : string,profile : GroupProfile,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/groups/:repository/:group/profile',repository,[[':group',group]]);
     return this.connector.put(query,JSON.stringify(profile),this.connector.getRequestOptions());
+  }
+  public editGroupSignup = (group: string, data: GroupSignupDetails, repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/config', repository,
+        [
+          [':group',group]
+        ]);
+    return this.connector.post<void>(query, JSON.stringify(data), this.connector.getRequestOptions());
+  }
+  public signupGroup = (group: string, password = '', repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup?password=:password', repository,
+        [
+          [':group',group],
+          [':password',password]
+        ]);
+    return this.connector.post<GroupSignupResult>(query, null, this.connector.getRequestOptions());
+  }
+  public confirmSignup = (group: string, user: string, repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/list/:user', repository,
+        [
+          [':group',group],
+          [':user',user]
+        ]);
+    return this.connector.put<void>(query, null, this.connector.getRequestOptions());
+  }
+  public rejectSignup = (group: string, user: string, repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/list/:user', repository,
+        [
+          [':group',group],
+          [':user',user]
+        ]);
+    return this.connector.delete<void>(query, this.connector.getRequestOptions());
+  }
+  public getGroupSignupList = (group: string, repository = RestConstants.HOME_REPOSITORY) => {
+    const query = this.connector.createUrl('iam/:version/groups/:repository/:group/signup/list', repository,
+        [
+          [':group',group]
+        ]);
+    return this.connector.get<UserSimple[]>(query, this.connector.getRequestOptions());
   }
   public getSubgroupByType = (group : string,type: string,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/groups/:repository/:group/type/:type',repository,[

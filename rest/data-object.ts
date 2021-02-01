@@ -257,6 +257,7 @@ export interface GroupProfile {
   groupType: string;
   scopeType: string;
 }
+export type GroupSignupResult = 'InvalidPassword' | 'AlreadyInList' | 'AlreadyMember' | 'Ok';
 
 export interface Group {
   authorityName: string;
@@ -266,6 +267,7 @@ export interface Group {
   profile: GroupProfile;
   organizations: Organization[];
   administrationAccess: boolean;
+  signupMethod:string;
 }
 
 export interface IamGroups {
@@ -320,11 +322,7 @@ export interface NodeRef {
   archived: boolean;
 }
 
-export interface User {
-  authorityName: string;
-  authorityType: string;
-  userName: string;
-  profile: UserProfile;
+export interface User extends UserSimple {
   organizations: Organization[];
   properties: any;
   stats: UserStats;
@@ -340,7 +338,7 @@ export interface UserSimple {
   profile: UserProfile;
   organizations: Organization[];
 }
-export interface UserQuota{
+export interface UserQuota {
     enabled:boolean;
     sizeCurrent:number;
     sizeQuota:number;
@@ -1096,12 +1094,12 @@ export class AccessPermission {
   hasRight:boolean;   // signaling if the user has the right above
 }
 
-export class Organization {
-  authorityName:string;
-  authorityType:string;
-  groupName:string;
-  profile:Profile;
+export interface Organization extends Group {
   sharedFolder:Reference;
+}
+export interface GroupSignupDetails {
+  signupMethod:string;
+  signupPassword:string;
 }
 
 export class Organizations {
@@ -1169,4 +1167,19 @@ export enum EventType {
  */
 export class ProfileSettings {
   showEmail:boolean;
+}
+
+export interface JobFieldDescription {
+  name: string;
+  type?: string;
+  file: boolean;
+  description?: string;
+  sampleValue?: string;
+  values?: JobFieldDescription[];
+}
+
+export interface JobDescription {
+  name: string;
+  description: string;
+  params: JobFieldDescription[];
 }

@@ -48,7 +48,8 @@ export class DialogButton {
     }
     public static TYPE_PRIMARY=1;
     public static TYPE_CANCEL=2;
-    public static TYPE_DANGER=3;
+    public static TYPE_DANGER=4; // red colored for danger actions, like deleting
+    public static TYPE_SECONDARY=8; // showed on the left side of the dialog in cards
     /**
      * @param name the button name, which is used for the translation
      * @param type the button type, use one of the constants
