@@ -134,7 +134,8 @@ export interface Service {
 }
 export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
 export interface Preview {
-  data: Blob; // image, may null, see @this.nodeHelper.appendImageData
+  data?: Blob; // image, may null, see @this.nodeHelper.appendImageData
+  mimetype? : string;
   url: string;
   isGenerated: boolean;
   type: PreviewType;
