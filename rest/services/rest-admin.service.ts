@@ -188,17 +188,19 @@ export class RestAdminService extends AbstractRestService{
     ]);
     return this.connector.post<any>(query,null,this.connector.getRequestOptions());
   }
-  public searchLucene(lucene:string,authorities:string[],request:any=null){
-      let query=this.connector.createUrlNoEscape("admin/:version/lucene/?query=:lucene&:authorities&:request",null,[
+  public searchLucene(lucene:string,store:string,authorities:string[],request:any=null){
+      let query=this.connector.createUrlNoEscape("admin/:version/lucene?query=:lucene&:authorities&store=:store&:request",null,[
           [":lucene",encodeURIComponent(lucene)],
+          [":store",encodeURIComponent(store)],
           [":authorities",RestHelper.getQueryStringForList("authorityScope",authorities)],
           [":request",this.connector.createRequestString(request)]
       ]);
       return this.connector.get<NodeList>(query,this.connector.getRequestOptions());
   }
-  public exportLucene(lucene:string,properties:string[]){
-    let query=this.connector.createUrlNoEscape("admin/:version/lucene/export/?query=:lucene&:properties",null,[
+  public exportLucene(lucene:string,store:string,properties:string[]){
+    let query=this.connector.createUrlNoEscape("admin/:version/lucene/export?query=:lucene&store=:store&:properties",null,[
         [":lucene",encodeURIComponent(lucene)],
+        [":store",encodeURIComponent(store)],
         [":properties",RestHelper.getQueryStringForList("properties",properties)],
     ]);
     return this.connector.get<any>(query,this.connector.getRequestOptions());
