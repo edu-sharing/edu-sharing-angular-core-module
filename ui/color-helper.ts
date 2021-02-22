@@ -35,9 +35,59 @@ export class ColorHelper{
   public static rgbToHex(rgb:number[]) : string {
     return "#" + ColorHelper.componentToHex(rgb[0]) + ColorHelper.componentToHex(rgb[1]) + ColorHelper.componentToHex(rgb[2]);
   }
-  private static componentToHex(c:number) {
+  public static componentToHex(c:number) {
     var hex = Math.max(0,Math.min(Math.round(c),255)).toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
+  public static rgbToHsl(rgb: number[]) {
+        const r = rgb[0] / 255.;
+        const g = rgb[1] / 255.;
+        const b = rgb[2] / 255.;
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+      // tslint:disable-next-line:one-variable-per-declaration prefer-const
+        let h, s, l = (max + min) / 2;
+        if (max === min) {
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+        return [ h, s, l ];
+    }
+    private static hue2rgb(p: number, q: number, t: number) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    }
+    public static hslToRgb(hsl: number[]) {
+        const h = hsl[0];
+        const s = hsl[1];
+        const l = hsl[2];
+        // tslint:disable-next-line:one-variable-per-declaration
+        let r, g, b;
+        if (s === 0) {
+            r = g = b = l;
+        } else {
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
+
+            r = ColorHelper.hue2rgb(p, q, h + 1/3);
+            g = ColorHelper.hue2rgb(p, q, h);
+            b = ColorHelper.hue2rgb(p, q, h - 1/3);
+        }
+
+        return [ r * 255, g * 255, b * 255 ];
+    }
 
 }
