@@ -416,16 +416,23 @@ export class RestNodeService extends AbstractRestService{
    * @param sendMail if true, send a mail to new invited users
    * @param mailText Additional mail text
    * @param sendCopy if true, send a copy of this mail to the user who is sharing this node
+   * @param createHandle Create a DOI Handle
+   * @param handleMode Update or create new handle, only relevant if this isn't the first time a handle is generated
    * @param repository
    * @returns {Observable<Response>}
    */
-  public setNodePermissions = (node : string,permissions:LocalPermissions,sendMail=false,mailText="",sendCopy=false,createHandle=false,repository=RestConstants.HOME_REPOSITORY) : Observable<Response> => {
-    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/permissions?mailtext=:mailText&sendMail=:sendMail&sendCopy=:sendCopy&createHandle=:createHandle",repository,[
+  public setNodePermissions = (node : string,permissions:LocalPermissions,sendMail=false,
+                               mailText='',sendCopy=false,
+                               createHandle=false,
+                               handleMode: 'distinct' | 'update' = 'distinct',
+                               repository=RestConstants.HOME_REPOSITORY) : Observable<Response> => {
+    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/permissions?mailtext=:mailText&sendMail=:sendMail&sendCopy=:sendCopy&createHandle=:createHandle&handleMode=:handleMode",repository,[
       [":node",node],
       [":mailText",mailText],
       [":sendMail",""+sendMail],
       [":sendCopy",""+sendCopy],
-      [":createHandle",""+createHandle]
+      [":createHandle",""+createHandle],
+      [":handleMode",""+handleMode]
     ]);
     return this.connector.post(query,JSON.stringify(permissions),this.connector.getRequestOptions());
   }
