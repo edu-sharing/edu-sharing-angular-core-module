@@ -5,9 +5,27 @@ import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {
-    ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-    IamUsers, IamUser, UserProfile, UserCredentials, ServerUpdate, CacheInfo, NetworkRepositories, Application, NodeStatistics, Statistics, JobDescription
-} from "../data-object";
+    ArchiveRestore,
+    ArchiveSearch,
+    Node,
+    NodeList,
+    IamGroup,
+    IamGroups,
+    IamAuthorities,
+    GroupProfile,
+    IamUsers,
+    IamUser,
+    UserProfile,
+    UserCredentials,
+    ServerUpdate,
+    CacheInfo,
+    NetworkRepositories,
+    Application,
+    NodeStatistics,
+    Statistics,
+    JobDescription,
+    NodeListElastic
+} from '../data-object';
 import {Observer} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
 
@@ -197,6 +215,12 @@ export class RestAdminService extends AbstractRestService{
       ]);
       return this.connector.get<NodeList>(query,this.connector.getRequestOptions());
   }
+    public searchElastic(dsl:string){
+        let query=this.connector.createUrlNoEscape("admin/:version/elastic?dsl=:dsl&:request",null,[
+            [":dsl",encodeURIComponent(dsl)]
+        ]);
+        return this.connector.get<NodeListElastic>(query,this.connector.getRequestOptions());
+    }
   public exportLucene(lucene:string,store:string,properties:string[]){
     let query=this.connector.createUrlNoEscape("admin/:version/lucene/export?query=:lucene&store=:store&:properties",null,[
         [":lucene",encodeURIComponent(lucene)],

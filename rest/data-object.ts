@@ -776,7 +776,10 @@ export interface NodeRemoteWrapper extends NodeWrapper{
 export interface NodeList {
   nodes: Node[];
   pagination: Pagination;
-  facettes: Facette[];
+  facettes?: Facette[];
+}
+export interface NodeListElastic extends NodeList{
+    elasticResponse: string;
 }
 export interface SearchList extends NodeList {
   ignored : string[];
