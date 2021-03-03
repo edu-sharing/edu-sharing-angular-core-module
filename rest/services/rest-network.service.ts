@@ -31,6 +31,12 @@ export class RestNetworkService extends AbstractRestService{
     }
     return true;
   }
+  static getRepository(node: Node, repositories = this. currentRepositories){
+      if(RestNetworkService.isFromHomeRepo(node, repositories)){
+          return repositories.filter((r) => r.isHomeRepo)[0];
+      }
+      return repositories.filter((r) => r.id === node.ref.repo)[0];
+  }
   static isFromHomeRepo(node: Node, repositories=this.currentRepositories) {
     if(!node || !node.ref){
         return false;
