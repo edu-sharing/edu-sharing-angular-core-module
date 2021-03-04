@@ -1,5 +1,5 @@
 import {RestConstants} from "./rest-constants";
-import {ListItem} from "../ui/list-item";
+import {ListItem, ListItemType} from '../ui/list-item';
 import {RestConnectorService} from "./services/rest-connector.service";
 import {Collection, Mds, Sort} from './data-object';
 import {TranslateService} from '@ngx-translate/core';
@@ -23,10 +23,14 @@ export class MdsHelper{
   static getColumns(translate: TranslateService, mdsSet: any, name: string) {
     let columns:ListItem[]=[];
     if(mdsSet) {
-      for (let list of mdsSet.lists) {
-        if (list.id == name) {
-          for (let column of list.columns) {
-            let item = new ListItem("NODE", column.id);
+      for (const list of mdsSet.lists) {
+        if (list.id === name) {
+          for (const column of list.columns) {
+            let type: ListItemType = 'NODE';
+            if(name === 'mediacenterGroups') {
+                type = 'GROUP';
+            }
+            const item = new ListItem(type, column.id);
             item.format = column.format;
             columns.push(item);
           }
@@ -36,15 +40,18 @@ export class MdsHelper{
     }
     if(!columns.length) {
         console.warn('mds does not define columns for ' + name + ', invalid configuration!');
-        if (name == 'search' || name == 'collectionReferences') {
+        if (name === 'search' || name === 'collectionReferences') {
             columns.push(new ListItem("NODE", RestConstants.LOM_PROP_TITLE));
             columns.push(new ListItem("NODE", RestConstants.CM_MODIFIED_DATE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_LICENSE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
-        } else if (name == 'mediacenterManaged') {
+        } else if (name === 'mediacenterManaged') {
             columns.push(new ListItem("NODE", RestConstants.LOM_PROP_TITLE));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCEID));
             columns.push(new ListItem("NODE", RestConstants.CCM_PROP_REPLICATIONSOURCE));
+        } else if (name === 'mediacenterGroups') {
+            columns.push(new ListItem('GROUP', RestConstants.AUTHORITY_DISPLAYNAME));
+            columns.push(new ListItem('GROUP', RestConstants.AUTHORITY_GROUPTYPE));
         }
     }
       columns.map((c) => {
