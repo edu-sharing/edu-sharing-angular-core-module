@@ -58,10 +58,12 @@ export class RestNodeService extends AbstractRestService{
      *
      */
     public publishCopy = (node : string,
+                          handleMode: 'distinct' | 'update' | null = null,
                           repository = RestConstants.HOME_REPOSITORY) => {
-        let query=this.connector.createUrl("node/:version/nodes/:repository/:node/publish",repository,
+        let query=this.connector.createUrl("node/:version/nodes/:repository/:node/publish?handleMode=:handleMode",repository,
             [
                 [":node",node],
+                [":handleMode",handleMode ? handleMode : ''],
             ]);
         return this.connector.post<NodeWrapper>(query,null, this.connector.getRequestOptions());
     }
@@ -416,23 +418,17 @@ export class RestNodeService extends AbstractRestService{
    * @param sendMail if true, send a mail to new invited users
    * @param mailText Additional mail text
    * @param sendCopy if true, send a copy of this mail to the user who is sharing this node
-   * @param createHandle Create a DOI Handle
-   * @param handleMode Update or create new handle, only relevant if this isn't the first time a handle is generated
    * @param repository
    * @returns {Observable<Response>}
    */
   public setNodePermissions = (node : string,permissions:LocalPermissions,sendMail=false,
                                mailText='',sendCopy=false,
-                               createHandle=false,
-                               handleMode: 'distinct' | 'update' = 'distinct',
                                repository=RestConstants.HOME_REPOSITORY) : Observable<Response> => {
-    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/permissions?mailtext=:mailText&sendMail=:sendMail&sendCopy=:sendCopy&createHandle=:createHandle&handleMode=:handleMode",repository,[
+    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/permissions?mailtext=:mailText&sendMail=:sendMail&sendCopy=:sendCopy",repository,[
       [":node",node],
       [":mailText",mailText],
       [":sendMail",""+sendMail],
       [":sendCopy",""+sendCopy],
-      [":createHandle",""+createHandle],
-      [":handleMode",""+handleMode]
     ]);
     return this.connector.post(query,JSON.stringify(permissions),this.connector.getRequestOptions());
   }
