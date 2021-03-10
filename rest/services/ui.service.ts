@@ -83,7 +83,7 @@ export class UIService {
         if (config.logout) {
           const sessionData = this.connector.getCurrentLogin();
           if (config.logout.ajax) {
-            this.http.get(config.logout.url).subscribe(
+            this.http.get(config.logout.url, {responseType: 'text'}).subscribe(
                 () => {
                   if (config.logout.destroySession) {
                     this.connector.logout().subscribe(response => {
