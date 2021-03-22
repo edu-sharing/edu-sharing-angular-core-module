@@ -4,7 +4,18 @@ import { Observable } from 'rxjs/Observable';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
-import {NodeRef, Node, NodeWrapper, NodePermissions, LocalPermissions, NodeVersions, NodeVersion, NodeList, VCardResult} from "../data-object";
+import {
+    NodeRef,
+    Node,
+    NodeWrapper,
+    NodePermissions,
+    LocalPermissions,
+    NodeVersions,
+    NodeVersion,
+    NodeList,
+    VCardResult,
+    SearchRequestBody
+} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 import {Helper} from "../helper";
 import {MdsHelper} from '../mds-helper';
@@ -95,20 +106,29 @@ export class RestSearchService extends AbstractRestService{
     }
     return this.search(criterias,null,request,type, RestConstants.HOME_REPOSITORY,RestConstants.DEFAULT,[],queryId);
   }
-    search(criterias: any[],facettes:string[]=[], request: any=null,contentType=RestConstants.CONTENT_TYPE_FILES, repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,propertyFilter:string[]=[], query = RestConstants.DEFAULT_QUERY_NAME) {
+    searchWithBody(body: SearchRequestBody, request: any=null,contentType=RestConstants.CONTENT_TYPE_FILES, repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,propertyFilter:string[]=[], query = RestConstants.DEFAULT_QUERY_NAME) {
+        let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/:metadataset/:query/?contentType=:contentType&:request&:propertyFilter',repository,[
+            [":metadataset",encodeURIComponent(metadataset)],
+            [":query",encodeURIComponent(query)],
+            [":contentType",contentType],
+            [":propertyFilter",RestHelper.getQueryString("propertyFilter",propertyFilter)],
+            [":request",this.connector.createRequestString(request)]
+        ]);
+        return this.connector.post<NodeList>(q,body,this.connector.getRequestOptions());
+    }
+
+    /**
+     * @Deprecated
+     * use searchWithBody instead
+     */
+    search(criterias: any[],facettes:string[]=[], request: any=null,contentType=RestConstants.CONTENT_TYPE_FILES,
+           repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,
+           propertyFilter:string[]=[], query = RestConstants.DEFAULT_QUERY_NAME, permissions: string[] =[]) {
         let body={
             criterias:criterias,
             facettes:facettes
         };
-
-      let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/:metadataset/:query/?contentType=:contentType&:request&:propertyFilter',repository,[
-        [":metadataset",encodeURIComponent(metadataset)],
-        [":query",encodeURIComponent(query)],
-        [":contentType",contentType],
-        [":propertyFilter",RestHelper.getQueryString("propertyFilter",propertyFilter)],
-        [":request",this.connector.createRequestString(request)]
-      ]);
-      return this.connector.post<NodeList>(q,body,this.connector.getRequestOptions());
+        return this.searchWithBody(body, request, contentType, repository, metadataset, propertyFilter, query);
     }
 
     searchFingerprint(nodeid:string,request: any=null,repository = RestConstants.HOME_REPOSITORY) {

@@ -1130,6 +1130,15 @@ export class PersonalProfile {
   homeFolder:Reference;
   sharedFolders:Array<Reference>;
 }
+export interface SearchRequestCriteria {
+    property: string;
+    values: string[];
+}
+export interface SearchRequestBody {
+    facettes?: string[];
+    criterias: SearchRequestCriteria[];
+    permissions?: string[];
+}
 export interface WebsiteInformation{
   title: string;
   page: string;
