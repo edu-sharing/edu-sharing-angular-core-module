@@ -1,5 +1,4 @@
 export class ColorHelper{
-  public static BRIGHTNESS_THRESHOLD_COLLECTIONS = 0.6;
   public static cssColorToRgb(color:string) : number[] {
     color=color.trim();
     if(color.startsWith("rgb")){
@@ -25,12 +24,36 @@ export class ColorHelper{
    * @returns {number}
    */
   public static getColorBrightness(color:string){
-    let rgb=ColorHelper.cssColorToRgb(color);
-    if(rgb){
-      return (rgb[0]*0.2126 + rgb[1]*0.7152 + rgb[2]*0.0722) / 255;
-    }
+    const rgb = ColorHelper.cssColorToRgb(color);
+    if(rgb) {
+      // return (rgb[0]*0.2126 + rgb[1]*0.7152 + rgb[2]*0.0722) / 255;
+        const a = rgb.map( (v)  => {
+            v /= 255;
+            return v <= 0.03928
+                ? v / 12.92
+                : Math.pow( (v + 0.055) / 1.055, 2.4 );
+        });
+        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
     return -1;
   }
+
+  private static getRatio(l1: number, l2: number) {
+      // calculate the color contrast ratio
+      return l1 > l2
+          ? ((l2 + 0.05) / (l1 + 0.05))
+          : ((l1 + 0.05) / (l2 + 0.05));
+  }
+    /**
+     * returns 0 (black) or 1 (white)
+     * @param color
+     */
+    public static getPreferredColor(color:string): PreferredColor {
+        const brightness = ColorHelper.getColorBrightness(color);
+        const ratioBlack = ColorHelper.getRatio(0, brightness);
+        const ratioWhite  = ColorHelper.getRatio(1, brightness);
+        return ratioBlack>ratioWhite ? PreferredColor.Black : PreferredColor.White;
+    }
 
   public static rgbToHex(rgb:number[]) : string {
     return "#" + ColorHelper.componentToHex(rgb[0]) + ColorHelper.componentToHex(rgb[1]) + ColorHelper.componentToHex(rgb[2]);
@@ -89,5 +112,8 @@ export class ColorHelper{
 
         return [ r * 255, g * 255, b * 255 ];
     }
-
+}
+export enum PreferredColor {
+    Black,
+    White,
 }
