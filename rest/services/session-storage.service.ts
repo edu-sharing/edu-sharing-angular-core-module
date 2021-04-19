@@ -107,6 +107,9 @@ export class SessionStorageService {
                         .subscribe(() => {
                             subscriber.next();
                             subscriber.complete();
+                        }, error => {
+                            subscriber.error(error);
+                            subscriber.complete();
                         });
                 });
             } else {
