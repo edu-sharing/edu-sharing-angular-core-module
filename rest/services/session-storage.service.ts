@@ -80,32 +80,41 @@ export class SessionStorageService {
     }
 
     set(name: string, value: any, store = Store.UserProfile) {
-        if (!this.connector.getCurrentLogin() ||
-            (!this.connector.getCurrentLogin()?.isGuest && !this.preferences)) {
-            setTimeout(() => this.set(name, value), 50);
-            return;
-        }
-        if(store === Store.Session) {
-            this.setCookie(name, value, SessionStorageService.EXPIRE_TIME_SESSION);
-            return;
-        }
-        if (
-            this.connector.getCurrentLogin().statusCode ==
+        return new Observable(subscriber => {
+            if (!this.connector.getCurrentLogin() ||
+                (!this.connector.getCurrentLogin()?.isGuest && !this.preferences)) {
+                setTimeout(() => this.set(name, value), 50);
+                return;
+            }
+            if (store === Store.Session) {
+                this.setCookie(name, value, SessionStorageService.EXPIRE_TIME_SESSION);
+                subscriber.next();
+                subscriber.complete();
+                return;
+            }
+            if (
+                this.connector.getCurrentLogin().statusCode ==
                 RestConstants.STATUS_CODE_OK &&
-            !this.connector.getCurrentLogin().isGuest
-        ) {
-            this.preferences[name] = value;
-            this.connector.isLoggedIn().subscribe((data: LoginResult) => {
-                if (data.statusCode != RestConstants.STATUS_CODE_OK) {
-                    return;
-                }
-                this.iam
-                    .setUserPreferences(this.preferences)
-                    .subscribe(() => {});
-            });
-        } else {
-            this.setCookie(name, value);
-        }
+                !this.connector.getCurrentLogin().isGuest
+            ) {
+                this.preferences[name] = value;
+                this.connector.isLoggedIn().subscribe((data: LoginResult) => {
+                    if (data.statusCode != RestConstants.STATUS_CODE_OK) {
+                        return;
+                    }
+                    this.iam
+                        .setUserPreferences(this.preferences)
+                        .subscribe(() => {
+                            subscriber.next();
+                            subscriber.complete();
+                        });
+                });
+            } else {
+                this.setCookie(name, value);
+                subscriber.next();
+                subscriber.complete();
+            }
+        });
     }
 
     delete(name: string) {
