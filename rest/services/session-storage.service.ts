@@ -80,7 +80,8 @@ export class SessionStorageService {
     }
 
     set(name: string, value: any, store = Store.UserProfile) {
-        if (!this.connector.getCurrentLogin() || !this.preferences) {
+        if (!this.connector.getCurrentLogin() ||
+            (!this.connector.getCurrentLogin()?.isGuest && !this.preferences)) {
             setTimeout(() => this.set(name, value), 50);
             return;
         }
