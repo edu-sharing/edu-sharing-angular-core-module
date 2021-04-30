@@ -1,4 +1,4 @@
-export type ListItemType = 'NODE' | 'COLLECTION' | 'ORG' | 'GROUP' | 'USER';
+export type ListItemType = 'NODE' | 'NODE_PROPOSAL' | 'COLLECTION' | 'ORG' | 'GROUP' | 'USER';
 
 /**
  * A list item info, which is basically a column
@@ -22,7 +22,9 @@ export class ListItem{
    * custom format string for date fields, may be null
    */
   public format:string;
-  constructor(public type : ListItemType,public name : string) {
+  constructor(public type : ListItemType,public name : string, public config = {
+      showLabel: false
+  }) {
   }
 
     static getCollectionDefaults() {

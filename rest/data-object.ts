@@ -773,7 +773,12 @@ export interface NodeTemplate extends NodeWrapper{
 export interface NodeRemoteWrapper extends NodeWrapper{
   remote : Node;
 }
-export interface NodeList {
+export interface AbstractList<T extends Node> {
+    nodes: T[];
+    pagination: Pagination;
+    facettes?: Facette[];
+}
+export interface NodeList extends AbstractList<Node> {
   nodes: Node[];
   pagination: Pagination;
   facettes?: Facette[];
@@ -1205,4 +1210,12 @@ export interface JobDescription {
 export class VCardResult {
   property: string;
   vcard: VCard;
+}
+export type CollectionProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED';
+export class ProposalNode extends Node {
+    proposal: Node;
+    status: CollectionProposalStatus;
+    // collection this proposal is for
+    proposalCollection?: Node;
+    accessible: boolean;
 }
