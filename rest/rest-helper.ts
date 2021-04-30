@@ -281,8 +281,8 @@ export class RestHelper{
       return str;
     }
     public static getTitle(node: Node):string {
-      if (node.title) return node.title;
-      return node.name;
+      if (node?.title) return node.title;
+      return node?.name;
     }
     public static getTitleFromProperties(properties:any):string {
         return properties[RestConstants.LOM_PROP_TITLE] ? properties[RestConstants.LOM_PROP_TITLE] : properties[RestConstants.CM_NAME];
