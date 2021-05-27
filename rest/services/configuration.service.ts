@@ -32,6 +32,7 @@ export class ConfigurationService {
       //this.http.get("assets/config.json").map((response: Response) => response.json()).subscribe((data:any)=>{
       this.locator.getConfig().subscribe((data)=>{
         this.data=data.current;
+        this.applyGlobal();
         observer.next(this.data);
         observer.complete();
       },(error)=>{
@@ -103,4 +104,16 @@ export class ConfigurationService {
   public instant<T = string>(name:string,defaultValue:T=null) : T {
     return this.instantInternal(name, defaultValue);
   }
+
+    private applyGlobal() {
+        if(document.getElementById('es-custom-css')) {
+            return;
+        }
+        if(this.data.customCSS) {
+            const child = document.createElement('style');
+            child.id = 'es-custom-css';
+            child.innerHTML = this.data.customCSS;
+            document.body.appendChild(child);
+        }
+    }
 }

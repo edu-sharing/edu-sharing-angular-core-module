@@ -123,16 +123,15 @@ export class RestAdminService extends AbstractRestService{
     let query=this.connector.createUrl("admin/:version/serverUpdate/list",null);
     return this.connector.get<ServerUpdate[]>(query,this.connector.getRequestOptions())
   }
-  public getNgVersion(){
-    let query=this.connector.createUrl("../version.txt", null);
-    let options:any=this.connector.getRequestOptions();
-    options.responseType='text';
-    return this.connector.get(query, options)
-  }
   public getRepositoryVersion(){
     let query=this.connector.createUrl("../version.html",null);
     let options:any=this.connector.getRequestOptions();
     options.responseType='text';
+    options.headers = {
+        'Cache-Control': 'no-cache, no-store, must-revalidate, post-check=0, pre-check=0',
+        Pragma: 'no-cache',
+        Expires: '0'
+    };
     return this.connector.get(query,options)
       .map((response:string) => this.readRepositoryVersion(response));
   }
@@ -299,7 +298,7 @@ export class RestAdminService extends AbstractRestService{
 
     public updateRepositoryConfig(config:any){
         let query=this.connector.createUrl("admin/:version/repositoryConfig",null);
-        return this.connector.put(query,JSON.stringify(config),this.connector.getRequestOptions());
+        return this.connector.put(query,config ? JSON.stringify(config) : null,this.connector.getRequestOptions());
     }
     public getRepositoryConfig(){
         let query=this.connector.createUrl("admin/:version/repositoryConfig",null);

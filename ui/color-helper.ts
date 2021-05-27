@@ -49,6 +49,9 @@ export class ColorHelper{
      * @param color
      */
     public static getPreferredColor(color:string): PreferredColor {
+        if(!color) {
+            return PreferredColor.Black;
+        }
         const brightness = ColorHelper.getColorBrightness(color);
         const ratioBlack = ColorHelper.getRatio(0, brightness);
         const ratioWhite  = ColorHelper.getRatio(1, brightness);
