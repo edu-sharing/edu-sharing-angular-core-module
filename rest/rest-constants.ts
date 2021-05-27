@@ -39,7 +39,8 @@ export class RestConstants {
     return {authorityName:RestConstants.AUTHORITY_EVERYONE,authorityType:RestConstants.AUTHORITY_TYPE_EVERYONE};
   }
   public static PERMISSION_OWNER = "Owner";
-  public static PERMISSION_CONSUMER = "Consumer";
+  // @Deprecated
+  public static PERMISSION_CONSUMER = RestConstants.ACCESS_CONSUMER;
   public static PERMISSION_COLLABORATOR = "Collaborator";
   public static PERMISSION_COORDINATOR = "Coordinator";
   public static PERMISSION_ALL = "All";
@@ -242,6 +243,7 @@ export class RestConstants {
   public static COMMENT_BULK_CREATE="BULK_CREATE";
   public static COMMENT_BULK_UPDATE="BULK_UPDATE";
   public static COMMENT_BULK_UPDATE_RESYNC="BULK_UPDATE_RESYNC";
+  public static COMMENT_REMOTE_OBJECT_INIT="REMOTE_OBJECT_INIT";
   public static COMMENT_BLOCKED_IMPORT="IMPORT_BLOCKED";
   public static ACCESS_ADD_CHILDREN="AddChildren";
   public static ACCESS_WRITE="Write";
@@ -254,6 +256,8 @@ export class RestConstants {
   public static CONTENT_TYPE_FILES_AND_FOLDERS="FILES_AND_FOLDERS";
   public static CONTENT_TYPE_ALL="ALL";
   public static CONTENT_TYPE_COLLECTIONS="COLLECTIONS";
+
+  public static IMPLICIT_COLLECTION_PERMISSIONS = [RestConstants.ACCESS_CC_PUBLISH, RestConstants.ACCESS_CONSUMER];
 
   public static COMBINE_MODE_AND="AND";
   public static COMBINE_MODE_OR="OR";
