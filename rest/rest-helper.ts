@@ -103,9 +103,12 @@ export class RestHelper{
     return query;
   }
 
-  public static getQueryStringForList(queryName : string, nodes : Node[]|string[]) : string{
-    if(nodes==null || nodes.length==0)
+  public static getQueryStringForList(queryName : string, nodes : Node[]|string[]|string) : string{
+    if(nodes==null || !nodes?.length)
       return "";
+    if(nodes instanceof String) {
+        return nodes.toString();
+    }
 
     // TODO both types
     let list : string[];

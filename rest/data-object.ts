@@ -85,7 +85,7 @@ export interface WorkflowDefinition{
 }
 export class WorkflowEntry {
   time?: number;
-  editor?: string;
+  editor?: UserSimple;
   receiver: UserSimple[];
   status: string;
   comment: string;
