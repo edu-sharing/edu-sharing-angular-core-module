@@ -34,7 +34,7 @@ export class UIAnimation{
         animate(time, style({transform:'translateX(-100%)'}))      ])
     ];
   }
-  public static fromRight(time=UIAnimation.ANIMATION_TIME_NORMAL){
+  public static fromRight(time: number | string = UIAnimation.ANIMATION_TIME_NORMAL) {
     return  [transition(':enter', [
       style({transform:'translateX(100%)'}),
       animate(time, style({transform:'translateX(0)'}))
