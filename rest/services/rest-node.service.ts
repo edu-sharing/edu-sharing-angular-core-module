@@ -448,7 +448,7 @@ export class RestNodeService extends AbstractRestService{
       ]);
     return this.connector.post<NodeWrapper>(query, JSON.stringify(properties), this.connector.getRequestOptions());
   }
-    public editNodeProperty = (node : string,property: string, value: string[]|string,repository=RestConstants.HOME_REPOSITORY) => {
+    public editNodeProperty = (node : string,property: string, value: string[],repository=RestConstants.HOME_REPOSITORY) => {
         let query = this.connector.createUrlNoEscape("node/v1/nodes/:repository/:node/property?property=:property&:value", repository,
             [
                 [":node", node],

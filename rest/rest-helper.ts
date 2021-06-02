@@ -103,7 +103,7 @@ export class RestHelper{
     return query;
   }
 
-  public static getQueryStringForList(queryName : string, nodes : Node[]|string[]|string) : string{
+  public static getQueryStringForList(queryName : string, nodes : Node[]|string[]) : string{
     if(nodes==null || !nodes?.length)
       return "";
     if(nodes instanceof String) {
