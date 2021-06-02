@@ -72,7 +72,7 @@ export class SessionStorageService {
                 !this.connector.getCurrentLogin().isGuest)
             ) {
                 observer.next(
-                    this.preferences[name] ? this.preferences[name] : fallback,
+                    this.preferences?.[name] ? this.preferences[name] : fallback,
                 );
             } else {
                 observer.next(this.getCookie(name, fallback));
