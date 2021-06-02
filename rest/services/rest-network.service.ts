@@ -5,10 +5,26 @@ import {RestConnectorService} from "./rest-connector.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {NetworkRepositories, Node, Repository, Service} from "../../core.module";
 import {Helper} from "../helper";
+import { shareReplay } from "rxjs/operators";
 
 @Injectable()
 export class RestNetworkService extends AbstractRestService{
   private static currentRepositories:Repository[];
+
+  private readonly getRepositories_ = new Observable<NetworkRepositories>((observer) => {
+    let query = this.connector.createUrl("network/:version/repositories", null);
+    return this.connector.get<NetworkRepositories>(query, this.connector.getRequestOptions()).subscribe((repositories) => {
+        RestNetworkService.currentRepositories = repositories.repositories;
+        observer.next(repositories);
+        observer.complete();
+    }, (error) => {
+        observer.error(error);
+        observer.complete();
+    });
+  }).pipe(
+    shareReplay(1), // Cache result
+  );
+
   public static supportsImport(repository: string, repositories: Repository[]) {
     if(repositories==null)
       return false;
@@ -72,17 +88,7 @@ export class RestNetworkService extends AbstractRestService{
         super(connector);
     }
     public getRepositories = () => {
-        return new Observable<NetworkRepositories>((observer) => {
-            let query = this.connector.createUrl("network/:version/repositories", null);
-            return this.connector.get<NetworkRepositories>(query, this.connector.getRequestOptions()).subscribe((repositories) => {
-                RestNetworkService.currentRepositories = repositories.repositories;
-                observer.next(repositories);
-                observer.complete();
-            }, (error) => {
-                observer.error(error);
-                observer.complete();
-            });
-        });
+        return this.getRepositories_;
     }
 
 

@@ -32,7 +32,7 @@ export class SessionStorageService {
         return Observable.create((observer: Observer<any>) => {
             if (
                 !this.connector.getCurrentLogin() ||
-                this.connector.getCurrentLogin().authorityName !=
+                this.connector.getCurrentLogin().authorityName !==
                     this.authorityName
             ) {
                 this.connector.isLoggedIn().subscribe((data: LoginResult) => {
@@ -48,6 +48,7 @@ export class SessionStorageService {
                     this.iam.getUserPreferences().subscribe(
                         (pref: any) => {
                             this.preferences = pref;
+                            this.authorityName = data.authorityName;
                             if (!this.preferences) this.preferences = {};
                             observer.next(
                                 this.preferences[name]
@@ -58,6 +59,7 @@ export class SessionStorageService {
                         },
                         (error: any) => {
                             this.preferences = {};
+                            console.error('preferences error', error);
                             observer.next(fallback);
                             observer.complete();
                         },
