@@ -93,6 +93,7 @@ export class RestConstants {
   public static CCM_TYPE_TOOL_INSTANCE = "ccm:tool_instance";
   public static CCM_TYPE_SAVED_SEARCH = "ccm:saved_search";
   public static CCM_FILENAME = "ccm:filename";
+  public static CCM_OBJECTTYPE="ccm:objecttype";
   public static CCM_PROP_WIDTH = "ccm:width";
   public static EXIF_PROP_DATE_TIME_ORIGINAL = "exif:dateTimeOriginal";
   public static CCM_PROP_HEIGHT = "ccm:height";
