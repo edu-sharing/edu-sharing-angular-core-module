@@ -1,171 +1,229 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { combineLatest, EMPTY, merge, Observable, of, Subject, throwError } from 'rxjs';
+import {
+    catchError,
+    distinctUntilChanged,
+    filter,
+    first,
+    map,
+    shareReplay,
+    startWith,
+    switchMap,
+} from 'rxjs/operators';
 import { RestIamService } from '../../rest/services/rest-iam.service';
-import { LoginResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
 import { RestConnectorService } from './rest-connector.service';
+
 /**
- Service to store any data in session (NEW: Now stored in repository) OLD: (stored as cookie)
- This is not the cleanest solution, but the current available modules for ng are not that great either
- Note that it currently only supports strings
- If a user is logged in, it will be stored inside the user profile. otherwise, a cookie will be set
+ * Service to store any data in session.
+ *
+ * - NEW: Now stored in repository
+ * - OLD: stored as cookie
+ *
+ * This is not the cleanest solution, but the current available modules for ng are not that great
+ * either. Note that it currently only supports strings. If a user is logged in, it will be stored
+ * inside the user profile. Otherwise, localStorage will be used.
  */
 @Injectable()
 export class SessionStorageService {
-    static KEY_WORKSPACE_SORT = 'workspace_sort';
-    // default we store session cookies about 24 hours
-    private static EXPIRE_TIME_SESSION = 24 * 60 * 60;
-    private preferences: any;
-    private authorityName: string;
-    constructor(
-        private iam: RestIamService,
-        private connector: RestConnectorService,
-    ) {
-        this.get('').subscribe(() => {});
+    static readonly KEY_WORKSPACE_SORT = 'workspace_sort';
+
+    private readonly localStorage = new BrowserStorage(localStorage);
+    private readonly sessionStorage = new BrowserStorage(sessionStorage);
+
+    /** User preferences from the backend were changed locally and pushed to the backend. */
+    private readonly userPreferencesChanged = new Subject<{ [key: string]: any }>();
+    /** User preferences in sync with the backend. */
+    private readonly userPreferences: Observable<{ [key: string]: any }>;
+    /** Refresh user preferences to reflect changes on the backend from outside this app. */
+    private readonly triggerRefresh = new Subject<void>();
+
+    constructor(private iam: RestIamService, private connector: RestConnectorService) {
+        // The currently logged in user. `null` for guest or no/invalid login.
+        const currentUser = this.connector.currentLogin.pipe(
+            filter((login) => login !== null),
+            map((login) =>
+                login.statusCode === RestConstants.STATUS_CODE_OK && !login.isGuest
+                    ? login.authorityName
+                    : null,
+            ),
+            distinctUntilChanged(),
+        );
+        // User preferences on the backend, updated when user changes and on `refresh`.
+        const remoteUserPreferences = combineLatest([
+            currentUser,
+            // Wrongly detected as deprecated use of startWith. The `undefined` parameter is
+            // important!
+            //
+            // tslint:disable-next-line: deprecation
+            this.triggerRefresh.pipe(startWith(undefined)),
+        ]).pipe(switchMap(([user]) => (user ? this.iam.getUserPreferences() : of(null))));
+        // User preferences combining data from the backend and local changes pushed to the backend.
+        // Will set to `null` while the user is not logged in.
+        this.userPreferences = merge(remoteUserPreferences, this.userPreferencesChanged).pipe(
+            shareReplay(1),
+        );
     }
 
+    /** Re-syncs with the backend after changes to the backend from outside this app. */
     refresh() {
-        this.preferences = null;
+        this.triggerRefresh.next();
     }
 
-    get(name: string, fallback: any = null, store = Store.UserProfile): Observable<any> {
-        return Observable.create((observer: Observer<any>) => {
-            if (
-                !this.connector.getCurrentLogin() ||
-                this.connector.getCurrentLogin().authorityName !==
-                    this.authorityName
-            ) {
-                this.connector.isLoggedIn().subscribe((data: LoginResult) => {
-                    if (
-                        store === Store.Session ||
-                        data.statusCode !== RestConstants.STATUS_CODE_OK ||
-                        data.isGuest
-                    ) {
-                        observer.next(this.getCookie(name, fallback));
-                        observer.complete();
-                        return;
-                    }
-                    this.iam.getUserPreferences().subscribe(
-                        (pref: any) => {
-                            this.preferences = pref;
-                            this.authorityName = data.authorityName;
-                            if (!this.preferences) this.preferences = {};
-                            observer.next(
-                                this.preferences[name]
-                                    ? this.preferences[name]
-                                    : fallback,
-                            );
-                            observer.complete();
-                        },
-                        (error: any) => {
-                            this.preferences = {};
-                            console.error('preferences error', error);
-                            observer.next(fallback);
-                            observer.complete();
-                        },
-                    );
-                });
-                return;
-            } else if (
-                store !== Store.Session && (
-                this.connector.getCurrentLogin().statusCode === RestConstants.STATUS_CODE_OK &&
-                !this.connector.getCurrentLogin().isGuest)
-            ) {
-                observer.next(
-                    this.preferences?.[name] ? this.preferences[name] : fallback,
-                );
-            } else {
-                observer.next(this.getCookie(name, fallback));
-            }
-            observer.complete();
-        });
+    /**
+     * Gets a current storage value from the backend or browser storage, depending on login state
+     * and `store`.
+     */
+    get(key: string, fallback: any = null, store = Store.UserProfile): Observable<any> {
+        return this.observe(key, fallback, store).pipe(first());
     }
 
-    set(name: string, value: any, store = Store.UserProfile) {
-        return new Observable(subscriber => {
-            if (!this.connector.getCurrentLogin() ||
-                (!this.connector.getCurrentLogin()?.isGuest && !this.preferences)) {
-                setTimeout(() => this.set(name, value), 50);
-                return;
+    /**
+     * Continually observes a storage value.
+     *
+     * Will update
+     * - on login state changes,
+     * - when the value is updated from within this app, and
+     * - when `refresh` is called.
+     */
+    observe(key: string, fallback: any = null, store = Store.UserProfile): Observable<any> {
+        return (() => {
+            switch (store) {
+                case Store.UserProfile:
+                    return this.observeFromUserProfile(key, fallback);
+                case Store.Session:
+                    return this.sessionStorage.observe(key, fallback);
             }
-            if (store === Store.Session) {
-                this.setCookie(name, value, SessionStorageService.EXPIRE_TIME_SESSION);
-                subscriber.next();
-                subscriber.complete();
-                return;
-            }
-            if (
-                this.connector.getCurrentLogin().statusCode ==
-                RestConstants.STATUS_CODE_OK &&
-                !this.connector.getCurrentLogin().isGuest
-            ) {
-                this.preferences[name] = value;
-                this.connector.isLoggedIn().subscribe((data: LoginResult) => {
-                    if (data.statusCode != RestConstants.STATUS_CODE_OK) {
-                        return;
-                    }
-                    this.iam
-                        .setUserPreferences(this.preferences)
-                        .subscribe(() => {
-                            subscriber.next();
-                            subscriber.complete();
-                        }, error => {
-                            subscriber.error(error);
-                            subscriber.complete();
-                        });
-                });
-            } else {
-                this.setCookie(name, value);
-                subscriber.next();
-                subscriber.complete();
-            }
-        });
+        })().pipe(
+            // Return a deep copy to prevent manipulation of our internal state from outside and
+            // bleeding over of manipulation from one client to another. Also, this gives us the
+            // chance to avoid unnecessary emits using `distinctUntilChanged`.
+            map((value) => JSON.stringify(value)),
+            distinctUntilChanged(),
+            map((value) => JSON.parse(value)),
+        );
     }
 
-    delete(name: string) {
-        this.set(name, null);
-    }
-
-    // http://stackoverflow.com/questions/34298133/angular-2-cookies
-    getCookie(name: string, fallback: any = null): string {
-        let ca: Array<string> = document.cookie.split(';');
-        let caLen: number = ca.length;
-        let cookieName = name + '=';
-        let c: string;
-        for (let i = 0; i < caLen; i += 1) {
-            c = ca[i].replace(/^\s\+/g, '').trim();
-            if (c.indexOf(cookieName) === 0) {
-                const value = c.substring(cookieName.length, c.length);
-                try {
-                    return JSON.parse(value);
-                } catch(e) {
-                    return value;
-                }
-            }
+    /**
+     * Updates a storage value, immediately reflecting the changes within this service and on the
+     * storage.
+     */
+    // Use a promise for `set` since an observable needs to be subscribed to to have an effect,
+    // which users are likely to forget.
+    async set(key: string, value: any, store = Store.UserProfile): Promise<void> {
+        switch (store) {
+            case Store.UserProfile:
+                return this.setToUserProfile(key, value);
+            case Store.Session:
+                return this.sessionStorage.set(key, value);
         }
-        return fallback;
     }
 
-    deleteCookie(name: string) {
-        this.setCookie(name, '', -1);
+    async delete(key: string, store = Store.UserProfile): Promise<void> {
+        switch (store) {
+            case Store.UserProfile:
+                return this.deleteFromUserProfile(key);
+            case Store.Session:
+                return this.sessionStorage.delete(key);
+        }
     }
 
-    setCookie(name: string, value: string, expireSeconds = 60 * 24 * 60 * 60, path = '/') {
-        let d: Date = new Date();
-        d.setTime(d.getTime() + expireSeconds * 1000);
-        let expires: string = 'expires=' + d.toUTCString();
-        document.cookie =
-            name +
-            '=' +
-            JSON.stringify(value) +
-            '; ' +
-            expires +
-            (path.length > 0 ? '; path=' + path : '');
+    private observeFromUserProfile(key: string, fallback: any): Observable<any> {
+        return this.userPreferences.pipe(
+            switchMap((preferences) => {
+                if (preferences) {
+                    return of(preferences[key] ?? fallback);
+                } else {
+                    return this.localStorage.observe(key, fallback);
+                }
+            }),
+        );
+    }
+
+    private setToUserProfile(key: string, value: any): Promise<void> {
+        return this.userPreferences
+            .pipe(
+                first(),
+                switchMap((preferences) => {
+                    if (preferences) {
+                        const updatedPreferences = { ...preferences, [key]: value };
+                        // Optimistically update our reference before the backend confirms the
+                        // change.
+                        this.userPreferencesChanged.next(updatedPreferences);
+                        return this.iam.setUserPreferences(updatedPreferences).pipe(
+                            catchError((error) => {
+                                // Reset to the previous state in case the backend didn't accept the
+                                // change.
+                                this.userPreferencesChanged.next(preferences);
+                                return throwError(error);
+                            }),
+                        );
+                    } else {
+                        this.localStorage.set(key, value);
+                        return EMPTY;
+                    }
+                }),
+            )
+            .toPromise();
+    }
+
+    private deleteFromUserProfile(key: string): Promise<void> {
+        return this.userPreferences
+            .pipe(
+                first(),
+                switchMap((preferences) => {
+                    if (preferences) {
+                        const updatedPreferences = { ...preferences };
+                        delete updatedPreferences[key];
+                        this.userPreferencesChanged.next(updatedPreferences);
+                        return this.iam.setUserPreferences(updatedPreferences).pipe(
+                            catchError((error) => {
+                                this.userPreferencesChanged.next(preferences);
+                                return throwError(error);
+                            }),
+                        );
+                    } else {
+                        this.localStorage.delete(key);
+                        return EMPTY;
+                    }
+                }),
+            )
+            .toPromise();
     }
 }
+
 export enum Store {
-    // the user profile, if available, otherwise as a cookie
+    /** The user profile, if available, otherwise localStorage. */
     UserProfile,
-    // Only the current running session (via cookie with timeout
+    /** Only the current running session (via sessionStorage). */
     Session,
+}
+
+class BrowserStorage {
+    private entryChanged = new Subject<{ key: string; value: any }>();
+
+    constructor(private storage: Storage) {}
+
+    get(key: string, fallback: any): any {
+        const rawValue = this.storage.getItem(key);
+        return rawValue ? JSON.parse(rawValue) : fallback;
+    }
+
+    observe(key: string, fallback: any): Observable<any> {
+        return this.entryChanged.pipe(
+            filter((entry) => entry.key === key),
+            map((entry) => entry.value),
+            startWith(this.get(key, fallback)),
+        );
+    }
+
+    set(key: string, value: any): void {
+        this.storage.setItem(key, JSON.stringify(value));
+        this.entryChanged.next({ key, value });
+    }
+
+    delete(key: string): void {
+        this.storage.removeItem(key);
+        this.entryChanged.next({ key, value: null });
+    }
 }

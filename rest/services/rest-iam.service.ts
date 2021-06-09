@@ -234,7 +234,7 @@ export class RestIamService extends AbstractRestService {
   }
   public setUserPreferences = (preferences:any,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/preferences',repository,[[':user',user]]);
-    return this.connector.put(query,JSON.stringify(preferences),this.connector.getRequestOptions());
+    return this.connector.put<void>(query,JSON.stringify(preferences),this.connector.getRequestOptions());
   }
 
   /**
