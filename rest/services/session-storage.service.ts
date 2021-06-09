@@ -81,45 +81,31 @@ export class SessionStorageService {
         });
     }
 
-    set(name: string, value: any, store = Store.UserProfile) {
-        return new Observable(subscriber => {
-            if (!this.connector.getCurrentLogin() ||
-                (!this.connector.getCurrentLogin()?.isGuest && !this.preferences)) {
-                setTimeout(() => this.set(name, value), 50);
+    async set(name: string, value: any, store = Store.UserProfile): Promise<void> {
+        while (!this.connector.getCurrentLogin() ||
+            (!this.connector.getCurrentLogin()?.isGuest && !this.preferences)) {
+                await new Promise<void>((resolve) => setTimeout(() => resolve(), 50));
+        }
+        if (store === Store.Session) {
+            this.setCookie(name, value, SessionStorageService.EXPIRE_TIME_SESSION);
+            return;
+        }
+        if (
+            this.connector.getCurrentLogin().statusCode ==
+            RestConstants.STATUS_CODE_OK &&
+            !this.connector.getCurrentLogin().isGuest
+        ) {
+            this.preferences[name] = value;
+            const data = await this.connector.isLoggedIn().toPromise();
+            if (data.statusCode != RestConstants.STATUS_CODE_OK) {
                 return;
             }
-            if (store === Store.Session) {
-                this.setCookie(name, value, SessionStorageService.EXPIRE_TIME_SESSION);
-                subscriber.next();
-                subscriber.complete();
-                return;
-            }
-            if (
-                this.connector.getCurrentLogin().statusCode ==
-                RestConstants.STATUS_CODE_OK &&
-                !this.connector.getCurrentLogin().isGuest
-            ) {
-                this.preferences[name] = value;
-                this.connector.isLoggedIn().subscribe((data: LoginResult) => {
-                    if (data.statusCode != RestConstants.STATUS_CODE_OK) {
-                        return;
-                    }
-                    this.iam
-                        .setUserPreferences(this.preferences)
-                        .subscribe(() => {
-                            subscriber.next();
-                            subscriber.complete();
-                        }, error => {
-                            subscriber.error(error);
-                            subscriber.complete();
-                        });
-                });
-            } else {
-                this.setCookie(name, value);
-                subscriber.next();
-                subscriber.complete();
-            }
-        });
+            await this.iam
+                .setUserPreferences(this.preferences)
+                .toPromise()
+        } else {
+            this.setCookie(name, value);
+        }
     }
 
     delete(name: string) {
