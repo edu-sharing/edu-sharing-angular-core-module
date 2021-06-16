@@ -39,6 +39,8 @@ export class SessionStorageService {
     private readonly triggerRefresh = new Subject<void>();
 
     constructor(private iam: RestIamService, private connector: RestConnectorService) {
+        // Make sure `currentLogin` emits at least once.
+        this.connector.isLoggedIn(false).toPromise();
         // The currently logged in user. `null` for guest or no/invalid login.
         const currentUser = this.connector.currentLogin.pipe(
             filter((login) => login !== null),
