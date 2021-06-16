@@ -24,10 +24,6 @@ export class SessionStorageService {
         this.get('').subscribe(() => {});
     }
 
-    refresh() {
-        this.preferences = null;
-    }
-
     get(name: string, fallback: any = null, store = Store.UserProfile): Observable<any> {
         return Observable.create((observer: Observer<any>) => {
             if (
