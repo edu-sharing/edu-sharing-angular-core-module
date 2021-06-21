@@ -105,6 +105,7 @@ export class RestConstants {
   public static LOM_PROP_TECHNICAL_FORMAT = "cclom:format";
   public static LOM_PROP_DESCRIPTION = "cclom:general_description";
   public static LOM_PROP_TITLE = "cclom:title";
+  public static CCM_PROP_RESTRICTED_ACCESS = "ccm:restricted_access";
   public static CCM_PROP_METADATACONTRIBUTER_CREATOR = "ccm:metadatacontributer_creator";
   public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = "ccm:metadatacontributer_creatorFN";
   public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR = "ccm:lifecyclecontributer_author";
