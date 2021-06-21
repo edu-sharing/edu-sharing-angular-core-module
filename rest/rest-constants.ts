@@ -190,6 +190,7 @@ export class RestConstants {
   // use not the maximum int value to prevent overflows in repository
   public static COUNT_UNLIMITED = 1247483647;
   public static USERHOME='-userhome-';
+  public static COLLECTIONHOME='-collectionhome-';
   public static SHARED_FILES='-shared_files-';
   public static MY_SHARED_FILES='-my_shared_files-';
   public static TO_ME_SHARED_FILES='-to_me_shared_files-';
