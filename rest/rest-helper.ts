@@ -123,10 +123,6 @@ export class RestHelper{
 
   }
 
-  public static printError(error : any) : string {
-    return error._body;
-  }
-
   public static createNameProperty(name: string) : any{
     let property : any ={};
     property[RestConstants.CM_NAME]=[name];
