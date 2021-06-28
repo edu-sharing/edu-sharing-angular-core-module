@@ -132,6 +132,7 @@ export class RestConstants {
   public static CCM_PROP_TRACKING_DOWNLOADS="ccm:tracking_downloads";
   public static CCM_PROP_CHILDOBJECT_ORDER = "ccm:childobject_order";
   public static CCM_PROP_COLLECTION_SUBCOLLECTION_ORDER_MODE = "ccm:collectionsubcollectionordermode";
+  public static CCM_PROP_COLLECTION_ORDER_MODE = "ccm:collectionordermode";
   public static CCM_PROP_COLLECTION_ORDERED_POSITION = "ccm:collection_ordered_position";
   public static CCM_PROP_PUBLISHED_HANDLE_ID="ccm:published_handle_id";
   public static CCM_PROP_PUBLISHED_DATE="ccm:published_date";
