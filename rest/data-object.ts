@@ -409,6 +409,7 @@ export class Collection{
   scope : string;
   pinned : boolean;
   orderMode: string;
+  orderAscending: boolean;
   authorFreetext: string;
 }
 
