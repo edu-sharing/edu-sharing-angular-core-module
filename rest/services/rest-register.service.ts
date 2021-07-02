@@ -35,6 +35,6 @@ export class RestRegisterService extends AbstractRestService{
             [":key",key],
             [":password",password]
         ]);
-        return this.connector.post(query, null, this.connector.getRequestOptions());
+        return this.connector.post<void>(query, null, this.connector.getRequestOptions());
     }
 }
