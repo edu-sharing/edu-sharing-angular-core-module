@@ -871,8 +871,8 @@ export interface Version {
 export interface NodeVersions {
   versions: Version[];
 }
-export interface RenderDetails{
-  snippet : string;
+export interface RenderDetails {
+  detailsSnippet : string;
   node : Node;
 }
 
