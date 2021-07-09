@@ -943,8 +943,9 @@ export interface UsageXmlParamsGeneral {
 export interface UsageList {
   usages: Usage[];
 }
-export interface CollectionUsage extends Usage{
+export interface CollectionUsage extends Usage {
     collection: Node;
+    collectionUsageType: 'ACTIVE' | 'PROPOSAL';
 }
 export interface Filetype {
   mimetype: string;
