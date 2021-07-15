@@ -178,8 +178,9 @@ export class Node {
   version : string;
   collection : Collection;
   rating: NodeRating;
+  usedInCollections?: CollectionRelationReference[];
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
-  public constructor(id:string=null){
+  public constructor(id:string=null) {
     this.ref=new NodeRef(id);
   }
 }
@@ -1025,6 +1026,9 @@ export class CollectionReference extends Node{
   originalId:string;
   accessOriginal: string[];
 }
+export class CollectionRelationReference extends Node {
+    relationType: 'Usage'| 'Proposal';
+}
 
 export class NodeRef {
   repo:string;
@@ -1143,6 +1147,7 @@ export interface SearchRequestCriteria {
 export interface SearchRequestBody {
     facettes?: string[];
     criterias: SearchRequestCriteria[];
+    resolveCollections?: boolean;
     permissions?: string[];
 }
 export interface WebsiteInformation{
