@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {BehaviorSubject, Observable, Observer} from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
@@ -289,7 +290,7 @@ export class RestLocatorService {
             this.apiUrl.next('');
             this.testApi(true);
         }
-        return this.apiUrl.filter((a) => a !== null && a !== '');
+        return this.apiUrl.pipe(filter((a) => a !== null && a !== ''));
     }
 
     setRoute(route: ActivatedRoute): Observable<void> {

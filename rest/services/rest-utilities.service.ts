@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
-import { Observable } from 'rxjs/Observable';
 import {RestConnectorService} from "./rest-connector.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {WebsiteInformation} from "../data-object";

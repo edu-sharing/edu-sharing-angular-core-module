@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
 import {RequestObject} from "../request-object";
 import {ArchiveRestore, ArchiveSearch, Node} from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class RestArchiveService extends AbstractRestService{
@@ -42,7 +42,7 @@ export class RestArchiveService extends AbstractRestService{
       [[":nodes",RestHelper.getQueryStringForList("archivedNodeIds",nodes)]]);
 
     return this.connector.delete(query,this.connector.getRequestOptions())
-      .map((response: Response) => response);
+      .pipe(map((response: Response) => response));
 
   }
   /**

@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestConnectorService} from './rest-connector.service';
@@ -79,23 +81,23 @@ export class RestMediacenterService extends AbstractRestService {
         const query=this.connector.createUrl('mediacenter/:version/import/mediacenters',null);
         const options=this.connector.getRequestOptions();
 
-        return this.connector.sendDataViaXHR(query,file,'POST','mediacenters')
-            .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+        return this.connector.sendDataViaXHR(query,file,'POST','mediacenters').pipe(
+            map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
     }
 
     public importOrganisations(file : File) {
         const query=this.connector.createUrl('mediacenter/:version/import/organisations',null);
         const options=this.connector.getRequestOptions();
 
-        return this.connector.sendDataViaXHR(query,file,'POST','organisations')
-            .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+        return this.connector.sendDataViaXHR(query,file,'POST','organisations').pipe(
+            map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
     }
 
     public importMcOrgConnections(file : File, removeSchoolsFromMC : boolean) {
         const query=this.connector.createUrl('mediacenter/:version/import/mc_org?removeSchoolsFromMC=' + removeSchoolsFromMC,null);
         const options=this.connector.getRequestOptions();
 
-        return this.connector.sendDataViaXHR(query,file,'POST','mcOrgs')
-            .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+        return this.connector.sendDataViaXHR(query,file,'POST','mcOrgs').pipe(
+            map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
     }
 }

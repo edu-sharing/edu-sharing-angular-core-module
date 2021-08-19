@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable, Observer} from 'rxjs';
-import 'rxjs/add/operator/do';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestConstants} from "../rest-constants";
 import {CollectionReference, Connector, ConnectorList, Filetype, Node, NodesRightMode} from "../data-object";
@@ -8,6 +7,7 @@ import {RestNodeService} from "./rest-node.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {UIService} from "./ui.service";
 import {NodeHelperService} from '../../../core-ui-module/node-helper.service';
+import { tap } from 'rxjs/operators';
 @Injectable()
 export class RestConnectorsService extends AbstractRestService{
     private static MODE_NONE=0;
@@ -26,7 +26,7 @@ export class RestConnectorsService extends AbstractRestService{
     ) => {
         let query=this.connector.createUrl("connector/:version/connectors/:repository/list",repository);
         return this.connector.get<ConnectorList>(query,this.connector.getRequestOptions())
-            .do((data)=>this.currentList=data);
+            .pipe(tap((data)=>this.currentList=data));
     }
     public connectorSupportsEdit(node: Node) {
         const connectors=this.getConnectors();

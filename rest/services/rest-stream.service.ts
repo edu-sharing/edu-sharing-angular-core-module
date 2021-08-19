@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
 import {RestConnectorService} from "./rest-connector.service";
 import {RestConstants} from "../rest-constants";
 import {

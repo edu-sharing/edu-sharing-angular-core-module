@@ -1,3 +1,5 @@
+
+import {tap,  first } from 'rxjs/operators';
 import {EventEmitter, Injectable, NgZone} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
@@ -120,10 +122,10 @@ export class RestConnectorService {
 }
   public logout() {
     let url=this.createUrl("authentication/:version/destroySession",null);
-    return this.get(url,this.getRequestOptions()).do(()=> {
+    return this.get(url,this.getRequestOptions()).pipe(tap(()=> {
         this.storage.remove(TemporaryStorageService.SESSION_INFO);
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
-    });
+    }));
   }
   public logoutSync() : any{
     let url=this.createUrl("authentication/:version/destroySession",null);
@@ -150,7 +152,7 @@ export class RestConnectorService {
                 observer.next(this.getCurrentLogin());
                 observer.complete();
             } else {
-                this.currentLogin.filter((data) => !!data).first().subscribe((data) => {
+                this.currentLogin.pipe(first((data) => !!data)).subscribe((data) => {
                     observer.next(data);
                     observer.complete();
                 });
