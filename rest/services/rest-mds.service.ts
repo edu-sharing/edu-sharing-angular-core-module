@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { MdsMetadataset, MdsMetadatasets, MdsValueList, MdsValues } from '../data-object';
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
@@ -45,6 +44,20 @@ export class RestMdsService extends AbstractRestService {
         return this.connector.post<MdsValueList>(
             query,
             JSON.stringify(values),
+            this.connector.getRequestOptions(),
+        );
+    };
+
+    getValuesForKeys = (keys:string[], metadataset = RestConstants.DEFAULT, mdsQuery: string, property: string,
+        repository = RestConstants.HOME_REPOSITORY): Observable<MdsValueList> => {
+        const query = this.connector.createUrl(
+            'mds/:version/metadatasetsV2/:repository/:metadataset/values_for_keys?query=:query&property=:property',
+            repository,
+            [[':metadataset', metadataset],[':query',mdsQuery],[':property',property]],
+        );
+        return  this.connector.post<MdsValueList>(
+            query,
+            JSON.stringify(keys),
             this.connector.getRequestOptions(),
         );
     };

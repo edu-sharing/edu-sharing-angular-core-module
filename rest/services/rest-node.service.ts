@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import 'rxjs/add/operator/map'
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";

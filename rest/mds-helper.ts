@@ -129,7 +129,7 @@ export class MdsHelper{
     /**
      * Returns all widgets used by the given template
      */
-    static getUsedWidgets(mds: Mds|MdsDefinition, template:string=null) {
+    static getUsedWidgets(mds: Mds|MdsDefinition, template:string=null): any[] {
         const used: any = [];
         const templateData = MdsHelper.findTemplate(mds, template);
         for(const w of mds.widgets) {

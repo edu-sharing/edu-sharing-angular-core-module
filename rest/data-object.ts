@@ -178,8 +178,9 @@ export class Node {
   version : string;
   collection : Collection;
   rating: NodeRating;
+  usedInCollections?: CollectionRelationReference[];
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
-  public constructor(id:string=null){
+  public constructor(id:string=null) {
     this.ref=new NodeRef(id);
   }
 }
@@ -872,8 +873,8 @@ export interface Version {
 export interface NodeVersions {
   versions: Version[];
 }
-export interface RenderDetails{
-  snippet : string;
+export interface RenderDetails {
+  detailsSnippet : string;
   node : Node;
 }
 
@@ -944,8 +945,9 @@ export interface UsageXmlParamsGeneral {
 export interface UsageList {
   usages: Usage[];
 }
-export interface CollectionUsage extends Usage{
+export interface CollectionUsage extends Usage {
     collection: Node;
+    collectionUsageType: 'ACTIVE' | 'PROPOSAL';
 }
 export interface Filetype {
   mimetype: string;
@@ -1024,6 +1026,9 @@ export class Person {
 export class CollectionReference extends Node{
   originalId:string;
   accessOriginal: string[];
+}
+export class CollectionRelationReference extends Node {
+    relationType: 'Usage'| 'Proposal';
 }
 
 export class NodeRef {
@@ -1143,6 +1148,7 @@ export interface SearchRequestCriteria {
 export interface SearchRequestBody {
     facettes?: string[];
     criterias: SearchRequestCriteria[];
+    resolveCollections?: boolean;
     permissions?: string[];
 }
 export interface WebsiteInformation{

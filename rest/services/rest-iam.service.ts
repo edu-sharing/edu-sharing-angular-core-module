@@ -1,6 +1,7 @@
+
+import {tap, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {RestConnectorService} from './rest-connector.service';
 import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
@@ -11,7 +12,6 @@ import {
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
 import {VCard} from '../../ui/VCard';
-import {map} from 'rxjs/operators';
 
 @Injectable()
 export class RestIamService extends AbstractRestService {
@@ -207,13 +207,13 @@ export class RestIamService extends AbstractRestService {
   }
   public getUser = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user',repository,[[':user',user]]);
-    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).
+    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).pipe(
         map((u) => {
           u.person.profile.vcard = new VCard((u.person.profile.vcard as unknown as string));
           return u;
-        }).do(
+        }),tap(
           (data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data) : null
-        );
+        ),);
   }
   public getUserStats = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/stats',repository,[[':user',user]]);
@@ -230,7 +230,7 @@ export class RestIamService extends AbstractRestService {
   public getUserPreferences = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/preferences',repository,[[':user',user]]);
     return this.connector.get<any>(query,this.connector.getRequestOptions())
-      .map((response) => JSON.parse(response.preferences));
+      .pipe(map((response) => JSON.parse(response.preferences)));
   }
   public setUserPreferences = (preferences:any,user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/preferences',repository,[[':user',user]]);

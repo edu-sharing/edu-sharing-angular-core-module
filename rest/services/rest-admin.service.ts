@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
-import { Observable } from 'rxjs/Observable';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
@@ -26,8 +24,9 @@ import {
     JobDescription,
     NodeListElastic
 } from '../data-object';
-import {Observer} from "rxjs";
+import {Observable} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class RestAdminService extends AbstractRestService{
@@ -82,7 +81,7 @@ export class RestAdminService extends AbstractRestService{
     let options=this.connector.getRequestOptions();
 
     return this.connector.sendDataViaXHR(query,file,"PUT")
-      .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+      .pipe(map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
   }
   public importExcel(file : File,parent:string){
     let query=this.connector.createUrl("admin/:version/import/excel?parent=:parent",null,[
@@ -91,7 +90,7 @@ export class RestAdminService extends AbstractRestService{
     let options=this.connector.getRequestOptions();
 
     return this.connector.sendDataViaXHR(query,file,"POST","excel")
-      .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+      .pipe(map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
   }
   public importCollections(file : File,parent:string){
     let query=this.connector.createUrl("admin/:version/import/collections?parent=:parent",null,[
@@ -100,14 +99,14 @@ export class RestAdminService extends AbstractRestService{
     let options=this.connector.getRequestOptions();
 
     return this.connector.sendDataViaXHR(query,file,"POST","xml")
-      .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+      .pipe(map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
   }
   public addApplicationXml(file : File) : Observable<any>{
     let query=this.connector.createUrl("admin/:version/applications/xml",null);
     let options=this.connector.getRequestOptions();
 
     return this.connector.sendDataViaXHR(query,file,"PUT","xml")
-      .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+      .pipe(map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
   }
   public getApplications(): Observable<Application[]>{
     let query=this.connector.createUrl("admin/:version/applications",null);
@@ -133,7 +132,7 @@ export class RestAdminService extends AbstractRestService{
         Expires: '0'
     };
     return this.connector.get(query,options)
-      .map((response:string) => this.readRepositoryVersion(response));
+      .pipe(map((response:string) => this.readRepositoryVersion(response)));
   }
 
   public getOAIClasses(){
@@ -171,7 +170,7 @@ export class RestAdminService extends AbstractRestService{
             [":binaryHandlerClassName",binaryHandlerClassName],
         ]);
         return this.connector.sendDataViaXHR(query,xml,'POST','xml')
-            .map((response:XMLHttpRequest) => {return JSON.parse(response.response)});
+            .pipe(map((response:XMLHttpRequest) => {return JSON.parse(response.response)}));
     }
   public refreshCache(rootFolder:string,sticky=false){
     let query=this.connector.createUrl("admin/:version/import/refreshCache/:rootFolder?sticky=:sticky",null,[

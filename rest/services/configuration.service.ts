@@ -37,7 +37,7 @@ export class ConfigurationService {
         observer.complete();
       },(error)=>{
         // no language available, so use a fixed string
-        this.bridge.showTemporaryMessage(MessageType.error, 'Error fetching configuration data. Please contact administrator.<br />Fehler beim Abrufen der Konfigurationsdaten. Bitte Administrator kontaktieren.', null, error);
+        this.bridge.showTemporaryMessage(MessageType.error, 'Error fetching configuration data. Please contact administrator.<br />Fehler beim Abrufen der Konfigurationsdaten. Bitte Administrator kontaktieren.', null, null, error);
         console.warn(error)
         this.data = {};
         observer.next(this.data);
