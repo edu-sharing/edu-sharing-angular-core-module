@@ -20,6 +20,7 @@ export class TemporaryStorageService {
     // default: false
     static OPTION_DISABLE_SCROLL_LAYOUT: 'option_disable_scroll_layout';
     static CUSTOM_NODE_LIST_COMPONENT = 'custom_node_list_component';
+    static CUSTOM_NODE_ENTRIES_COMPONENT = 'custom_node_entries_component';
 
     private data: any = {};
 
