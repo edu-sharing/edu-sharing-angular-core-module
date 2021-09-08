@@ -11,6 +11,7 @@ import { Node } from '../data-object';
 export class TemporaryStorageService {
     static APPLY_TO_LMS_PARAMETER_NODE = 'apply_to_lms_node';
     static NODE_RENDER_PARAMETER_LIST = 'node_render_list';
+    static NODE_RENDER_PARAMETER_DATA_SOURCE = 'node_render_data_source';
     static COLLECTION_ADD_NODES = 'collection_add_nodes';
     static WORKSPACE_LAST_LOCATION = 'WORKSPACE_LAST_LOCATION';
     static USER_INFO = 'USER_INFO';

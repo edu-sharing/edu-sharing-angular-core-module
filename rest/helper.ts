@@ -33,6 +33,19 @@ export class Helper {
       return result;
     }
 
+    /**
+     * Get unmatching keys between two objects
+     * example: a = {1: 1, 2: 2}, b = {1: 1, 2: 3} ==> [1]
+     */
+    static getKeysWithDifferentValues<T>(object1: T, object2: T) {
+        const diffs = new Set();
+        for(const key of Object.keys(object1).concat(Object.keys(object2))) {
+            if((object1 as any)[key] !== (object2 as any)[key]){
+                diffs.add(key);
+            }
+        }
+        return [...diffs];
+    }
   /**
    * Returns true if both arrays are equal(same length, and all primitive objects are equal)
    * @param array1
