@@ -324,6 +324,13 @@ export class RestConstants {
   public static WORKFLOW_STATUS_TO_CHECK:WorkflowDefinition={id:'200_tocheck',color:"#3CB0B0",hasReceiver:true,next:null};
   public static WORKFLOW_STATUS_HASFLAWS:WorkflowDefinition={id:'300_hasflaws',color:"#D58553",hasReceiver:true,next:null};
   public static WORKFLOW_STATUS_CHECKED:WorkflowDefinition={id:'400_checked',color:"#42A053",hasReceiver:false,next:null};
+    public static POSSIBLE_SORT_BY_FIELDS_SOLR=[
+        new SortItem("NODE",RestConstants.CM_NAME),
+        new SortItem("NODE",RestConstants.LOM_PROP_TITLE),
+        new SortItem("NODE",RestConstants.CM_MODIFIED_DATE),
+        new SortItem("NODE",RestConstants.CM_PROP_C_CREATED),
+        new SortItem("NODE",RestConstants.CM_CREATOR),
+    ];
 
     public static POSSIBLE_SORT_BY_FIELDS=[
         new SortItem("NODE",RestConstants.CM_NAME),
