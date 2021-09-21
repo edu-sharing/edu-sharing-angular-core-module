@@ -3,7 +3,7 @@
  * All Object types returned by the rest service
  */
 
-import {ListItem} from "../ui/list-item";
+import {ListItem, ListItemType} from '../ui/list-item';
 import {VCard} from '../ui/VCard';
 
 export enum STREAM_STATUS {
@@ -1225,4 +1225,11 @@ export class ProposalNode extends Node {
     // collection this proposal is for
     proposalCollection?: Node;
     accessible: boolean;
+}
+export class ListItemSort extends ListItem {
+    constructor(public type : ListItemType,public name : string, public mode : 'ascending' | 'descending' | null = null, public config = {
+        showLabel: false
+    }) {
+        super(type ,name, config);
+    }
 }

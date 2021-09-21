@@ -1,4 +1,4 @@
-import {SortItem, WorkflowDefinition} from "./data-object";
+import {ListItemSort, SortItem, WorkflowDefinition} from './data-object';
 
 export class RestConstants {
   public static DOCUMENT_EDITOR_URL="http://appserver9.metaventis.com/eduConDev/";
@@ -328,36 +328,35 @@ export class RestConstants {
   public static WORKFLOW_STATUS_HASFLAWS:WorkflowDefinition={id:'300_hasflaws',color:"#D58553",hasReceiver:true,next:null};
   public static WORKFLOW_STATUS_CHECKED:WorkflowDefinition={id:'400_checked',color:"#42A053",hasReceiver:false,next:null};
     public static POSSIBLE_SORT_BY_FIELDS_SOLR=[
-        new SortItem("NODE",RestConstants.CM_NAME),
-        new SortItem("NODE",RestConstants.LOM_PROP_TITLE),
-        new SortItem("NODE",RestConstants.CM_MODIFIED_DATE),
-        new SortItem("NODE",RestConstants.CM_PROP_C_CREATED),
-        new SortItem("NODE",RestConstants.CM_CREATOR),
+        new ListItemSort("NODE",RestConstants.CM_NAME),
+        new ListItemSort("NODE",RestConstants.LOM_PROP_TITLE),
+        new ListItemSort("NODE",RestConstants.CM_MODIFIED_DATE),
+        new ListItemSort("NODE",RestConstants.CM_PROP_C_CREATED),
+        new ListItemSort("NODE",RestConstants.CM_CREATOR),
     ];
 
     public static POSSIBLE_SORT_BY_FIELDS=[
-        new SortItem("NODE",RestConstants.CM_NAME),
-        new SortItem("NODE",RestConstants.LOM_PROP_TITLE),
-        new SortItem("NODE",RestConstants.CM_MODIFIED_DATE),
-        new SortItem("NODE",RestConstants.LOM_PROP_TITLE),
-        new SortItem("NODE",RestConstants.CM_PROP_C_CREATED),
-        new SortItem("NODE",RestConstants.CM_CREATOR),
-        new SortItem("NODE",RestConstants.NODE_ID),
-        new SortItem("NODE",RestConstants.CCM_PROP_WF_STATUS),
-        new SortItem("NODE",RestConstants.CM_ARCHIVED_DATE),
-        new SortItem("NODE",RestConstants.LOM_PROP_GENERAL_KEYWORD),
-        new SortItem("NODE",RestConstants.CCM_PROP_LICENSE),
-        new SortItem("NODE",RestConstants.CCM_PROP_IO_EDITORIAL_STATE),
-        new SortItem("NODE",RestConstants.CCM_PROP_IO_TECHNICAL_STATE),
-        new SortItem("NODE",RestConstants.CCM_PROP_IO_MEDIACENTER),
+        new ListItemSort("NODE",RestConstants.CM_NAME),
+        new ListItemSort("NODE",RestConstants.LOM_PROP_TITLE),
+        new ListItemSort("NODE",RestConstants.CM_MODIFIED_DATE),
+        new ListItemSort("NODE",RestConstants.CM_PROP_C_CREATED),
+        new ListItemSort("NODE",RestConstants.CM_CREATOR),
+        new ListItemSort("NODE",RestConstants.NODE_ID),
+        new ListItemSort("NODE",RestConstants.CCM_PROP_WF_STATUS),
+        new ListItemSort("NODE",RestConstants.CM_ARCHIVED_DATE),
+        new ListItemSort("NODE",RestConstants.LOM_PROP_GENERAL_KEYWORD),
+        new ListItemSort("NODE",RestConstants.CCM_PROP_LICENSE),
+        new ListItemSort("NODE",RestConstants.CCM_PROP_IO_EDITORIAL_STATE),
+        new ListItemSort("NODE",RestConstants.CCM_PROP_IO_TECHNICAL_STATE),
+        new ListItemSort("NODE",RestConstants.CCM_PROP_IO_MEDIACENTER),
         // not supported by alfresco/solr atm
         //new SortItem("USER",RestConstants.AUTHORITY_NAME),
-        new SortItem("USER",RestConstants.AUTHORITY_FIRSTNAME),
-        new SortItem("USER",RestConstants.AUTHORITY_LASTNAME),
-        new SortItem("USER",RestConstants.AUTHORITY_EMAIL),
-        new SortItem("USER",RestConstants.AUTHORITY_STATUS),
-        new SortItem("GROUP",RestConstants.AUTHORITY_DISPLAYNAME),
-        new SortItem("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
+        new ListItemSort("USER",RestConstants.AUTHORITY_FIRSTNAME),
+        new ListItemSort("USER",RestConstants.AUTHORITY_LASTNAME),
+        new ListItemSort("USER",RestConstants.AUTHORITY_EMAIL),
+        new ListItemSort("USER",RestConstants.AUTHORITY_STATUS),
+        new ListItemSort("GROUP",RestConstants.AUTHORITY_DISPLAYNAME),
+        new ListItemSort("GROUP",RestConstants.AUTHORITY_GROUPTYPE),
     ];
   public static LICENSE_URLS={
     "CC_BY_ABOUT":"https://creativecommons.org/licenses/?lang=de",
