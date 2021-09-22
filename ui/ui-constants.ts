@@ -11,7 +11,7 @@ export class UIConstants{
   public static MEDIA_QUERY_MIN_HEIGHT="min-height";
   public static MEDIA_QUERY_MAX_HEIGHT="max-height";
 
-  public static QUERY_PARAM_LIST_VIEW_TYPE="viewType";
+  public static QUERY_PARAM_LIST_VIEW_TYPE="displayType";
 
 }
 export enum OPEN_URL_MODE{
