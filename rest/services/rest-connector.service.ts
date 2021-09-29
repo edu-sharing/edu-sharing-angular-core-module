@@ -122,6 +122,7 @@ export class RestConnectorService {
     let url=this.createUrl("authentication/:version/destroySession",null);
     return this.get(url,this.getRequestOptions()).do(()=> {
         this.storage.remove(TemporaryStorageService.SESSION_INFO);
+        this._scope = null;
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     });
   }
@@ -132,6 +133,8 @@ export class RestConnectorService {
     xhr.withCredentials=options.withCredentials;
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
+    this._scope = null;
+    this.storage.remove(TemporaryStorageService.SESSION_INFO);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
@@ -550,8 +553,10 @@ export class RestConnectorService {
   private checkHeaders(response: Response) {
     if(!this._scope)
       return;
-    if(this._scope!=response.headers.get('X-Edu-Scope')){
+    const headerScope = response.headers.get('X-Edu-Scope') || response.headers.get('x-edu-scope');
+    if(this._scope !== headerScope) {
       this.goToLogin(null);
+      console.warn('current scope ' + this._scope + ' != ' + headerScope + ' enforcing re-login', response.url);
     }
   }
   private goToLogin(scope=this._scope) {
