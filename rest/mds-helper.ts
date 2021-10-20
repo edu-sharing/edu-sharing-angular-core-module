@@ -124,7 +124,9 @@ export class MdsHelper{
      * Find a template by id in the given mds
      */
     static findTemplate(mds: Mds|MdsDefinition, id: string) {
-       return mds.views.find((v) => v.id === id);
+       return (
+           mds.views as Array<ArrayElement<Mds['views']> | ArrayElement<MdsDefinition['views']>>
+       ).find((v) => v.id === id);
     }
     /**
      * Returns all widgets used by the given template
@@ -140,3 +142,6 @@ export class MdsHelper{
         return used;
     }
 }
+
+type ArrayElement<ArrayType extends readonly unknown[]> = 
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
