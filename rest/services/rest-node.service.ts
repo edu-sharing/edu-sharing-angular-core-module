@@ -78,10 +78,10 @@ export class RestNodeService extends AbstractRestService{
                         facettes : string[] = [],
                         request : any = null,
                         repository = RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrlNoEscape("node/:version/nodes/:repository?query=:query&:facettes&:request",repository,
+    let query=this.connector.createUrlNoEscape("node/:version/nodes/:repository?query=:query&:facets&:request",repository,
       [
         [":query",encodeURIComponent(searchQuery)],
-        [":facettes",RestHelper.getQueryStringForList("facettes",facettes)],
+        [":facets",RestHelper.getQueryStringForList("facets",facettes)],
         [":request",this.connector.createRequestString(request)]
       ]);
     return this.connector.post<NodeList>(query,"",this.connector.getRequestOptions());
