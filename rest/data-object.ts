@@ -718,7 +718,7 @@ export interface  MdsValuesParameters {
 }
 export interface MdsValues{
   valueParameters:MdsValuesParameters;
-  criterias : any;
+  criteria : any;
 }
 
 export interface Parent {
@@ -1147,7 +1147,7 @@ export interface SearchRequestCriteria {
 }
 export interface SearchRequestBody {
     facets?: string[];
-    criterias: SearchRequestCriteria[];
+    criteria: SearchRequestCriteria[];
     resolveCollections?: boolean;
     permissions?: string[];
 }

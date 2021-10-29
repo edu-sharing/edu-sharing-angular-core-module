@@ -124,7 +124,7 @@ export class RestSearchService extends AbstractRestService{
            repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,
            propertyFilter:string[]=[], query = RestConstants.DEFAULT_QUERY_NAME, permissions: string[] =[]) {
         let body={
-            criterias:criterias,
+            criteria:criterias,
             facets:facettes
         };
         return this.searchWithBody(body, request, contentType, repository, metadataset, propertyFilter, query);
