@@ -10,10 +10,6 @@ import { RestConstants } from '../rest-constants';
 
 @Injectable()
 export class RestLocatorService {
-    private static DEFAULT_NUMBER_PER_REQUEST = 25;
-
-    numberPerRequest = RestLocatorService.DEFAULT_NUMBER_PER_REQUEST;
-
     get apiVersion(): number {
         return this._apiVersion;
     }
@@ -118,121 +114,6 @@ export class RestLocatorService {
                         response => {
                             // Unmarshall encapuslated json response
                             observer.next(JSON.parse(response.body.value));
-                            observer.complete();
-                        },
-                        (error: any) => {
-                            observer.error(error);
-                            observer.complete();
-                        },
-                    );
-            });
-        });
-    }
-
-    getConfig(): Observable<any> {
-        return new Observable<any>((observer: Observer<any>) => {
-            this.locateApi().subscribe(data => {
-                const query = RestLocatorService.createUrl(
-                    'config/:version/values',
-                    null,
-                );
-                this.http
-                    .get<any>(
-                        this.apiUrl.value + query,
-                        this.getRequestOptions(),
-                    )
-                    .subscribe(
-                        response => {
-                            this.setConfigValues(response.body.current);
-                            observer.next(response.body);
-                            observer.complete();
-                        },
-                        (error: any) => {
-                            observer.error(error);
-                            observer.complete();
-                        },
-                    );
-            });
-        });
-    }
-
-    getConfigVariables(): Observable<string[]> {
-        return new Observable<string[]>((observer: Observer<string[]>) => {
-            this.locateApi().subscribe(data => {
-                const query = RestLocatorService.createUrl(
-                    'config/:version/variables',
-                    null,
-                );
-                this.http
-                    .get<any>(
-                        this.apiUrl.value + query,
-                        this.getRequestOptions('application/json'),
-                    )
-                    .subscribe(
-                        response => {
-                            observer.next(response.body.current);
-                            observer.complete();
-                        },
-                        (error: any) => {
-                            observer.error(error);
-                            observer.complete();
-                        },
-                    );
-            });
-        });
-    }
-
-    getConfigLanguage(lang: string): Observable<any> {
-        return new Observable<any>((observer: Observer<any>) => {
-            this.locateApi().subscribe(data => {
-                const query = RestLocatorService.createUrl(
-                    'config/:version/language',
-                    null,
-                );
-                this.http
-                    .get(
-                        this.apiUrl.value + query,
-                        this.getRequestOptions(
-                            'application/json',
-                            null,
-                            null,
-                            lang,
-                        ),
-                    )
-                    .subscribe(
-                        (response: any) => {
-                            observer.next(response.body.current);
-                            observer.complete();
-                        },
-                        (error: any) => {
-                            observer.error(error);
-                            observer.complete();
-                        },
-                    );
-            });
-        });
-    }
-
-    getLanguageDefaults(lang: string): Observable<any> {
-        return new Observable<any>((observer: Observer<any>) => {
-            this.locateApi().subscribe(data => {
-                const query = RestLocatorService.createUrl(
-                    'config/:version/language/defaults',
-                    null,
-                );
-                this.http
-                    .get(
-                        this.apiUrl.value + query,
-                        this.getRequestOptions(
-                            'application/json',
-                            null,
-                            null,
-                            lang,
-                        ),
-                    )
-                    .subscribe(
-                        response => {
-                            observer.next(response.body);
                             observer.complete();
                         },
                         (error: any) => {
@@ -360,10 +241,4 @@ export class RestLocatorService {
             }
         }
     }
-
-    private setConfigValues(config: any) {
-        if (config.itemsPerRequest)
-            this.numberPerRequest = config.itemsPerRequest;
-    }
-
 }

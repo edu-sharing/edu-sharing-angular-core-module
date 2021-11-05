@@ -14,6 +14,7 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
+import { ConfigService } from 'ngx-edu-sharing-api';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -48,13 +49,7 @@ export class RestConnectorService {
   get endpointUrl(): string {
     return this.locator.endpointUrl;
   }
-  get numberPerRequest(): number {
-    return this.locator.numberPerRequest;
-  }
-
-  set numberPerRequest(value: number) {
-    this.locator.numberPerRequest=value;
-  }
+  numberPerRequest = RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
   get lastActionTime(){
     return this._lastActionTime;
   }
@@ -71,9 +66,12 @@ export class RestConnectorService {
               private locator: RestLocatorService,
               private bridge: BridgeService,
               private storage : TemporaryStorageService,
-              private event:FrameEventsService) {
+              private event:FrameEventsService,
+              private configApi: ConfigService,
+  ) {
     this.numberPerRequest=RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
     event.addListener(this);
+    this.configApi.getConfig().subscribe(config => this.numberPerRequest = config.itemsPerRequest);
   }
   public getBridgeService(){
     return this.bridge;

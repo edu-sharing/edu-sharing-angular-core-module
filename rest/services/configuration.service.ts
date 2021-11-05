@@ -3,6 +3,8 @@ import {Observable, Observer} from "rxjs";
 import {RestLocatorService} from "./rest-locator.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {MessageType} from '../../ui/message-type';
+import { ConfigService } from 'ngx-edu-sharing-api';
+import { first } from "rxjs/operators";
 
 /**
  Service to get configuration data while running (e.g. loaded extension)
@@ -11,8 +13,12 @@ import {MessageType} from '../../ui/message-type';
 export class ConfigurationService {
   private data : any=null;
 
-  constructor(private bridge:BridgeService,private locator : RestLocatorService) {
-    //this.getAll().subscribe(()=>{});
+  constructor(
+    private bridge: BridgeService,
+    private locator: RestLocatorService,
+    private configApi: ConfigService,
+  ) {
+      //this.getAll().subscribe(()=>{});
   }
   public getLocator(){
     return this.locator;
@@ -29,9 +35,10 @@ export class ConfigurationService {
         observer.complete();
         return;
       }
-      //this.http.get("assets/config.json").map((response: Response) => response.json()).subscribe((data:any)=>{
-      this.locator.getConfig().subscribe((data)=>{
-        this.data=data.current;
+      // TODO: cleanup. This method used to directly fetch the config from the API. The wrapping and
+      // caching is not needed anymore.
+      this.configApi.getConfig().pipe(first()).subscribe((data)=>{
+        this.data=data;
         this.applyGlobal();
         observer.next(this.data);
         observer.complete();
