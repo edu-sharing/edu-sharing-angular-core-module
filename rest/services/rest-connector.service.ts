@@ -152,38 +152,36 @@ export class RestConnectorService {
                 });
             }
         }
-        this.locator.locateApi().subscribe(() => {
-            this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
-                (data: LoginResult) => {
-                    this.toolPermissions = data.toolPermissions;
-                    this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
-                    this.currentLogin.next(data);
-                    this.storage.set(TemporaryStorageService.SESSION_INFO, data);
-                    this._logoutTimeout = data.sessionTimeout;
-                    if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
-                      this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,false).subscribe(()=>{
-                        this.isLoggedIn().subscribe((data:LoginResult)=>{
-                                observer.next(data);
-                                observer.complete();
-                            },(error:any)=>{
-                                observer.error(error);
-                                observer.complete();
-                            });
-                      },(error:any)=>{
-                          observer.error(error);
-                          observer.complete();
-                      });
-                      return;
-                    }
-                    observer.next(data);
-                    observer.complete();
-                },
-                (error: any) => {
-                    observer.error(error);
-                    observer.complete();
+        this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
+            (data: LoginResult) => {
+                this.toolPermissions = data.toolPermissions;
+                this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
+                this.currentLogin.next(data);
+                this.storage.set(TemporaryStorageService.SESSION_INFO, data);
+                this._logoutTimeout = data.sessionTimeout;
+                if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
+                  this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,false).subscribe(()=>{
+                    this.isLoggedIn().subscribe((data:LoginResult)=>{
+                            observer.next(data);
+                            observer.complete();
+                        },(error:any)=>{
+                            observer.error(error);
+                            observer.complete();
+                        });
+                  },(error:any)=>{
+                      observer.error(error);
+                      observer.complete();
+                  });
+                  return;
                 }
-            );
-        });
+                observer.next(data);
+                observer.complete();
+            },
+            (error: any) => {
+                observer.error(error);
+                observer.complete();
+            }
+        );
     });
   }
   public hasAccessToScope(scope:string) {
@@ -342,86 +340,84 @@ export class RestConnectorService {
   }
   private request<T>(method:string,url:string,body:any,options:any,appendUrl=true){
       return new Observable<T>((observer : Observer<T>) => {
-          this.locator.locateApi().subscribe(data => {
-              this._lastActionTime=new Date().getTime();
-              this._currentRequestCount++;
-              let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
-              let call=null;
-              if(method=='GET'){
-                call=this.http.get<T>(requestUrl, options);
-              }
-              else if(method=='POST'){
-                  call=this.http.post<T>(requestUrl,body, options);
-              }
-              else if(method=='PUT'){
-                  call=this.http.put<T>(requestUrl,body, options);
-              }
-              else if(method=='DELETE'){
-                  call=this.http.delete<T>(requestUrl, options);
-              }
-              else{
-                throw new Error("Unknown request method "+method);
-              }
-              call.subscribe((response:any) => {
-                      this._currentRequestCount--;
-                      this.checkHeaders(response);
-                      observer.next(response.body);
-                      observer.complete();
-                  },
-                  error => {
-                      this._currentRequestCount--;
+          this._lastActionTime=new Date().getTime();
+          this._currentRequestCount++;
+          let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
+          let call=null;
+          if(method=='GET'){
+            call=this.http.get<T>(requestUrl, options);
+          }
+          else if(method=='POST'){
+              call=this.http.post<T>(requestUrl,body, options);
+          }
+          else if(method=='PUT'){
+              call=this.http.put<T>(requestUrl,body, options);
+          }
+          else if(method=='DELETE'){
+              call=this.http.delete<T>(requestUrl, options);
+          }
+          else{
+            throw new Error("Unknown request method "+method);
+          }
+          call.subscribe((response:any) => {
+                  this._currentRequestCount--;
+                  this.checkHeaders(response);
+                  observer.next(response.body);
+                  observer.complete();
+              },
+              error => {
+                  this._currentRequestCount--;
 
-                      if (!this._autoLogin) {
+                  if (!this._autoLogin) {
 
-                      }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || (
-                          error.status === RestConstants.HTTP_FORBIDDEN && ['POST','PUT','DELETE'].indexOf(method) !== -1)) {
-                          let callback=() => {
-                              if(this.bridge.isRunningCordova() && options.headers['Authorization']){
-                                  this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
-                                      options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
-                                      this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
-                                          observer.next(data);
-                                          observer.complete();
-                                      },(error:any)=>{
-                                          this.goToLogin();
-                                          observer.error(error);
-                                          observer.complete();
-                                      });
-                                  });
-                                  return;
-                              }
-                              else {
-                                  this.goToLogin();
-                              }
-                          };
-                          if(error.status === RestConstants.HTTP_FORBIDDEN){
-                              this.isLoggedIn(true).subscribe((result) => {
-                                  if(result.statusCode !== RestConstants.STATUS_CODE_OK){
-                                      console.log('forbidden request and user session is lost -> go to login');
-                                      callback();
-                                  } else {
-                                      // login is okay, person has no access, throw error
+                  }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || (
+                      error.status === RestConstants.HTTP_FORBIDDEN && ['POST','PUT','DELETE'].indexOf(method) !== -1)) {
+                      let callback=() => {
+                          if(this.bridge.isRunningCordova() && options.headers['Authorization']){
+                              this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
+                                  options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
+                                  this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
+                                      observer.next(data);
+                                      observer.complete();
+                                  },(error:any)=>{
+                                      this.goToLogin();
                                       observer.error(error);
                                       observer.complete();
-                                  }
+                                  });
                               });
                               return;
-                          } else {
-                              callback();
                           }
-
-                      }
-                      if (this.bridge.isRunningCordova() && error.status==0){
-                          this.noConnectionDialog();
-                          observer.complete();
+                          else {
+                              this.goToLogin();
+                          }
+                      };
+                      if(error.status === RestConstants.HTTP_FORBIDDEN){
+                          this.isLoggedIn(true).subscribe((result) => {
+                              if(result.statusCode !== RestConstants.STATUS_CODE_OK){
+                                  console.log('forbidden request and user session is lost -> go to login');
+                                  callback();
+                              } else {
+                                  // login is okay, person has no access, throw error
+                                  observer.error(error);
+                                  observer.complete();
+                              }
+                          });
                           return;
+                      } else {
+                          callback();
                       }
 
-
-                      observer.error(error);
+                  }
+                  if (this.bridge.isRunningCordova() && error.status==0){
+                      this.noConnectionDialog();
                       observer.complete();
-                  });
-          });
+                      return;
+                  }
+
+
+                  observer.error(error);
+                  observer.complete();
+              });
       });
   }
 
@@ -487,14 +483,6 @@ export class RestConnectorService {
               }
           }, 50);
       });
-  }
-
-  /**
-   * Returns the current api version (usually a value > 1, can be floating point), or -1 if no api is connected
-   * @returns {number}
-   */
-  public getApiVersion(){
-    return this.locator.apiVersion;
   }
 
   /**
