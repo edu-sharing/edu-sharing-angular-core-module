@@ -71,7 +71,11 @@ export class RestConnectorService {
   ) {
     this.numberPerRequest=RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
     event.addListener(this);
-    this.configApi.getConfig().subscribe(config => this.numberPerRequest = config.itemsPerRequest);
+    this.configApi.getConfig().subscribe(config => {
+      if (config.itemsPerRequest) {
+        this.numberPerRequest = config.itemsPerRequest
+      }
+    });
   }
   public getBridgeService(){
     return this.bridge;
