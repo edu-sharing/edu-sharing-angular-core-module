@@ -70,9 +70,7 @@ export class RestLocatorService {
         private http: HttpClient,
         private bridge: BridgeService,
         private about: AboutService,
-    ) {
-        this.testEndpoint(this.apiUrl);
-    }
+    ) {}
 
     createOAuthFromSession() {
         return new Observable((observer: Observer<OAuthResult>) => {
@@ -178,20 +176,5 @@ export class RestLocatorService {
 
     getBridge() {
         return this.bridge;
-    }
-
-    private testEndpoint(url: string) {
-        this.about.getAbout().subscribe(
-            data => {},
-            error => {
-                if (error.status === RestConstants.HTTP_UNAUTHORIZED) {
-                    return;
-                } else {
-                    console.error(
-                        'Could not contact rest api at location ' + url,
-                    );
-                }
-            },
-        );
     }
 }
