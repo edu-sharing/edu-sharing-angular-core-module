@@ -138,10 +138,6 @@ export class RestConnectorService {
   public getCurrentLogin() : LoginResult {
     return this.currentLogin.value;
   }
-  public getAbout(){
-      let url=this.createUrl("_about",null);
-      return this.get<About>(url,this.getRequestOptions());
-  }
   public isLoggedIn(forceRenew=true){
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {

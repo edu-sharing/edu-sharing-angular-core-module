@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
+import { AboutService } from 'ngx-edu-sharing-api'
 
 @Injectable()
 export class RestLocatorService {
@@ -71,7 +72,11 @@ export class RestLocatorService {
         return url;
     }
 
-    constructor(private http: HttpClient, private bridge: BridgeService) {}
+    constructor(
+        private http: HttpClient,
+        private bridge: BridgeService,
+        private about: AboutService,
+    ) {}
 
     createOAuthFromSession() {
         return new Observable((observer: Observer<OAuthResult>) => {
@@ -190,12 +195,12 @@ export class RestLocatorService {
     }
 
     private testEndpoint(url: string, local = true) {
-        this.http.get<any>(url + '_about', this.getRequestOptions()).subscribe(
+        this.about.getAbout().subscribe(
             data => {
                 this._apiVersion =
-                    data.body.version.major + data.body.version.minor / 10;
+                    data.version.major + data.version.minor / 10;
                 this.apiUrl.next(url);
-                this.themesUrl = data.body.themesUrl;
+                this.themesUrl = data.themesUrl;
                 return;
             },
             error => {
