@@ -1,11 +1,11 @@
 
-import {tap,  first } from 'rxjs/operators';
+import {tap,  first, switchMap } from 'rxjs/operators';
 import {EventEmitter, Injectable, NgZone} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
-import {BehaviorSubject, Observable, Observer} from 'rxjs';
+import {BehaviorSubject, Observable, Observer, of} from 'rxjs';
 import {RequestObject} from '../request-object';
-import {OAuthResult, LoginResult, AccessScope, About} from '../data-object';
+import {OAuthResult, AccessScope} from '../data-object';
 import {Router, ActivatedRoute} from '@angular/router';
 import {RestLocatorService} from './rest-locator.service';
 import {HttpClient} from '@angular/common/http';
@@ -14,7 +14,7 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
-import { ConfigService } from 'ngx-edu-sharing-api';
+import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -31,7 +31,7 @@ export class RestConnectorService {
   public _scope: string;
   private toolPermissions: string[];
   private themesUrl="../themes/default/";
-  currentLogin = new BehaviorSubject<LoginResult>(null);
+  currentLogin = new BehaviorSubject<LoginInfo>(null);
   get autoLogin(): boolean {
     return this._autoLogin;
   }
@@ -68,7 +68,9 @@ export class RestConnectorService {
               private storage : TemporaryStorageService,
               private event:FrameEventsService,
               private configApi: ConfigService,
+              private authenticationApi: AuthenticationService,
   ) {
+    this.registerLoginInfo();
     this.numberPerRequest=RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
     event.addListener(this);
     this.configApi.getConfig().subscribe(config => {
@@ -123,12 +125,12 @@ export class RestConnectorService {
 
 }
   public logout() {
-    let url=this.createUrl("authentication/:version/destroySession",null);
-    return this.get(url,this.getRequestOptions()).pipe(tap(()=> {
+    return this.authenticationApi.logout().pipe(tap(() => {
         this.storage.remove(TemporaryStorageService.SESSION_INFO);
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     }));
   }
+
   public logoutSync() : any{
     let url=this.createUrl("authentication/:version/destroySession",null);
     let xhr = new XMLHttpRequest();
@@ -139,55 +141,41 @@ export class RestConnectorService {
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
-  public getCurrentLogin() : LoginResult {
+  public getCurrentLogin() : LoginInfo {
     return this.currentLogin.value;
   }
-  public isLoggedIn(forceRenew=true){
-    const url = this.createUrl("authentication/:version/validateSession",null);
-    return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
-        if(!forceRenew) {
-            if(this.getCurrentLogin()) {
-                observer.next(this.getCurrentLogin());
-                observer.complete();
-            } else {
-                this.currentLogin.pipe(first((data) => !!data)).subscribe((data) => {
-                    observer.next(data);
-                    observer.complete();
-                });
-            }
-        }
-        this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
-            (data: LoginResult) => {
-                this.toolPermissions = data.toolPermissions;
-                this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
-                this.currentLogin.next(data);
-                this.storage.set(TemporaryStorageService.SESSION_INFO, data);
-                this._logoutTimeout = data.sessionTimeout;
-                if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
-                  this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,false).subscribe(()=>{
-                    this.isLoggedIn().subscribe((data:LoginResult)=>{
-                            observer.next(data);
-                            observer.complete();
-                        },(error:any)=>{
-                            observer.error(error);
-                            observer.complete();
-                        });
-                  },(error:any)=>{
-                      observer.error(error);
-                      observer.complete();
-                  });
-                  return;
-                }
-                observer.next(data);
-                observer.complete();
-            },
-            (error: any) => {
-                observer.error(error);
-                observer.complete();
-            }
-        );
+
+  private registerLoginInfo(): void {
+    this.authenticationApi.getLoginInfo().subscribe((loginInfo) => {
+      this.toolPermissions = loginInfo.toolPermissions;
+      this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, loginInfo);
+      this.currentLogin.next(loginInfo);
+      this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
+      this._logoutTimeout = loginInfo.sessionTimeout;
     });
   }
+
+  public isLoggedIn(forceRenew=true): Observable<LoginInfo> {
+    return this.authenticationApi.getLoginInfo().pipe(
+      first(),
+      switchMap((loginInfo) => {
+        if (
+            loginInfo.statusCode !== RestConstants.STATUS_CODE_OK &&
+            this.bridge.isRunningCordova()
+        ) {
+            return this.bridge
+                .getCordova()
+                .reinitStatus(this.locator.endpointUrl, false)
+                .pipe(
+                    switchMap(() => this.authenticationApi.updateLoginInfo()),
+                );
+        } else {
+            return of(loginInfo);
+        }
+      }),
+    );
+  }
+
   public hasAccessToScope(scope:string) {
     let url=this.createUrl("authentication/:version/hasAccessToScope/?scope=:scope",null,[[":scope",scope]]);
     return this.get<AccessScope>(url,this.getRequestOptions());
@@ -214,49 +202,18 @@ export class RestConnectorService {
       }
     });
   }
+
   public login(username:string,password:string,scope:string=null){
-
-    let url = this.createUrl("authentication/:version/validateSession", null);
-    if(scope) {
-      url = this.createUrl("authentication/:version/loginToScope", null);
-    }
-    return new Observable<LoginResult>((observer)=>{
-      if(scope){
-        this.post<LoginResult>(url,JSON.stringify({
-          userName:username,
-          password:password,
-          scope:scope
-        }),this.getRequestOptions()).subscribe(
-          (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
-            this.storage.set(TemporaryStorageService.SESSION_INFO,data);
-            observer.next(data);
-            observer.complete();
-          },
-          (error:any) =>{
-            observer.error(error);
-            observer.complete();
-          });
-      }
-      else {
-        this.get<LoginResult>(url, this.getRequestOptions("",username,password)).subscribe(
-          (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
-            this.storage.set(TemporaryStorageService.SESSION_INFO,data);
-            observer.next(data);
-            observer.complete();
-          },
-          (error: any) => {
-
-            observer.error(error);
-            observer.complete();
-          });
-      }
-    });
-
+    return this.authenticationApi.login(username, password, scope).pipe(
+      tap(loginInfo => {
+        if (loginInfo.isValidLogin) {
+          this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, loginInfo);
+        }
+        this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
+      })
+    )
   }
+
   public createRequestString(request : RequestObject){
     let str="skipCount="+(request && request.offset ? request.offset : 0)+
       "&maxItems="+(request && request.count!=null ?  request.count : this.numberPerRequest);
