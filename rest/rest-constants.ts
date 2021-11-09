@@ -89,6 +89,8 @@ export class RestConstants {
   public static CM_PROP_C_CREATED = "cm:created";
   public static CCM_TYPE_IO = "ccm:io";
   public static CCM_TYPE_MAP = "ccm:map";
+  public static SYS_TYPE_CONTAINER = "sys:container";
+  public static CCM_TYPE_TOOLPERMISSION = "ccm:toolpermission";
   public static CCM_TYPE_REMOTEOBJECT="ccm:remoteobject";
   public static CCM_TYPE_TOOL_INSTANCE = "ccm:tool_instance";
   public static CCM_TYPE_SAVED_SEARCH = "ccm:saved_search";
