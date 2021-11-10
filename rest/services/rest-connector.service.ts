@@ -1,11 +1,11 @@
 
 import {tap,  first, switchMap } from 'rxjs/operators';
-import {EventEmitter, Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
 import {BehaviorSubject, Observable, Observer, of} from 'rxjs';
 import {RequestObject} from '../request-object';
-import {OAuthResult, AccessScope} from '../data-object';
+import {OAuthResult} from '../data-object';
 import {Router, ActivatedRoute} from '@angular/router';
 import {RestLocatorService} from './rest-locator.service';
 import {HttpClient} from '@angular/common/http';
@@ -167,7 +167,7 @@ export class RestConnectorService {
                 .getCordova()
                 .reinitStatus(this.locator.endpointUrl, false)
                 .pipe(
-                    switchMap(() => this.authenticationApi.updateLoginInfo()),
+                    switchMap(() => this.authenticationApi.forceLoginInfoRefresh()),
                 );
         } else {
             return of(loginInfo);
@@ -176,10 +176,6 @@ export class RestConnectorService {
     );
   }
 
-  public hasAccessToScope(scope:string) {
-    let url=this.createUrl("authentication/:version/hasAccessToScope/?scope=:scope",null,[[":scope",scope]]);
-    return this.get<AccessScope>(url,this.getRequestOptions());
-  }
   public hasToolPermissionInstant(permission:string){
     if(this.toolPermissions)
       return this.toolPermissions.indexOf(permission) != -1;
