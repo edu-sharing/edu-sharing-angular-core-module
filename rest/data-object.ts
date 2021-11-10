@@ -5,6 +5,7 @@
 
 import {ListItem, ListItemType} from '../ui/list-item';
 import {VCard} from '../ui/VCard';
+import {LoginInfo} from 'ngx-edu-sharing-api';
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -901,17 +902,9 @@ export interface Version {
 export interface NodeVersion {
   version: Version;
 }
-export interface LoginResult{
-  isAdmin: boolean;
-  statusCode: string;
-  isValidLogin : boolean;
-  currentScope : string;
-  authorityName : string;
-  sessionTimeout : number;
-  isGuest : boolean;
-  toolPermissions : string[];
-  remoteAuthentications : any;
-}
+
+export type LoginResult = LoginInfo;
+
 export interface AccessScope{
   hasAccess : boolean;
 }
