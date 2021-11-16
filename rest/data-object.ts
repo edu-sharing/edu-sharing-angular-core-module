@@ -332,6 +332,7 @@ export interface NodeRef {
 export interface User extends UserSimple {
   organizations: Organization[];
   properties: any;
+  stats: UserStats;
   homeFolder: NodeRef;
   sharedFolders: NodeRef[];
   quota: UserQuota;
