@@ -24,6 +24,7 @@ import NumberFormatOptions = Intl.NumberFormatOptions;
 import {Helper} from "./helper";
 import {MessageType} from '../ui/message-type';
 import {Observable} from "rxjs";
+import {UniversalNode} from '../../common/definitions';
 
 export class RestHelper{
     private static SPACES_STORE_REF = "workspace://SpacesStore/";
@@ -279,7 +280,7 @@ export class RestHelper{
       str=format.format(h)+":"+format.format(m)+":"+format.format(s);
       return str;
     }
-    public static getTitle(node: Node):string {
+    public static getTitle(node: UniversalNode):string {
       if (node?.title) return node.title;
       return node?.name;
     }

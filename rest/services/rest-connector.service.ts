@@ -23,7 +23,7 @@ import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing
  */
 @Injectable()
 export class RestConnectorService {
-  private static DEFAULT_NUMBER_PER_REQUEST = 25;
+  public static DEFAULT_NUMBER_PER_REQUEST = 25;
   private _lastActionTime=0;
   private _currentRequestCount=0;
   private _logoutTimeout: number;
