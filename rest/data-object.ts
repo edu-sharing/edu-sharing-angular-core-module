@@ -335,6 +335,7 @@ export interface User extends UserSimple {
   homeFolder: NodeRef;
   sharedFolders: NodeRef[];
   quota: UserQuota;
+  profile: UserProfile;
 }
 export interface UserSimple {
   authorityName: string;

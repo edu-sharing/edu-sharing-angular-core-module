@@ -328,5 +328,12 @@ export class RestAdminService extends AbstractRestService{
         options.responseType='text';
         return this.connector.put<string>(query,content,options);
     }
+    public switchAuthentication(authorityName:string) {
+        let query=this.connector.createUrl("admin/:version/authenticate/:authorityName",null,[
+            [":authorityName",authorityName]
+        ]);
+        let options:any=this.connector.getRequestOptions();
+        return this.connector.post<string>(query, null, options);
+    }
 }
 
