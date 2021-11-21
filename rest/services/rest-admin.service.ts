@@ -312,6 +312,11 @@ export class RestAdminService extends AbstractRestService{
         return this.connector.put<any>(query,JSON.stringify(options),this.connector.getRequestOptions());
     }
 
+    public getConfigMerged() {
+        let query=this.connector.createUrl("admin/:version/config/merged",null);
+        let options:any=this.connector.getRequestOptions();
+        return this.connector.get<any>(query,options);
+    }
     public getConfigFile(filename:string) {
         let query=this.connector.createUrl("admin/:version/configFile?filename=:filename",null,[
             [":filename",filename]
