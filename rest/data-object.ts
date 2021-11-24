@@ -180,6 +180,7 @@ export class Node {
   collection : Collection;
   rating: NodeRating;
   usedInCollections?: CollectionRelationReference[];
+  relations: {[key in 'Original']: Node};
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
   public constructor(id:string=null) {
     this.ref=new NodeRef(id);
