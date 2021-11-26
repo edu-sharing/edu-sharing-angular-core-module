@@ -120,7 +120,7 @@ export class ConfigurationService {
             const child = document.createElement('style');
             child.id = 'es-custom-css';
             child.innerHTML = this.data.customCSS;
-            document.body.appendChild(child);
+            document.head.appendChild(child);
         }
     }
 }
