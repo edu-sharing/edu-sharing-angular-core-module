@@ -942,7 +942,7 @@ export interface UsageList {
 }
 export interface CollectionUsage extends Usage {
     collection: Node;
-    collectionUsageType: 'ACTIVE' | 'PROPOSAL';
+    collectionUsageType: 'ACTIVE' | 'PROPOSAL_PENDING' | 'PROPOSAL_DECLINED';
 }
 export interface Filetype {
   mimetype: string;
