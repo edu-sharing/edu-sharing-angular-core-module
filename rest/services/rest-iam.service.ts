@@ -6,24 +6,49 @@ import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
 import {
   ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User
+  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, LoginResult
 } from '../data-object';
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
 import {VCard} from '../../ui/VCard';
+import {BehaviorSubject} from 'rxjs';
+import {shareReplay} from 'rxjs/operators';
 
 @Injectable()
 export class RestIamService extends AbstractRestService {
+  currentUser = new BehaviorSubject<{user: IamUser, login: LoginResult}>(null);
+  private currentUserSubscription: Observable<any>;
     constructor(connector : RestConnectorService, private storage : TemporaryStorageService) {
         super(connector);
     }
-
+  currentUserValid() {
+      return this.currentUser.value && this.currentUser.value.login === this.connector.getCurrentLogin();
+  }
   /**
    * Get's the currently authenticated user object (same as calling getUser)
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.storage.get(TemporaryStorageService.USER_INFO);
+    return this.currentUserValid() ? this.currentUser.value?.user.person : null;
+  }
+  /**
+   * Get's the currently authenticated user object (same as calling getUser)
+   * Please note that getUser() has to be called before, otherwise it will return null
+   */
+  async getCurrentUserAsync() {
+    if(this.currentUserValid()) {
+      this.currentUserSubscription = null;
+      return this.currentUser.value.user;
+    } else {
+      if(this.currentUserSubscription) {
+        const result = this.currentUserSubscription.toPromise();
+        if(this.currentUserValid()) {
+          return result;
+        }
+      }
+      this.currentUserSubscription = this.getUser().pipe(shareReplay());
+      return this.currentUserSubscription.toPromise();
+    }
   }
 
   /**
@@ -157,7 +182,26 @@ export class RestIamService extends AbstractRestService {
   }
   public getUser = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user',repository,[[':user',user]]);
-    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).do((data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data.person) : null);
+    if(user === RestConstants.ME) {
+      return new Observable<IamUser>((observer) => {
+        this.connector.isLoggedIn(false).subscribe((login) => {
+          // fetch current login to have a valid person info
+          return this.connector.get<IamUser>(query, this.connector.getRequestOptions()).do((user) => {
+            this.currentUser.next({
+              user,
+              login
+            });
+          }).subscribe((user) => {
+            observer.next(user);
+            observer.complete();
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          })
+        });
+      });
+    }
+    return this.connector.get<IamUser>(query,this.connector.getRequestOptions());
   }
   public getUserGroups = (user=RestConstants.ME,pattern='*',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
       const query=this.connector.createUrlNoEscape('iam/:version/people/:repository/:user/memberships?pattern=:pattern&:request',repository,[

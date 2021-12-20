@@ -12,7 +12,6 @@ export class TemporaryStorageService {
     static APPLY_TO_LMS_PARAMETER_NODE = 'apply_to_lms_node';
     static COLLECTION_ADD_NODES = 'collection_add_nodes';
     static WORKSPACE_LAST_LOCATION = 'WORKSPACE_LAST_LOCATION';
-    static USER_INFO = 'USER_INFO';
     // default: false
     static OPTION_HIDE_MAINNAV: 'option_hide_mainnav';
     // default: false
