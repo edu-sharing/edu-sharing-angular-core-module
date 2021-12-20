@@ -46,7 +46,7 @@ export class RestIamService extends AbstractRestService {
       this.currentUserSubscription = null;
       return this.currentUser.value.user;
     } else {
-      return this.currentUser.subscribe();
+      return (await this.currentUser.toPromise()).user;
     }
   }
 
