@@ -28,7 +28,7 @@ export class RestConnectorService {
   public _scope: string;
   private toolPermissions: string[];
   private themesUrl="../themes/default/";
-  private currentLogin = new BehaviorSubject<LoginResult>(null);
+  currentLogin = new BehaviorSubject<LoginResult>(null);
   isValidatingSession = false;
 
   get autoLogin(): boolean {

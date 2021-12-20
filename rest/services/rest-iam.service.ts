@@ -12,7 +12,8 @@ import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
 import {VCard} from '../../ui/VCard';
 import {BehaviorSubject} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {distinctUntilChanged, filter} from 'rxjs/operators';
+import {Helper} from '../helper';
 
 @Injectable()
 export class RestIamService extends AbstractRestService {
@@ -20,34 +21,32 @@ export class RestIamService extends AbstractRestService {
   private currentUserSubscription: Observable<any>;
     constructor(connector : RestConnectorService, private storage : TemporaryStorageService) {
         super(connector);
+        // subscribe login updates and sync the current user state
+        this.connector.currentLogin.pipe(
+            filter((a) => !!a),
+            distinctUntilChanged((a,b) =>
+          Helper.objectEquals(a,b)
+        )).subscribe(async (login) => {
+          this.currentUser.next(null);
+          await this.getUser().toPromise();
+        });
     }
-  currentUserValid() {
-      return this.currentUser.value && this.currentUser.value.login === this.connector.getCurrentLogin();
-  }
   /**
    * Get's the currently authenticated user object (same as calling getUser)
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.currentUserValid() ? this.currentUser.value?.user.person : null;
+    return this.currentUser.value?.user?.person;
   }
   /**
-   * Get's the currently authenticated user object (same as calling getUser)
-   * Please note that getUser() has to be called before, otherwise it will return null
+   * Get's the currently authenticated user object (same as calling getUser, but prevents duplicated calls)
    */
   async getCurrentUserAsync() {
-    if(this.currentUserValid()) {
+    if(this.currentUser.value) {
       this.currentUserSubscription = null;
       return this.currentUser.value.user;
     } else {
-      if(this.currentUserSubscription) {
-        const result = this.currentUserSubscription.toPromise();
-        if(this.currentUserValid()) {
-          return result;
-        }
-      }
-      this.currentUserSubscription = this.getUser().pipe(shareReplay());
-      return this.currentUserSubscription.toPromise();
+      return this.currentUser.subscribe();
     }
   }
 
@@ -200,8 +199,9 @@ export class RestIamService extends AbstractRestService {
           })
         });
       });
+    } else {
+      return this.connector.get<IamUser>(query, this.connector.getRequestOptions());
     }
-    return this.connector.get<IamUser>(query,this.connector.getRequestOptions());
   }
   public getUserGroups = (user=RestConstants.ME,pattern='*',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
       const query=this.connector.createUrlNoEscape('iam/:version/people/:repository/:user/memberships?pattern=:pattern&:request',repository,[
