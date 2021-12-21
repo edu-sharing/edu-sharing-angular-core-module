@@ -220,11 +220,12 @@ export class RestAdminService extends AbstractRestService{
         ]);
         return this.connector.get<NodeListElastic>(query,this.connector.getRequestOptions());
     }
-  public exportLucene(lucene:string,store:string,properties:string[]){
+  public exportLucene(lucene:string,store:string,properties:string[],authorities:string[]){
     let query=this.connector.createUrlNoEscape("admin/:version/lucene/export?query=:lucene&store=:store&:properties",null,[
         [":lucene",encodeURIComponent(lucene)],
         [":store",encodeURIComponent(store)],
         [":properties",RestHelper.getQueryStringForList("properties",properties)],
+        [":authorities",RestHelper.getQueryStringForList("authorityScope",authorities)]
     ]);
     return this.connector.get<any>(query,this.connector.getRequestOptions());
   }
