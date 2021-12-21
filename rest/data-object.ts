@@ -180,10 +180,17 @@ export class Node {
   rating: NodeRating;
   usedInCollections?: CollectionRelationReference[];
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
+  nodeLTIDeepLink: NodeLTIDeepLink;
   public constructor(id:string=null) {
     this.ref=new NodeRef(id);
   }
 }
+
+export interface NodeLTIDeepLink {
+    ltiDeepLinkReturnUrl: string;
+    jwtDeepLinkResponse: string;
+}
+
 export interface NodeContent {
   version: string;
   url: string;
