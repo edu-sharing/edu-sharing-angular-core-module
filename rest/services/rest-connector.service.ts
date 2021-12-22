@@ -147,23 +147,31 @@ export class RestConnectorService {
       let url=this.createUrl("_about",null);
       return this.get<About>(url,this.getRequestOptions());
   }
-  public isLoggedIn(forceRenew=true){
+  public isLoggedIn(forceRenew = true){
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
         if(!forceRenew) {
-            if(this.getCurrentLogin()) {
-                observer.next(this.getCurrentLogin());
+            if(!this.isValidatingSession && this.currentLogin.value) {
+                observer.next(this.currentLogin.value);
                 observer.complete();
-            } else {
-                this.currentLogin.filter((data) => !!data).first().subscribe((data) => {
-                    observer.next(data);
-                    observer.complete();
-                });
+                return;
             }
         }
+        if(this.isValidatingSession) {
+            this.currentLogin.filter((result) => result != null).first().subscribe((result) => {
+                observer.next(result);
+                observer.complete();
+            }, error => {
+                observer.error(error);
+                observer.complete();
+            });
+            return;
+            }
+        this.isValidatingSession = true;
         this.locator.locateApi().subscribe(() => {
             this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
                 (data: LoginResult) => {
+                    this.isValidatingSession = false;
                     this.toolPermissions = data.toolPermissions;
                     this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
                     this.currentLogin.next(data);
@@ -184,10 +192,12 @@ export class RestConnectorService {
                       });
                       return;
                     }
+                    this.isValidatingSession = false;
                     observer.next(data);
                     observer.complete();
                 },
                 (error: any) => {
+                    this.isValidatingSession = false;
                     this.currentLogin.error(error);
                     observer.error(error);
                     observer.complete();
@@ -236,9 +246,10 @@ export class RestConnectorService {
           scope:scope
         }),this.getRequestOptions()).subscribe(
           (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
             this.currentLogin.next(data);
+            if(data.isValidLogin) {
+                this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, data);
+            }
             observer.next(data);
             observer.complete();
           },
@@ -250,9 +261,10 @@ export class RestConnectorService {
       else {
         this.get<LoginResult>(url, this.getRequestOptions("",username,password)).subscribe(
           (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
             this.currentLogin.next(data);
+            if(data.isValidLogin) {
+                this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, data);
+            }
             observer.next(data);
             observer.complete();
           },
