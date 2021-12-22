@@ -5,31 +5,67 @@ import {RestConnectorService} from './rest-connector.service';
 import {RestHelper} from '../rest-helper';
 import {RestConstants} from '../rest-constants';
 import {
-  ArchiveRestore, ArchiveSearch, Node, NodeList, IamGroup, IamGroups, IamAuthorities, GroupProfile,
-  IamUsers, IamUser, UserProfile, UserCredentials, UserStatus, Person, User, GroupSignupDetails, Group, ProfileSettings, GroupSignupResult, UserSimple, UserStats
+  ArchiveRestore,
+  ArchiveSearch,
+  Node,
+  NodeList,
+  IamGroup,
+  IamGroups,
+  IamAuthorities,
+  GroupProfile,
+  IamUsers,
+  IamUser,
+  UserProfile,
+  UserCredentials,
+  UserStatus,
+  Person,
+  User,
+  LoginResult,
+  UserStats,
+  UserSimple,
+  ProfileSettings,
+  GroupSignupDetails, GroupSignupResult
 } from '../data-object';
 import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
 import {VCard} from '../../ui/VCard';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
+import {distinctUntilChanged, filter} from 'rxjs/operators';
+import {Helper} from '../helper';
 
 @Injectable()
 export class RestIamService extends AbstractRestService {
+  currentUser = new BehaviorSubject<{user: IamUser, login: LoginResult}>(null);
+  private currentUserSubscription: Observable<any>;
     constructor(connector : RestConnectorService, private storage : TemporaryStorageService) {
         super(connector);
+        // subscribe login updates and sync the current user state
+        this.connector.currentLogin.pipe(
+            filter((a) => !!a),
+            distinctUntilChanged((a,b) =>
+          Helper.objectEquals(a,b)
+        )).subscribe(async (login) => {
+          this.currentUser.next(null);
+          await this.getUser().toPromise();
+        });
     }
-
   /**
    * Get's the currently authenticated user object (same as calling getUser)
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.storage.get(TemporaryStorageService.USER_INFO)?.person;
+    return this.currentUser.value?.user?.person;
   }
-
-  getCurrentUserAsync() : Promise<IamUser> {
-      return this.getCurrentUser() ? Promise.resolve(this.storage.get(TemporaryStorageService.USER_INFO)) :
-          this.getUser().toPromise();
+  /**
+   * Get's the currently authenticated user object (same as calling getUser, but prevents duplicated calls)
+   */
+  async getCurrentUserAsync() {
+    if(this.currentUser.value) {
+      this.currentUserSubscription = null;
+      return this.currentUser.value.user;
+    } else {
+      return (await this.currentUser.toPromise()).user;
+    }
   }
 
   /**
@@ -207,13 +243,27 @@ export class RestIamService extends AbstractRestService {
   }
   public getUser = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user',repository,[[':user',user]]);
-    return this.connector.get<IamUser>(query,this.connector.getRequestOptions()).
-        map((u) => {
-          u.person.profile.vcard = new VCard((u.person.profile.vcard as unknown as string));
-          return u;
-        }).do(
-          (data)=>user===RestConstants.ME ? this.storage.set(TemporaryStorageService.USER_INFO,data) : null
-        );
+    if(user === RestConstants.ME) {
+      return new Observable<IamUser>((observer) => {
+        this.connector.isLoggedIn(false).subscribe((login) => {
+          // fetch current login to have a valid person info
+          return this.connector.get<IamUser>(query, this.connector.getRequestOptions()).do((user) => {
+            this.currentUser.next({
+              user,
+              login
+            });
+          }).subscribe((user) => {
+            observer.next(user);
+            observer.complete();
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          })
+        });
+      });
+    } else {
+      return this.connector.get<IamUser>(query, this.connector.getRequestOptions());
+    }
   }
   public getUserStats = (user=RestConstants.ME,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/stats',repository,[[':user',user]]);
