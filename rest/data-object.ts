@@ -1203,10 +1203,11 @@ export interface JobFieldDescription {
   sampleValue?: string;
   values?: JobFieldDescription[];
 }
-
+export type JobTag = 'DeletePersonJob';
 export interface JobDescription {
   name: string;
   description: string;
+  tags: JobTag[];
   params: JobFieldDescription[];
 }
 export class VCardResult {

@@ -228,6 +228,35 @@ export class RestAdminService extends AbstractRestService{
     ]);
     return this.connector.get<any>(query,this.connector.getRequestOptions());
   }
+  public startJobSync(job:string,params:any, file: File = null){
+      let query=this.connector.createUrl("admin/:version/job/:job/sync",null,[
+          [":job",job],
+      ]);
+      if(!params) {
+          params = {};
+      }
+      if(file) {
+          return new Observable((observer) => {
+              const reader = new FileReader();
+              console.log(reader);
+              reader.addEventListener('load', (event) => {
+                  const result = event.target.result;
+                  console.log(result);
+                  params.FILE_DATA = result;
+                  this.startJob(job, params).subscribe(() => {
+                      observer.next();
+                      observer.complete();
+                  }, error => {
+                      observer.error(error);
+                      observer.complete();
+                  } );
+              });
+              reader.readAsText(file);
+          });
+      } else {
+          return this.connector.post<any>(query, JSON.stringify(params), this.connector.getRequestOptions());
+      }
+  }
   public startJob(job:string,params:any, file: File = null){
       let query=this.connector.createUrl("admin/:version/job/:job",null,[
           [":job",job],
