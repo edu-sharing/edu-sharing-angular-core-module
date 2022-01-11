@@ -717,7 +717,7 @@ export interface  MdsValuesParameters {
 }
 export interface MdsValues{
   valueParameters:MdsValuesParameters;
-  criterias : any;
+  criteria : any;
 }
 
 export interface Parent {
