@@ -244,7 +244,7 @@ export interface Facette {
 export interface ArchiveSearch {
   nodes: Node[];
   pagination: Pagination;
-  facettes: Facette[];
+  facets: Facette[];
 }
 
 export interface RestError {
@@ -777,12 +777,12 @@ export interface NodeRemoteWrapper extends NodeWrapper{
 export interface AbstractList<T extends Node> {
     nodes: T[];
     pagination: Pagination;
-    facettes?: Facette[];
+    facets?: Facette[];
 }
 export interface NodeList extends AbstractList<Node> {
   nodes: Node[];
   pagination: Pagination;
-  facettes?: Facette[];
+  facets?: Facette[];
 }
 export interface NodeListElastic extends NodeList{
     elasticResponse: string;
@@ -1141,8 +1141,9 @@ export interface SearchRequestCriteria {
     values: string[];
 }
 export interface SearchRequestBody {
-    facettes?: string[];
-    criterias: SearchRequestCriteria[];
+    facets?: string[];
+    criteria: SearchRequestCriteria[];
+    resolveCollections?: boolean;
     permissions?: string[];
 }
 export interface WebsiteInformation{
