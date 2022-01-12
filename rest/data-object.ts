@@ -262,6 +262,8 @@ export interface GroupProfile {
 }
 export type GroupSignupResult = 'InvalidPassword' | 'AlreadyInList' | 'AlreadyMember' | 'Ok';
 
+export type ConfigFilePrefix =  'NODE' | 'NODE_APPLICATION' | 'CLUSTER' | 'DEFAULTS' |
+    'DEFAULTS_METADATASETS' | 'DEFAULTS_MAULTEMPLATES';
 export interface Group {
   authorityName: string;
   authorityType: string;
