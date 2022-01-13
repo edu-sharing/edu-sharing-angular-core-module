@@ -24,7 +24,7 @@ import {
     NodeStatistics,
     Statistics,
     JobDescription,
-    NodeListElastic, ConfigFilePrefix
+    NodeListElastic, ConfigFilePrefix, PluginStatus
 } from '../data-object';
 import {Observer} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
@@ -41,6 +41,10 @@ export class RestAdminService extends AbstractRestService{
     public getAllJobs(){
         let query=this.connector.createUrl("admin/:version/jobs/all",null);
         return this.connector.get<JobDescription[]>(query,this.connector.getRequestOptions())
+    }
+    public getPlugins(){
+        let query=this.connector.createUrl("admin/:version/plugins",null);
+        return this.connector.get<PluginStatus[]>(query,this.connector.getRequestOptions())
     }
     public cancelJob(job:string){
         let query=this.connector.createUrl("admin/:version/jobs/:job",null,[[":job",job]]);

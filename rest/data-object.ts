@@ -1205,6 +1205,10 @@ export interface JobFieldDescription {
   values?: JobFieldDescription[];
 }
 
+export interface PluginStatus {
+    name: string;
+    enabled: boolean;
+}
 export interface JobDescription {
   name: string;
   description: string;
