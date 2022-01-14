@@ -14,7 +14,7 @@ export class RestMdsService extends AbstractRestService {
 
     getSets = (repository = RestConstants.HOME_REPOSITORY): Observable<any> => {
         const query = this.connector.createUrl(
-            'mds/:version/metadatasetsV2/:repository',
+            'mds/:version/metadatasets/:repository',
             repository,
         );
         return this.connector.get<MdsMetadatasets>(query, this.connector.getRequestOptions());
@@ -25,7 +25,7 @@ export class RestMdsService extends AbstractRestService {
         repository = RestConstants.HOME_REPOSITORY,
     ): Observable<any> => {
         const query = this.connector.createUrl(
-            'mds/:version/metadatasetsV2/:repository/:metadataset',
+            'mds/:version/metadatasets/:repository/:metadataset',
             repository,
             [[':metadataset', metadataset]],
         );
@@ -38,7 +38,7 @@ export class RestMdsService extends AbstractRestService {
         repository = RestConstants.HOME_REPOSITORY,
     ): Observable<MdsValueList> => {
         const query = this.connector.createUrl(
-            'mds/:version/metadatasetsV2/:repository/:metadataset/values',
+            'mds/:version/metadatasets/:repository/:metadataset/values',
             repository,
             [[':metadataset', metadataset]],
         );

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {RestConnectorService} from "./rest-connector.service";
 import {RestHelper} from "../rest-helper";
 import {RestConstants} from "../rest-constants";
@@ -91,7 +90,7 @@ export class RestSearchService extends AbstractRestService{
 
   }
   saveSearch(name:string,query:string,criterias:any[],repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,replace=false) {
-    let url=this.connector.createUrl('search/:version/queriesV2/:repository/:metadataset/:query/save?name=:name&replace=:replace',repository,[
+    let url=this.connector.createUrl('search/:version/queries/:repository/:metadataset/:query/save?name=:name&replace=:replace',repository,[
       [":name",name],
       [":query",query],
       [":metadataset",metadataset],
@@ -107,7 +106,7 @@ export class RestSearchService extends AbstractRestService{
     return this.search(criterias,null,request,type, RestConstants.HOME_REPOSITORY,RestConstants.DEFAULT,[],queryId);
   }
     searchWithBody(body: SearchRequestBody, request: any=null,contentType=RestConstants.CONTENT_TYPE_FILES, repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,propertyFilter:string[]=[], query = RestConstants.DEFAULT_QUERY_NAME) {
-        let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/:metadataset/:query/?contentType=:contentType&:request&:propertyFilter',repository,[
+        let q=this.connector.createUrlNoEscape('search/:version/queries/:repository/:metadataset/:query/?contentType=:contentType&:request&:propertyFilter',repository,[
             [":metadataset",encodeURIComponent(metadataset)],
             [":query",encodeURIComponent(query)],
             [":contentType",contentType],
@@ -125,8 +124,8 @@ export class RestSearchService extends AbstractRestService{
            repository = RestConstants.HOME_REPOSITORY, metadataset = RestConstants.DEFAULT,
            propertyFilter:string[]=[], query = RestConstants.DEFAULT_QUERY_NAME, permissions: string[] =[]) {
         let body={
-            criterias:criterias,
-            facettes:facettes
+            criteria:criterias,
+            facets:facettes
         };
         return this.searchWithBody(body, request, contentType, repository, metadataset, propertyFilter, query);
     }
@@ -144,7 +143,7 @@ export class RestSearchService extends AbstractRestService{
                        fields: string[] = [],
                        contributorProperties: string[] = [],
                        repository = RestConstants.HOME_REPOSITORY): Observable<VCardResult[]> {
-        let q=this.connector.createUrlNoEscape('search/:version/queriesV2/:repository/contributor?searchWord=:searchWord&contributorKind=:contributorKind&:fields&:contributorProperties',repository,[
+        let q=this.connector.createUrlNoEscape('search/:version/queries/:repository/contributor?searchWord=:searchWord&contributorKind=:contributorKind&:fields&:contributorProperties',repository,[
             [":searchWord", encodeURIComponent(searchWord)],
             [":contributorKind", encodeURIComponent(contributorKind)],
             [":fields", RestHelper.getQueryString("fields", fields)],
