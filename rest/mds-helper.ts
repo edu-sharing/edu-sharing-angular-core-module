@@ -5,9 +5,10 @@ import {Collection, Mds, Sort} from './data-object';
 import {TranslateService} from '@ngx-translate/core';
 import {MdsDefinition, MdsWidget, MdsWidgetValue, Values} from '../../common/ui/mds-editor/types';
 import {Widget} from '../../common/ui/mds-editor/mds-editor-instance.service';
+import { MdsSort } from "ngx-edu-sharing-api";
 
 export class MdsHelper{
-    static getSortInfo(mdsSet: Mds|MdsDefinition, name: string): Sort{
+    static getSortInfo(mdsSet: Mds|MdsDefinition, name: string): Sort | MdsSort {
         if(mdsSet) {
             if (mdsSet.sorts) {
                 for (const list of mdsSet.sorts) {

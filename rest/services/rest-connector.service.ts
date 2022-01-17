@@ -1,11 +1,11 @@
 
-import {tap,  first } from 'rxjs/operators';
-import {EventEmitter, Injectable, NgZone} from '@angular/core';
+import {tap,  first, switchMap } from 'rxjs/operators';
+import {Injectable, NgZone} from '@angular/core';
 import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
-import {BehaviorSubject, Observable, Observer} from 'rxjs';
+import {BehaviorSubject, Observable, Observer, of} from 'rxjs';
 import {RequestObject} from '../request-object';
-import {OAuthResult, LoginResult, AccessScope, About} from '../data-object';
+import {OAuthResult} from '../data-object';
 import {Router, ActivatedRoute} from '@angular/router';
 import {RestLocatorService} from './rest-locator.service';
 import {HttpClient} from '@angular/common/http';
@@ -14,6 +14,7 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
+import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -22,7 +23,7 @@ import {DialogButton} from "../../ui/dialog-button";
  */
 @Injectable()
 export class RestConnectorService {
-  private static DEFAULT_NUMBER_PER_REQUEST = 25;
+  public static DEFAULT_NUMBER_PER_REQUEST = 25;
   private _lastActionTime=0;
   private _currentRequestCount=0;
   private _logoutTimeout: number;
@@ -30,7 +31,7 @@ export class RestConnectorService {
   public _scope: string;
   private toolPermissions: string[];
   private themesUrl="../themes/default/";
-  currentLogin = new BehaviorSubject<LoginResult>(null);
+  currentLogin = new BehaviorSubject<LoginInfo>(null);
   get autoLogin(): boolean {
     return this._autoLogin;
   }
@@ -48,13 +49,7 @@ export class RestConnectorService {
   get endpointUrl(): string {
     return this.locator.endpointUrl;
   }
-  get numberPerRequest(): number {
-    return this.locator.numberPerRequest;
-  }
-
-  set numberPerRequest(value: number) {
-    this.locator.numberPerRequest=value;
-  }
+  numberPerRequest = RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
   get lastActionTime(){
     return this._lastActionTime;
   }
@@ -71,9 +66,18 @@ export class RestConnectorService {
               private locator: RestLocatorService,
               private bridge: BridgeService,
               private storage : TemporaryStorageService,
-              private event:FrameEventsService) {
+              private event:FrameEventsService,
+              private configApi: ConfigService,
+              private authenticationApi: AuthenticationService,
+  ) {
+    this.registerLoginInfo();
     this.numberPerRequest=RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
     event.addListener(this);
+    this.configApi.getConfig().subscribe(config => {
+      if (config.itemsPerRequest) {
+        this.numberPerRequest = config.itemsPerRequest
+      }
+    });
   }
   public getBridgeService(){
     return this.bridge;
@@ -121,12 +125,13 @@ export class RestConnectorService {
 
 }
   public logout() {
-    let url=this.createUrl("authentication/:version/destroySession",null);
-    return this.get(url,this.getRequestOptions()).pipe(tap(()=> {
+    return this.authenticationApi.logout().pipe(tap(() => {
         this.storage.remove(TemporaryStorageService.SESSION_INFO);
+        this._scope = null;
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     }));
   }
+
   public logoutSync() : any{
     let url=this.createUrl("authentication/:version/destroySession",null);
     let xhr = new XMLHttpRequest();
@@ -134,68 +139,46 @@ export class RestConnectorService {
     xhr.withCredentials=options.withCredentials;
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
+    this._scope = null;
+    this.storage.remove(TemporaryStorageService.SESSION_INFO);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
-  public getCurrentLogin() : LoginResult {
+  public getCurrentLogin() : LoginInfo {
     return this.currentLogin.value;
   }
-  public getAbout(){
-      let url=this.createUrl("_about",null);
-      return this.get<About>(url,this.getRequestOptions());
-  }
-  public isLoggedIn(forceRenew=true){
-    const url = this.createUrl("authentication/:version/validateSession",null);
-    return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
-        if(!forceRenew) {
-            if(this.getCurrentLogin()) {
-                observer.next(this.getCurrentLogin());
-                observer.complete();
-            } else {
-                this.currentLogin.pipe(first((data) => !!data)).subscribe((data) => {
-                    observer.next(data);
-                    observer.complete();
-                });
-            }
-        }
-        this.locator.locateApi().subscribe(() => {
-            this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
-                (data: LoginResult) => {
-                    this.toolPermissions = data.toolPermissions;
-                    this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
-                    this.currentLogin.next(data);
-                    this.storage.set(TemporaryStorageService.SESSION_INFO, data);
-                    this._logoutTimeout = data.sessionTimeout;
-                    if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
-                      this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,false).subscribe(()=>{
-                        this.isLoggedIn().subscribe((data:LoginResult)=>{
-                                observer.next(data);
-                                observer.complete();
-                            },(error:any)=>{
-                                observer.error(error);
-                                observer.complete();
-                            });
-                      },(error:any)=>{
-                          observer.error(error);
-                          observer.complete();
-                      });
-                      return;
-                    }
-                    observer.next(data);
-                    observer.complete();
-                },
-                (error: any) => {
-                    observer.error(error);
-                    observer.complete();
-                }
-            );
-        });
+
+  private registerLoginInfo(): void {
+    this.authenticationApi.getLoginInfo().subscribe((loginInfo) => {
+      this.toolPermissions = loginInfo.toolPermissions;
+      this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, loginInfo);
+      this.currentLogin.next(loginInfo);
+      this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
+      this._logoutTimeout = loginInfo.sessionTimeout;
     });
   }
-  public hasAccessToScope(scope:string) {
-    let url=this.createUrl("authentication/:version/hasAccessToScope/?scope=:scope",null,[[":scope",scope]]);
-    return this.get<AccessScope>(url,this.getRequestOptions());
+
+  public isLoggedIn(forceRenew=true): Observable<LoginInfo> {
+    return this.authenticationApi.getLoginInfo().pipe(
+      first(),
+      switchMap((loginInfo) => {
+        if (
+            loginInfo.statusCode !== RestConstants.STATUS_CODE_OK &&
+            this.bridge.isRunningCordova()
+        ) {
+            return this.bridge
+                .getCordova()
+                .reinitStatus(this.locator.endpointUrl, false)
+                .pipe(
+                    switchMap(() => this.authenticationApi.forceLoginInfoRefresh()),
+                );
+        } else {
+            return of(loginInfo);
+        }
+      }),
+    );
   }
+
   public hasToolPermissionInstant(permission:string){
     if(this.toolPermissions)
       return this.toolPermissions.indexOf(permission) != -1;
@@ -218,49 +201,18 @@ export class RestConnectorService {
       }
     });
   }
+
   public login(username:string,password:string,scope:string=null){
-
-    let url = this.createUrl("authentication/:version/validateSession", null);
-    if(scope) {
-      url = this.createUrl("authentication/:version/loginToScope", null);
-    }
-    return new Observable<LoginResult>((observer)=>{
-      if(scope){
-        this.post<LoginResult>(url,JSON.stringify({
-          userName:username,
-          password:password,
-          scope:scope
-        }),this.getRequestOptions()).subscribe(
-          (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
-            this.storage.set(TemporaryStorageService.SESSION_INFO,data);
-            observer.next(data);
-            observer.complete();
-          },
-          (error:any) =>{
-            observer.error(error);
-            observer.complete();
-          });
-      }
-      else {
-        this.get<LoginResult>(url, this.getRequestOptions("",username,password)).subscribe(
-          (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
-            this.storage.set(TemporaryStorageService.SESSION_INFO,data);
-            observer.next(data);
-            observer.complete();
-          },
-          (error: any) => {
-
-            observer.error(error);
-            observer.complete();
-          });
-      }
-    });
-
+    return this.authenticationApi.login(username, password, scope).pipe(
+      tap(loginInfo => {
+        if (loginInfo.isValidLogin) {
+          this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, loginInfo);
+        }
+        this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
+      })
+    )
   }
+
   public createRequestString(request : RequestObject){
     let str="skipCount="+(request && request.offset ? request.offset : 0)+
       "&maxItems="+(request && request.count!=null ?  request.count : this.numberPerRequest);
@@ -348,86 +300,84 @@ export class RestConnectorService {
   }
   private request<T>(method:string,url:string,body:any,options:any,appendUrl=true){
       return new Observable<T>((observer : Observer<T>) => {
-          this.locator.locateApi().subscribe(data => {
-              this._lastActionTime=new Date().getTime();
-              this._currentRequestCount++;
-              let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
-              let call=null;
-              if(method=='GET'){
-                call=this.http.get<T>(requestUrl, options);
-              }
-              else if(method=='POST'){
-                  call=this.http.post<T>(requestUrl,body, options);
-              }
-              else if(method=='PUT'){
-                  call=this.http.put<T>(requestUrl,body, options);
-              }
-              else if(method=='DELETE'){
-                  call=this.http.delete<T>(requestUrl, options);
-              }
-              else{
-                throw new Error("Unknown request method "+method);
-              }
-              call.subscribe((response:any) => {
-                      this._currentRequestCount--;
-                      this.checkHeaders(response);
-                      observer.next(response.body);
-                      observer.complete();
-                  },
-                  error => {
-                      this._currentRequestCount--;
+          this._lastActionTime=new Date().getTime();
+          this._currentRequestCount++;
+          let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
+          let call=null;
+          if(method=='GET'){
+            call=this.http.get<T>(requestUrl, options);
+          }
+          else if(method=='POST'){
+              call=this.http.post<T>(requestUrl,body, options);
+          }
+          else if(method=='PUT'){
+              call=this.http.put<T>(requestUrl,body, options);
+          }
+          else if(method=='DELETE'){
+              call=this.http.delete<T>(requestUrl, options);
+          }
+          else{
+            throw new Error("Unknown request method "+method);
+          }
+          call.subscribe((response:any) => {
+                  this._currentRequestCount--;
+                  this.checkHeaders(response);
+                  observer.next(response.body);
+                  observer.complete();
+              },
+              error => {
+                  this._currentRequestCount--;
 
-                      if (!this._autoLogin) {
+                  if (!this._autoLogin) {
 
-                      }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || (
-                          error.status === RestConstants.HTTP_FORBIDDEN && ['POST','PUT','DELETE'].indexOf(method) !== -1)) {
-                          let callback=() => {
-                              if(this.bridge.isRunningCordova() && options.headers['Authorization']){
-                                  this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
-                                      options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
-                                      this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
-                                          observer.next(data);
-                                          observer.complete();
-                                      },(error:any)=>{
-                                          this.goToLogin();
-                                          observer.error(error);
-                                          observer.complete();
-                                      });
-                                  });
-                                  return;
-                              }
-                              else {
-                                  this.goToLogin();
-                              }
-                          };
-                          if(error.status === RestConstants.HTTP_FORBIDDEN){
-                              this.isLoggedIn(true).subscribe((result) => {
-                                  if(result.statusCode !== RestConstants.STATUS_CODE_OK){
-                                      console.log('forbidden request and user session is lost -> go to login');
-                                      callback();
-                                  } else {
-                                      // login is okay, person has no access, throw error
+                  }else if (error.status === RestConstants.HTTP_UNAUTHORIZED || (
+                      error.status === RestConstants.HTTP_FORBIDDEN && ['POST','PUT','DELETE'].indexOf(method) !== -1)) {
+                      let callback=() => {
+                          if(this.bridge.isRunningCordova() && options.headers['Authorization']){
+                              this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,true).subscribe(()=>{
+                                  options.headers['Authorization']='Bearer '+this.bridge.getCordova().oauth.access_token;
+                                  this.request<T>(method,url,body,options,appendUrl).subscribe(data=>{
+                                      observer.next(data);
+                                      observer.complete();
+                                  },(error:any)=>{
+                                      this.goToLogin();
                                       observer.error(error);
                                       observer.complete();
-                                  }
+                                  });
                               });
                               return;
-                          } else {
-                              callback();
                           }
-
-                      }
-                      if (this.bridge.isRunningCordova() && error.status==0){
-                          this.noConnectionDialog();
-                          observer.complete();
+                          else {
+                              this.goToLogin();
+                          }
+                      };
+                      if(error.status === RestConstants.HTTP_FORBIDDEN){
+                          this.isLoggedIn(true).subscribe((result) => {
+                              if(result.statusCode !== RestConstants.STATUS_CODE_OK){
+                                  console.log('forbidden request and user session is lost -> go to login');
+                                  callback();
+                              } else {
+                                  // login is okay, person has no access, throw error
+                                  observer.error(error);
+                                  observer.complete();
+                              }
+                          });
                           return;
+                      } else {
+                          callback();
                       }
 
-
-                      observer.error(error);
+                  }
+                  if (this.bridge.isRunningCordova() && error.status==0){
+                      this.noConnectionDialog();
                       observer.complete();
-                  });
-          });
+                      return;
+                  }
+
+
+                  observer.error(error);
+                  observer.complete();
+              });
       });
   }
 
@@ -496,14 +446,6 @@ export class RestConnectorService {
   }
 
   /**
-   * Returns the current api version (usually a value > 1, can be floating point), or -1 if no api is connected
-   * @returns {number}
-   */
-  public getApiVersion(){
-    return this.locator.apiVersion;
-  }
-
-  /**
    * Returns the absolute url to the current rest endpoint
    * @returns {string}
    */
@@ -552,8 +494,10 @@ export class RestConnectorService {
   private checkHeaders(response: Response) {
     if(!this._scope)
       return;
-    if(this._scope!=response.headers.get('X-Edu-Scope')){
+    const headerScope = response.headers.get('X-Edu-Scope') || response.headers.get('x-edu-scope');
+    if(this._scope !== headerScope) {
       this.goToLogin(null);
+      console.warn('current scope ' + this._scope + ' != ' + headerScope + ' enforcing re-login', response.url);
     }
   }
   private goToLogin(scope=this._scope) {

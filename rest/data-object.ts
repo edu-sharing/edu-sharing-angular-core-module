@@ -5,6 +5,7 @@
 
 import {ListItem, ListItemType} from '../ui/list-item';
 import {VCard} from '../ui/VCard';
+import {LoginInfo} from 'ngx-edu-sharing-api';
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -179,6 +180,7 @@ export class Node {
   collection : Collection;
   rating: NodeRating;
   usedInCollections?: CollectionRelationReference[];
+  relations: {[key in 'Original']: Node};
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
   nodeLTIDeepLink: NodeLTIDeepLink;
   public constructor(id:string=null) {
@@ -252,7 +254,7 @@ export interface Facette {
 export interface ArchiveSearch {
   nodes: Node[];
   pagination: Pagination;
-  facettes: Facette[];
+  facets: Facette[];
 }
 
 export interface RestError {
@@ -343,6 +345,7 @@ export interface User extends UserSimple {
   homeFolder: NodeRef;
   sharedFolders: NodeRef[];
   quota: UserQuota;
+  profile: UserProfile;
 }
 export interface UserSimple {
   authorityName: string;
@@ -725,7 +728,7 @@ export interface  MdsValuesParameters {
 }
 export interface MdsValues{
   valueParameters:MdsValuesParameters;
-  criterias : any;
+  criteria : any;
 }
 
 export interface Parent {
@@ -785,12 +788,12 @@ export interface NodeRemoteWrapper extends NodeWrapper{
 export interface AbstractList<T extends Node> {
     nodes: T[];
     pagination: Pagination;
-    facettes?: Facette[];
+    facets?: Facette[];
 }
 export interface NodeList extends AbstractList<Node> {
   nodes: Node[];
   pagination: Pagination;
-  facettes?: Facette[];
+  facets?: Facette[];
 }
 export interface NodeListElastic extends NodeList{
     elasticResponse: string;
@@ -908,17 +911,9 @@ export interface Version {
 export interface NodeVersion {
   version: Version;
 }
-export interface LoginResult{
-  isAdmin: boolean;
-  statusCode: string;
-  isValidLogin : boolean;
-  currentScope : string;
-  authorityName : string;
-  sessionTimeout : number;
-  isGuest : boolean;
-  toolPermissions : string[];
-  remoteAuthentications : any;
-}
+
+export type LoginResult = LoginInfo;
+
 export interface AccessScope{
   hasAccess : boolean;
 }
@@ -954,7 +949,7 @@ export interface UsageList {
 }
 export interface CollectionUsage extends Usage {
     collection: Node;
-    collectionUsageType: 'ACTIVE' | 'PROPOSAL';
+    collectionUsageType: 'ACTIVE' | 'PROPOSAL_PENDING' | 'PROPOSAL_DECLINED';
 }
 export interface Filetype {
   mimetype: string;
@@ -1153,8 +1148,8 @@ export interface SearchRequestCriteria {
     values: string[];
 }
 export interface SearchRequestBody {
-    facettes?: string[];
-    criterias: SearchRequestCriteria[];
+    facets?: string[];
+    criteria: SearchRequestCriteria[];
     resolveCollections?: boolean;
     permissions?: string[];
 }
@@ -1215,10 +1210,11 @@ export interface JobFieldDescription {
   sampleValue?: string;
   values?: JobFieldDescription[];
 }
-
+export type JobTag = 'DeletePersonJob';
 export interface JobDescription {
   name: string;
   description: string;
+  tags: JobTag[];
   params: JobFieldDescription[];
 }
 export class VCardResult {

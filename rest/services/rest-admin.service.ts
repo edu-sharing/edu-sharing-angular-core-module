@@ -219,13 +219,43 @@ export class RestAdminService extends AbstractRestService{
         ]);
         return this.connector.get<NodeListElastic>(query,this.connector.getRequestOptions());
     }
-  public exportLucene(lucene:string,store:string,properties:string[]){
-    let query=this.connector.createUrlNoEscape("admin/:version/lucene/export?query=:lucene&store=:store&:properties",null,[
+  public exportLucene(lucene:string,store:string,properties:string[],authorities:string[]){
+    let query=this.connector.createUrlNoEscape("admin/:version/lucene/export?query=:lucene&store=:store&:properties&:authorityScope",null,[
         [":lucene",encodeURIComponent(lucene)],
         [":store",encodeURIComponent(store)],
         [":properties",RestHelper.getQueryStringForList("properties",properties)],
+        [":authorityScope",RestHelper.getQueryStringForList("authorityScope",authorities)]
     ]);
     return this.connector.get<any>(query,this.connector.getRequestOptions());
+  }
+  public startJobSync(job:string,params:any, file: File = null){
+      let query=this.connector.createUrl("admin/:version/job/:job/sync",null,[
+          [":job",job],
+      ]);
+      if(!params) {
+          params = {};
+      }
+      if(file) {
+          return new Observable((observer) => {
+              const reader = new FileReader();
+              console.log(reader);
+              reader.addEventListener('load', (event) => {
+                  const result = event.target.result;
+                  console.log(result);
+                  params.FILE_DATA = result;
+                  this.startJob(job, params).subscribe(() => {
+                      observer.next();
+                      observer.complete();
+                  }, error => {
+                      observer.error(error);
+                      observer.complete();
+                  } );
+              });
+              reader.readAsText(file);
+          });
+      } else {
+          return this.connector.post<any>(query, JSON.stringify(params), this.connector.getRequestOptions());
+      }
   }
   public startJob(job:string,params:any, file: File = null){
       let query=this.connector.createUrl("admin/:version/job/:job",null,[
@@ -311,6 +341,11 @@ export class RestAdminService extends AbstractRestService{
         return this.connector.put<any>(query,JSON.stringify(options),this.connector.getRequestOptions());
     }
 
+    public getConfigMerged() {
+        let query=this.connector.createUrl("admin/:version/config/merged",null);
+        let options:any=this.connector.getRequestOptions();
+        return this.connector.get<any>(query,options);
+    }
     public getConfigFile(filename:string) {
         let query=this.connector.createUrl("admin/:version/configFile?filename=:filename",null,[
             [":filename",filename]
@@ -326,6 +361,13 @@ export class RestAdminService extends AbstractRestService{
         let options:any=this.connector.getRequestOptions();
         options.responseType='text';
         return this.connector.put<string>(query,content,options);
+    }
+    public switchAuthentication(authorityName:string) {
+        let query=this.connector.createUrl("admin/:version/authenticate/:authorityName",null,[
+            [":authorityName",authorityName]
+        ]);
+        let options:any=this.connector.getRequestOptions();
+        return this.connector.post<string>(query, null, options);
     }
 }
 
