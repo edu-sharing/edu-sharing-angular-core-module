@@ -5,9 +5,11 @@ import {Helper} from './rest/helper';
  */
 export class CsvHelper {
     public static fromArray(header: string[], data: string[][]|any) {
-        let csv = header.map((h) => '"' + h + '"').join(';');
+        let csv = header ? header.map((h) => '"' + h + '"').join(';') : '';
         for (const d of data) {
-            csv += '\n';
+            if(csv) {
+                csv += '\n';
+            }
             const i = 0;
             let line: string[] = [];
             if (d instanceof Array) {
