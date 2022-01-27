@@ -182,15 +182,14 @@ export class Node {
   usedInCollections?: CollectionRelationReference[];
   relations: {[key in 'Original']: Node};
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
-  nodeLTIDeepLink: NodeLTIDeepLink;
   public constructor(id:string=null) {
     this.ref=new NodeRef(id);
   }
 }
 
-export interface NodeLTIDeepLink {
-    ltiDeepLinkReturnUrl: string;
+export interface DeepLinkResponse {
     jwtDeepLinkResponse: string;
+    ltiDeepLinkReturnUrl: string;
 }
 
 export interface NodeContent {
