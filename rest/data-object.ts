@@ -795,7 +795,7 @@ export interface SearchList extends NodeList {
   ignored : string[];
 }
 export interface ParentList extends NodeList{
-  scope?: 'MY_FILES' | 'SHARED_FILES' | 'COLLECTION';
+  scope?: 'MY_FILES' | 'SHARED_FILES' | 'COLLECTION' | 'UNKNOWN';
 }
 export interface NodeProperties{
   name:string;
