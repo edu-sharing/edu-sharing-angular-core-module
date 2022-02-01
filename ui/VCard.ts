@@ -251,7 +251,7 @@ export class VCard {
   private escape(value: string) {
     if(value==null)
       return '';
-    return value.replace('\\','\\\\').replace(',','\\,').replace(';',' ');
+    return value.replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g, ' ');
   }
 
   public copy() {
