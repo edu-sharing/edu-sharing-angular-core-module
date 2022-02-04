@@ -1199,6 +1199,7 @@ export interface JobFieldDescription {
   name: string;
   type?: string;
   file: boolean;
+  array: boolean;
   description?: string;
   sampleValue?: string;
   values?: JobFieldDescription[];
