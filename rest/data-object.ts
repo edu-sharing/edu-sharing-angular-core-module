@@ -1208,6 +1208,7 @@ export interface JobFieldDescription {
 
 export interface PluginStatus {
     name: string;
+    version: string;
     enabled: boolean;
 }
 export interface JobDescription {
