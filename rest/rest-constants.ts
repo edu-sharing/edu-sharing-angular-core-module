@@ -217,6 +217,7 @@ export class RestConstants {
   public static CCM_PROP_TOOL_PRODUCER= 'ccm:tool_producer';
   public static CCM_PROP_TOOL_INSTANCE_REF= 'ccm:tool_instance_ref';
   public static CCM_PROP_IO_EDITORIAL_STATE = "ccm:editorial_state";
+  public static CCM_PROP_EDUSCOPENAME = "ccm:eduscopename";
   public static CCM_PROP_IO_TECHNICAL_STATE = "ccm:technical_state";
   public static CCM_PROP_IO_MEDIACENTER = "ccm:mediacenter";
   public static CCM_PROP_COLLECTION_PROPOSAL_STATUS = "ccm:collection_proposal_status";

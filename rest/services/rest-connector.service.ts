@@ -183,8 +183,8 @@ export class RestConnectorService {
                                 observer.next(data);
                                 observer.complete();
                             },(error:any)=>{
-                                observer.error(error);
-                                observer.complete();
+                            observer.error(error);
+                            observer.complete();
                             });
                       },(error:any)=>{
                           observer.error(error);
