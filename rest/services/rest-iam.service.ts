@@ -269,7 +269,7 @@ export class RestIamService extends AbstractRestService {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/stats',repository,[[':user',user]]);
     return this.connector.get<UserStats>(query,this.connector.getRequestOptions());
   }
-  public getUserGroups = (user=RestConstants.ME,pattern='*',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
+  public getUserGroups = (user=RestConstants.ME,pattern='',request:any=null,repository=RestConstants.HOME_REPOSITORY) => {
       const query=this.connector.createUrlNoEscape('iam/:version/people/:repository/:user/memberships?pattern=:pattern&:request',repository,[
           [':user',encodeURIComponent(user)],
           [':pattern',encodeURIComponent(pattern)],
