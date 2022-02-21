@@ -282,7 +282,7 @@ export interface IamGroups {
 }
 export interface OrganizationOrganizations {
   canCreate: boolean;
-  organizations: Group[];
+  organizations: Organization[];
   pagination: Pagination;
 }
 export interface IamGroup {
