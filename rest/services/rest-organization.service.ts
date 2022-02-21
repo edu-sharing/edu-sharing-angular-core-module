@@ -2,7 +2,12 @@ import {Injectable} from "@angular/core";
 import {RestConstants} from "../rest-constants";
 import {Observable} from "rxjs";
 import {RestConnectorService} from "./rest-connector.service";
-import {IamUsers, IamAuthorities, OrganizationOrganizations, Organization} from "../data-object";
+import {
+    IamUsers,
+    IamAuthorities,
+    OrganizationOrganizations,
+    Organization,
+} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 
 @Injectable()
@@ -40,4 +45,12 @@ export class RestOrganizationService extends AbstractRestService{
       [":onlyMemberships",""+onlyMemberships]]);
     return this.connector.get<OrganizationOrganizations>(query, this.connector.getRequestOptions());
   }
+    public getOrganization = (id: string,repository = RestConstants.HOME_REPOSITORY) => {
+        let query = this.connector.createUrlNoEscape("organization/:version/organizations/:repository/:id", repository,
+            [
+                [":id",encodeURIComponent(id)]
+            ]
+        );
+        return this.connector.get<Organization>(query, this.connector.getRequestOptions());
+    }
 }
