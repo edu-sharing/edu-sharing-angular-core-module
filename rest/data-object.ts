@@ -1235,3 +1235,12 @@ export class ListItemSort extends ListItem {
         super(type ,name, config);
     }
 }
+
+export class LTIRegistrationToken {
+    token: string;
+    url: string;
+    tsCreated: number;
+}
+export class LTIRegistrationTokens {
+    registrationLinks: LTIRegistrationToken[];
+}

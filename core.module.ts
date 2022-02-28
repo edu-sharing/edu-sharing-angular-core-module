@@ -31,6 +31,7 @@ import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
 import {RestStatisticsService} from "./rest/services/rest-statistics.service";
 import {RestRatingService} from "./rest/services/rest-rating.service";
 import {RestTrackingService} from "./rest/services/rest-tracking.service";
+import {RestLtiService} from './rest/services/rest-lti.service';
 
 @NgModule({
     imports: [
@@ -67,7 +68,8 @@ import {RestTrackingService} from "./rest/services/rest-tracking.service";
         SessionStorageService,
         ConfigurationService,
         TemporaryStorageService,
-        UIService
+        UIService,
+        RestLtiService
     ]
 })
 export class CoreModule {}
