@@ -59,7 +59,18 @@ export class SessionStorageService {
             //
             // tslint:disable-next-line: deprecation
             this.triggerRefresh.pipe(startWith(undefined)),
-        ]).pipe(switchMap(([user]) => (user ? this.iam.getUserPreferences() : of(null))));
+        ]).pipe(
+            switchMap(([user]) =>
+                // We use `null` as an indicator that preferences cannot be stored with the user
+                // profile.
+                user
+                    // The backend might return `null` in case no preferences have been saved yet.
+                    // We map to the empty object if that happens.
+                    ? this.iam.getUserPreferences().pipe(map((preferences) => preferences ?? {}))
+                    // We pass null when there is no valid user.
+                    : of(null),
+            ),
+        );
         // User preferences combining data from the backend and local changes pushed to the backend.
         // Will set to `null` while the user is not logged in.
         this.userPreferences = merge(remoteUserPreferences, this.userPreferencesChanged).pipe(
