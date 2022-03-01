@@ -115,9 +115,24 @@ export class SessionStorageService {
     async set(key: string, value: any, store = Store.UserProfile): Promise<void> {
         switch (store) {
             case Store.UserProfile:
-                return this.setToUserProfile(key, value);
+                return this.setToUserProfile({ key, value });
             case Store.Session:
                 return this.sessionStorage.set(key, value);
+        }
+    }
+
+    /**
+     * Sets multiple values at a time.
+     *
+     * Otherwise identical to `set`.
+     */
+    async setValues(values: { [key: string]: any }, store = Store.UserProfile): Promise<void> {
+        if (store === Store.UserProfile) {
+            return this.setToUserProfile(values);
+        } else {
+            for (const [key, value] of Object.entries(values)) {
+                this.set(key, value, store);
+            }
         }
     }
 
@@ -142,13 +157,13 @@ export class SessionStorageService {
         );
     }
 
-    private setToUserProfile(key: string, value: any): Promise<void> {
+    private setToUserProfile(values: { [key: string]: any }): Promise<void> {
         return this.userPreferences
             .pipe(
                 first(),
                 switchMap((preferences) => {
                     if (preferences) {
-                        const updatedPreferences = { ...preferences, [key]: value };
+                        const updatedPreferences = { ...preferences, ...values };
                         // Optimistically update our reference before the backend confirms the
                         // change.
                         this.userPreferencesChanged.next(updatedPreferences);
@@ -161,7 +176,9 @@ export class SessionStorageService {
                             }),
                         );
                     } else {
-                        this.localStorage.set(key, value);
+                        for (const [key, value] of Object.entries(values)) {
+                            this.localStorage.set(key, value);
+                        }
                         return EMPTY;
                     }
                 }),
