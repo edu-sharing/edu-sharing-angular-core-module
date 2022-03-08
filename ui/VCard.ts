@@ -3,6 +3,8 @@
  */
 
 export class VCard {
+  public static TYPE_PERSON = 0;
+  public static TYPE_ORG = 1;
   // was the vcard altered
   private isDirty=false;
   private lines:string[];
@@ -265,6 +267,10 @@ export class VCard {
    */
   public apply(other: VCard) {
     this.lines=other.lines;
+  }
+
+  getType(): number {
+    return this.isValid() ? this.givenname || this.surname ? VCard.TYPE_PERSON : VCard.TYPE_ORG : VCard.TYPE_PERSON;
   }
 }
 
