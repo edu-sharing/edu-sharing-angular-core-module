@@ -126,7 +126,9 @@ export class SessionStorageService {
     async set(key: string, value: any, store = Store.UserProfile): Promise<void> {
         switch (store) {
             case Store.UserProfile:
-                return this.setToUserProfile({ key, value });
+                const obj: any = {};
+                obj[key] = value;
+                return this.setToUserProfile(obj);
             case Store.Session:
                 return this.sessionStorage.set(key, value);
         }
