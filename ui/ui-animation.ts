@@ -1,4 +1,4 @@
-import {style, animate, transition} from "@angular/animations";
+import {style, animate, transition, trigger, state} from '@angular/animations';
 export class UIAnimation{
   public static ANIMATION_TIME_FAST=100;
   public static ANIMATION_TIME_NORMAL=200;
@@ -94,6 +94,22 @@ export class UIAnimation{
             style({'transform-origin':'50% 0%',transform:'scaleY(0)',opacity:0}),
             animate(time, style({transform:'scaleY(1)',opacity:1}))
         ])];
+    }
+    /**
+     * Useful animation to switch different content insides a dialog (navigating between contents)
+     * This is a special variant which does work without ngIf fields, it will remove display states
+     */
+    public static switchDialogBoolean(time=UIAnimation.ANIMATION_TIME_NORMAL){
+        return [
+            state('false', style({ opacity: 0, 'transform-origin': '50% 0%', transform: 'scaleY(0)', display: 'none'})),
+            state('true', style({ opacity: 1, 'transform-origin': '50% 0%', transform: 'scaleY(100%)'})),
+            transition('false => true', [
+                style({ display: '' }),
+                animate(time + 'ms ease-in-out')
+            ]),
+            transition('true => false', [
+                animate(time + 'ms ease-in-out')
+            ])];
     }
   /**
    * Useful animation for showing any modal cards
