@@ -186,6 +186,12 @@ export class Node {
     this.ref=new NodeRef(id);
   }
 }
+
+export interface DeepLinkResponse {
+    jwtDeepLinkResponse: string;
+    ltiDeepLinkReturnUrl: string;
+}
+
 export interface NodeContent {
   version: string;
   url: string;
@@ -1229,4 +1235,13 @@ export class ListItemSort extends ListItem {
     }) {
         super(type ,name, config);
     }
+}
+
+export class LTIRegistrationToken {
+    token: string;
+    url: string;
+    tsCreated: number;
+}
+export class LTIRegistrationTokens {
+    registrationLinks: LTIRegistrationToken[];
 }
