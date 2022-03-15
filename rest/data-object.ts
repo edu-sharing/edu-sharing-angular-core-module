@@ -135,7 +135,7 @@ export interface Service {
 }
 export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
 export interface Preview {
-  data?: string; // image, may null, see @this.nodeHelper.appendImageData
+  data?: string[]; // image, may null, see @this.nodeHelper.appendImageData
   mimetype? : string;
   url: string;
   isGenerated: boolean;
@@ -157,9 +157,9 @@ export class Node {
   aspects: string[];
   name: string;
   title: string;
-  createdAt: Date;
+  createdAt: string;
   createdBy: Person;
-  modifiedAt: Date;
+  modifiedAt: string;
   modifiedBy: Person;
   access: string[];
   repositoryType: string;
@@ -170,14 +170,14 @@ export class Node {
   mimetype: string;
   iconURL: string;
   license: License;
-  size: number;
+  size: string;
   commentCount: number;
   preview: Preview;
   owner: Person;
   metadataset: string;
   isDirectory: boolean;
   version : string;
-  collection : Collection;
+  collection: Collection;
   rating: NodeRating;
   usedInCollections?: CollectionRelationReference[];
   relations: {[key in 'Original']: Node};
@@ -404,8 +404,9 @@ export interface Owner {
   sharedFolders: SharedFolder[];
 }
 
-export class Collection{
+export class Collection {
   level0: boolean;
+  title: string;
   description: string;
   type: string;
   viewtype: string;
@@ -413,6 +414,7 @@ export class Collection{
   y: number;
   z: number;
   color: string;
+  fromUser: boolean;
   childCollectionsCount: number;
   childReferencesCount: number;
   preview: Preview;
