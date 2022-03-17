@@ -31,7 +31,7 @@ export class SessionStorageService {
                 this.connector.getCurrentLogin().authorityName !==
                     this.authorityName
             ) {
-                this.connector.isLoggedIn().subscribe((data: LoginResult) => {
+                this.connector.isLoggedIn(false).subscribe((data: LoginResult) => {
                     if (
                         store === Store.Session ||
                         data.statusCode !== RestConstants.STATUS_CODE_OK ||
@@ -92,7 +92,7 @@ export class SessionStorageService {
             !this.connector.getCurrentLogin().isGuest
         ) {
             this.preferences[name] = value;
-            const data = await this.connector.isLoggedIn().toPromise();
+            const data = await this.connector.isLoggedIn(false).toPromise();
             if (data.statusCode != RestConstants.STATUS_CODE_OK) {
                 return;
             }

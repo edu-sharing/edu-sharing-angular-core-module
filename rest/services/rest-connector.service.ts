@@ -29,6 +29,8 @@ export class RestConnectorService {
   private toolPermissions: string[];
   private themesUrl="../themes/default/";
   currentLogin = new BehaviorSubject<LoginResult>(null);
+  isValidatingSession = false;
+
   get autoLogin(): boolean {
     return this._autoLogin;
   }
@@ -121,7 +123,7 @@ export class RestConnectorService {
   public logout() {
     let url=this.createUrl("authentication/:version/destroySession",null);
     return this.get(url,this.getRequestOptions()).do(()=> {
-        this.storage.remove(TemporaryStorageService.SESSION_INFO);
+        this.currentLogin.next(null);
         this._scope = null;
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     });
@@ -134,47 +136,55 @@ export class RestConnectorService {
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
     this._scope = null;
-    this.storage.remove(TemporaryStorageService.SESSION_INFO);
+    this.currentLogin.next(null);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
-  public getCurrentLogin() : LoginResult {
+  public getCurrentLogin() : LoginResult{
     return this.currentLogin.value;
   }
   public getAbout(){
       let url=this.createUrl("_about",null);
       return this.get<About>(url,this.getRequestOptions());
   }
-  public isLoggedIn(forceRenew=true){
+  public isLoggedIn(forceRenew = true){
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
         if(!forceRenew) {
-            if(this.getCurrentLogin()) {
-                observer.next(this.getCurrentLogin());
+            if(!this.isValidatingSession && this.currentLogin.value) {
+                observer.next(this.currentLogin.value);
                 observer.complete();
-            } else {
-                this.currentLogin.filter((data) => !!data).first().subscribe((data) => {
-                    observer.next(data);
-                    observer.complete();
-                });
+                return;
             }
         }
+        if(this.isValidatingSession) {
+            this.currentLogin.filter((result) => result != null).first().subscribe((result) => {
+                observer.next(result);
+                observer.complete();
+            }, error => {
+                observer.error(error);
+                observer.complete();
+            });
+            return;
+            }
+        this.isValidatingSession = true;
         this.locator.locateApi().subscribe(() => {
             this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
                 (data: LoginResult) => {
+                    this.isValidatingSession = false;
                     this.toolPermissions = data.toolPermissions;
                     this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
                     this.currentLogin.next(data);
-                    this.storage.set(TemporaryStorageService.SESSION_INFO, data);
                     this._logoutTimeout = data.sessionTimeout;
                     if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
                       this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,false).subscribe(()=>{
                         this.isLoggedIn().subscribe((data:LoginResult)=>{
+                                this.currentLogin.next(data);
                                 observer.next(data);
                                 observer.complete();
                             },(error:any)=>{
-                                observer.error(error);
-                                observer.complete();
+                            observer.error(error);
+                            observer.complete();
                             });
                       },(error:any)=>{
                           observer.error(error);
@@ -182,10 +192,13 @@ export class RestConnectorService {
                       });
                       return;
                     }
+                    this.isValidatingSession = false;
                     observer.next(data);
                     observer.complete();
                 },
                 (error: any) => {
+                    this.isValidatingSession = false;
+                    this.currentLogin.error(error);
                     observer.error(error);
                     observer.complete();
                 }
@@ -208,7 +221,7 @@ export class RestConnectorService {
   public hasToolPermission(permission:string){
     return new Observable<boolean>((observer : Observer<boolean>) => {
       if (this.toolPermissions == null) {
-        this.isLoggedIn().subscribe(() => {
+        this.isLoggedIn(false).subscribe(() => {
           observer.next(this.hasToolPermissionInstant(permission));
           observer.complete();
         }, (error: any) => observer.error(error));
@@ -233,9 +246,10 @@ export class RestConnectorService {
           scope:scope
         }),this.getRequestOptions()).subscribe(
           (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
-            this.storage.set(TemporaryStorageService.SESSION_INFO,data);
+            this.currentLogin.next(data);
+            if(data.isValidLogin) {
+                this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, data);
+            }
             observer.next(data);
             observer.complete();
           },
@@ -247,9 +261,10 @@ export class RestConnectorService {
       else {
         this.get<LoginResult>(url, this.getRequestOptions("",username,password)).subscribe(
           (data) => {
-            if(data.isValidLogin)
-              this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN,data);
-            this.storage.set(TemporaryStorageService.SESSION_INFO,data);
+            this.currentLogin.next(data);
+            if(data.isValidLogin) {
+                this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, data);
+            }
             observer.next(data);
             observer.complete();
           },
