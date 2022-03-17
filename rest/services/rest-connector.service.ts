@@ -24,7 +24,6 @@ import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing
 @Injectable()
 export class RestConnectorService {
   public static DEFAULT_NUMBER_PER_REQUEST = 25;
-  private _lastActionTime=0;
   private _currentRequestCount=0;
   private _logoutTimeout: number;
   private _autoLogin = true;
@@ -50,9 +49,6 @@ export class RestConnectorService {
     return this.locator.endpointUrl;
   }
   numberPerRequest = RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
-  get lastActionTime(){
-    return this._lastActionTime;
-  }
   get logoutTimeout(){
     return this._logoutTimeout;
   }
@@ -90,7 +86,7 @@ export class RestConnectorService {
   }
   public onEvent(event:string,request:any){
     if(event==FrameEventsService.EVENT_UPDATE_SESSION_TIMEOUT) {
-      this._lastActionTime=new Date().getTime();
+      this.authenticationApi.reportOutsideApiRequest();
     }
     if(event==FrameEventsService.EVENT_PARENT_REST_REQUEST){
       let method=request.method ? request.method.toLowerCase() : "get";
@@ -300,7 +296,7 @@ export class RestConnectorService {
   }
   private request<T>(method:string,url:string,body:any,options:any,appendUrl=true){
       return new Observable<T>((observer : Observer<T>) => {
-          this._lastActionTime=new Date().getTime();
+          this.authenticationApi.reportOutsideApiRequest();
           this._currentRequestCount++;
           let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
           let call=null;
