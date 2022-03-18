@@ -1,47 +1,17 @@
-import {Injectable, NgZone} from "@angular/core";
-import {BridgeService} from "../../../core-bridge-module/bridge.service";
-import {HttpClient} from "@angular/common/http";
-import {RestConnectorService} from "./rest-connector.service";
-import {Observable, Observer} from "rxjs";
-import {RestConstants} from "../rest-constants";
-import {MessageType} from "../../ui/message-type";
+import {Injectable, NgZone} from '@angular/core';
+import {BridgeService} from '../../../core-bridge-module/bridge.service';
+import {HttpClient} from '@angular/common/http';
+import {RestConnectorService} from './rest-connector.service';
+import {Observable, Observer} from 'rxjs';
+import {RestConstants} from '../rest-constants';
+import {MessageType} from '../../ui/message-type';
 import {DateRange} from '@angular/material/datepicker';
 
 @Injectable()
 export class UIService {
-  /** Returns true if the current sessions seems to be running on a mobile device
-   *
-   */
-  public isMobile(){
-    if(this.bridge.isRunningCordova())
-      return true;
-    // http://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
-    if( navigator.userAgent.match(/Android/i)
-        || navigator.userAgent.match(/webOS/i)
-        || navigator.userAgent.match(/iPhone/i)
-        || navigator.userAgent.match(/iPad/i)
-        || navigator.userAgent.match(/iPod/i)
-        || navigator.userAgent.match(/BlackBerry/i)
-        || navigator.userAgent.match(/Windows Phone/i)
-    ){
-      return true;
-    }
-    else {
-      return false;
-    }
-
-  }
-  private appleCmd: boolean;
-  private shiftCmd: boolean;
-  public isAppleCmd() {
-    return this.appleCmd;
-  }
-  public isShiftCmd() {
-    return this.shiftCmd;
-  }
   constructor(
-      private bridge : BridgeService,
-      private ngZone : NgZone,
+      private bridge: BridgeService,
+      private ngZone: NgZone,
       private http: HttpClient,
       private connector: RestConnectorService,
   ) {
@@ -58,13 +28,45 @@ export class UIService {
         }
       });
       window.addEventListener('keyup', (event) => {
-        if (event.keyCode == 91 || event.keyCode == 93)
+        if (event.keyCode == 91 || event.keyCode == 93) {
           this.appleCmd = false;
+        }
         if (event.key == 'Shift') {
           this.shiftCmd = false;
         }
       });
     });
+  }
+  private appleCmd: boolean;
+  private shiftCmd: boolean;
+  /** Returns true if the current sessions seems to be running on a mobile device
+   *
+   */
+  public isMobile() {
+    if (this.bridge.isRunningCordova()) {
+      return true;
+    }
+    // http://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
+    if ( navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)
+    ) {
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  }
+  public isAppleCmd() {
+    return this.appleCmd;
+  }
+  public isShiftCmd() {
+    return this.shiftCmd;
   }
 
   /**
@@ -90,10 +92,10 @@ export class UIService {
 
 
   hideKeyboardIfMobile() {
-    if(this.isMobile()) {
+    if (this.isMobile()) {
       try {
         (document.activeElement as any).blur();
-      }catch(e){console.warn(e);}
+      } catch (e) {console.warn(e); }
     }
   }
   public handleLogout() {
@@ -164,12 +166,12 @@ export class UIService {
      */
     scrollSmooth(y: number = 0, smoothness = 1) {
         this.ngZone.runOutsideAngular(() => {
-            let mode = window.scrollY >= y;
-            let divider = 3 * smoothness;
-            let minSpeed = 7 / smoothness;
+            const mode = window.scrollY >= y;
+            const divider = 3 * smoothness;
+            const minSpeed = 7 / smoothness;
             let lastY = y;
-            let interval = setInterval(() => {
-                let yDiff = window.scrollY - lastY;
+            const interval = setInterval(() => {
+                const yDiff = window.scrollY - lastY;
                 lastY = window.scrollY;
                 if (window.scrollY > y && mode && yDiff) {
                     window.scrollBy(
@@ -200,14 +202,14 @@ export class UIService {
     ) {
         return new Promise<void>(resolve => {
             this.ngZone.runOutsideAngular(() => {
-                let currentPos =
+                const currentPos =
                     axis == 'x' ? element.scrollLeft : element.scrollTop;
                 if (element.getAttribute('data-is-scrolling') == 'true') {
                     return;
                 }
-                let mode = currentPos > pos;
+                const mode = currentPos > pos;
                 let lastPos = pos;
-                let maxPos =
+                const maxPos =
                     axis == 'x'
                         ? element.scrollWidth - element.clientWidth
                         : element.scrollHeight - element.clientHeight;
@@ -225,11 +227,11 @@ export class UIService {
                 const callback = () => {
                     let currentPos =
                         axis == 'x' ? element.scrollLeft : element.scrollTop;
-                    let posDiff = currentPos - lastPos;
-                    let speedFactor = speed / 16.;
-                    let divider = (3 / speedFactor) * smoothness;
-                    let minSpeed = (5 * speedFactor) / smoothness;
-                    let maxSpeed = (50 * speedFactor) / smoothness;
+                    const posDiff = currentPos - lastPos;
+                    const speedFactor = speed / 16.;
+                    const divider = (3 / speedFactor) * smoothness;
+                    const minSpeed = (5 * speedFactor) / smoothness;
+                    const maxSpeed = (50 * speedFactor) / smoothness;
                     lastPos = currentPos;
                     let finished = true;
                     if (currentPos > pos) {
@@ -246,8 +248,8 @@ export class UIService {
                         finished = currentPos >= pos;
                     }
 
-                    if (axis == 'x') element.scrollLeft = currentPos;
-                    else element.scrollTop = currentPos;
+                    if (axis == 'x') { element.scrollLeft = currentPos; }
+                    else { element.scrollTop = currentPos; }
                     if (finished) {
                         element.removeAttribute('data-is-scrolling');
                         resolve();
@@ -257,7 +259,7 @@ export class UIService {
                         window.requestAnimationFrame(callback);
                     }
                 };
-                window.requestAnimationFrame(callback)
+                window.requestAnimationFrame(callback);
 
                 element.setAttribute('data-is-scrolling', 'true');
             });
@@ -276,10 +278,10 @@ export class UIService {
         smoothness = 1,
     ) {
         let target: Element;
-        if(element === 'auto') {
+        if (element === 'auto') {
             let parent = child.parentElement;
-            while(parent) {
-                if(['scroll', 'auto'].includes(window.getComputedStyle(parent).overflowY)) {
+            while (parent) {
+                if (['scroll', 'auto'].includes(window.getComputedStyle(parent).overflowY)) {
                     target = parent;
                     break;
                 }
