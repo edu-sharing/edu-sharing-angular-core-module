@@ -87,15 +87,6 @@ export class RestNodeService extends AbstractRestService{
     return this.connector.post<NodeList>(query,"",this.connector.getRequestOptions());
 
   }
-
-  /** Get the home directory for the current user (a ref to the folder)
-   *
-   * @returns {Observable<R>}
-   */
-  public getHomeDirectory(){
-    let query=this.connector.createUrl("iam/:version/people/:repository/:user",RestConstants.HOME_REPOSITORY,[[":user",RestConstants.ME]]);
-    return this.connector.get<NodeRef>(query,this.connector.getRequestOptions());
-  }
   /**
    * Prepare a remote object (an object from a foreign repository) local cache and return the cached instance
    * @param node the id of the node

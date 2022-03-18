@@ -5,7 +5,16 @@
 
 import {ListItem, ListItemType} from '../ui/list-item';
 import {VCard} from '../ui/VCard';
-import {LoginInfo} from 'ngx-edu-sharing-api';
+import {
+    LoginInfo,
+    Organization,
+    UserProfile as ApiUserProfile,
+    NodeRef,
+    UserQuota,
+    UserStatus,
+} from 'ngx-edu-sharing-api';
+
+export { Organization, NodeRef, UserQuota };
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -183,7 +192,7 @@ export class Node {
   relations: {[key in 'Original']: Node};
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
   public constructor(id:string=null) {
-    this.ref=new NodeRef(id);
+    this.ref = { id } as NodeRef;
   }
 }
 
@@ -308,20 +317,9 @@ export interface IamAuthorities {
   authorities: AuthorityProfile[];
   pagination: Pagination;
 }
-export interface UserProfile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  primaryAffiliation: string;
-  avatar: string;
-  about: string;
-  skills: string[];
-  types: string[];
+
+export interface UserProfile extends Omit<ApiUserProfile, 'vcard'> {
   vcard: VCard;
-}
-export interface UserStatus {
-  status: string;
-  date: Date;
 }
 export interface UserStats {
   nodeCount: number;
@@ -332,36 +330,25 @@ export interface UserCredentials {
   oldPassword: string;
   newPassword: string;
 }
-export interface NodeRef {
-  repo: string;
-  id: string;
-  archived: boolean;
-}
 
 export interface User extends UserSimple {
-  organizations: Organization[];
-  properties: any;
-  homeFolder: NodeRef;
-  sharedFolders: NodeRef[];
-  quota: UserQuota;
+  properties?: any;
+  homeFolder?: NodeRef;
+  sharedFolders?: NodeRef[];
+  quota?: UserQuota;
   profile: UserProfile;
 }
 export interface UserSimple {
   authorityName: string;
-  authorityType: string;
-  userName: string;
-  status: UserStatus;
+  authorityType?: string;
+  userName?: string;
+  status?: UserStatus;
   profile: UserProfile;
-  organizations: Organization[];
-}
-export interface UserQuota {
-    enabled:boolean;
-    sizeCurrent:number;
-    sizeQuota:number;
+  organizations?: Organization[];
 }
 export interface IamUser {
   person : User;
-  editProfile : boolean;
+  editProfile? : boolean;
 }
 export interface IamPreferences {
   preferences : string;
@@ -1032,15 +1019,6 @@ export class CollectionRelationReference extends Node {
     relationType: 'Usage'| 'Proposal';
 }
 
-export class NodeRef {
-  repo:string;
-  id:string;
-  archived:boolean;
-  isHomeRepo:boolean;
-  public constructor(id:string=null){
-    this.id=id;
-  }
-}
 export interface CollectionReferences {
     references: Array<CollectionReference>;
     pagination: Pagination;
@@ -1116,9 +1094,6 @@ export class AccessPermission {
   hasRight:boolean;   // signaling if the user has the right above
 }
 
-export interface Organization extends Group {
-  sharedFolder:Reference;
-}
 export interface GroupSignupDetails {
   signupMethod:string;
   signupPassword:string;

@@ -15,7 +15,6 @@ export class TemporaryStorageService {
     static NODE_RENDER_PARAMETER_DATA_SOURCE = 'node_render_data_source';
     static COLLECTION_ADD_NODES = 'collection_add_nodes';
     static WORKSPACE_LAST_LOCATION = 'WORKSPACE_LAST_LOCATION';
-    static USER_INFO = 'USER_INFO';
     static SESSION_INFO = 'SESSION_INFO';
     // default: false
     static OPTION_HIDE_MAINNAV: 'option_hide_mainnav';

@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { UserEntry, UserService } from 'ngx-edu-sharing-api';
+import { Observable, Subject } from 'rxjs';
+import { first, map, takeUntil } from 'rxjs/operators';
 import { VCard } from '../../ui/VCard';
 import {
     GroupProfile,
@@ -22,26 +23,39 @@ import {
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
-import { TemporaryStorageService } from './temporary-storage.service';
 
 @Injectable()
-export class RestIamService extends AbstractRestService {
-    constructor(connector: RestConnectorService, private storage: TemporaryStorageService) {
+export class RestIamService extends AbstractRestService implements OnDestroy {
+    private currentUser: User;
+    private destroyed$ = new Subject<void>();
+
+    constructor(connector: RestConnectorService, private userService: UserService) {
         super(connector);
+        this.userService
+            .getCurrentUser()
+            .pipe(takeUntil(this.destroyed$), map(mapVCard))
+            .subscribe((userEntry) => (this.currentUser = userEntry.person));
+    }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 
     /**
-     * Get's the currently authenticated user object (same as calling getUser)
-     * Please note that getUser() has to be called before, otherwise it will return null
+     * Get's the currently authenticated user object (same as calling getUser).
+     *
+     * User data will be fetched automatically, but this method will return `null` until the data is
+     * available.
+     *
+     * Using `getCurrentUserAsync` or `userService.getCurrentUser()` is preferred over this method.
      */
     getCurrentUser(): User {
-        return this.storage.get(TemporaryStorageService.USER_INFO)?.person;
+        return this.currentUser;
     }
 
     getCurrentUserAsync(): Promise<IamUser> {
-        return this.getCurrentUser()
-            ? Promise.resolve(this.storage.get(TemporaryStorageService.USER_INFO))
-            : this.getUser().toPromise();
+        return this.userService.getCurrentUser().pipe(first(), map(mapVCard)).toPromise();
     }
 
     /**
@@ -280,7 +294,7 @@ export class RestIamService extends AbstractRestService {
         );
         return this.connector.get<IamAuthorities>(query, this.connector.getRequestOptions());
     };
-    
+
     public deleteGroupMember = (
         group: string,
         member: string,
@@ -405,24 +419,12 @@ export class RestIamService extends AbstractRestService {
         return this.connector.put(query, null, this.connector.getRequestOptions());
     };
 
-    public getUser = (user = RestConstants.ME, repository = RestConstants.HOME_REPOSITORY) => {
-        const query = this.connector.createUrl(
-            'iam/:version/people/:repository/:user',
-            repository,
-            [[':user', user]],
-        );
-        return this.connector.get<IamUser>(query, this.connector.getRequestOptions()).pipe(
-            map((u) => {
-                u.person.profile.vcard = new VCard(u.person.profile.vcard as unknown as string);
-                return u;
-            }),
-            tap((data) =>
-                user === RestConstants.ME
-                    ? this.storage.set(TemporaryStorageService.USER_INFO, data)
-                    : null,
-            ),
-        );
-    };
+    getUser(
+        user = RestConstants.ME,
+        repository = RestConstants.HOME_REPOSITORY,
+    ): Observable<IamUser> {
+        return this.userService.getUser(user, repository).pipe(map(mapVCard));
+    }
 
     public getUserStats = (user = RestConstants.ME, repository = RestConstants.HOME_REPOSITORY) => {
         const query = this.connector.createUrl(
@@ -605,7 +607,7 @@ export class RestIamService extends AbstractRestService {
             this.connector.getRequestOptions(),
         );
     };
-    
+
     public getRecentlyInvited(repository = RestConstants.HOME_REPOSITORY) {
         const query = this.connector.createUrl(
             'iam/:version/authorities/:repository/recent',
@@ -613,4 +615,17 @@ export class RestIamService extends AbstractRestService {
         );
         return this.connector.get<IamAuthorities>(query, this.connector.getRequestOptions());
     }
+}
+
+function mapVCard(userEntry: UserEntry): IamUser {
+    return {
+        ...userEntry,
+        person: {
+            ...userEntry.person,
+            profile: {
+                ...userEntry.person.profile,
+                vcard: new VCard(userEntry.person.profile.vcard),
+            },
+        },
+    };
 }
