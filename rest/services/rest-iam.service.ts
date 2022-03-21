@@ -578,17 +578,8 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         profile: UserProfile,
         repository = RestConstants.HOME_REPOSITORY,
     ) => {
-        const query = this.connector.createUrl(
-            'iam/:version/people/:repository/:user/profile',
-            repository,
-            [[':user', user]],
-        );
-        (profile.vcard as unknown) = profile.vcard.toVCardString();
-        return this.connector.put(
-            query,
-            JSON.stringify(profile),
-            this.connector.getRequestOptions(),
-        );
+        const convertedProfile = { ...profile, vcard: profile.vcard.toVCardString() };
+        return this.userService.editProfile(user, convertedProfile, repository);
     };
 
     public editUserCredentials = (
