@@ -1,6 +1,9 @@
 
 /**
  * All Object types returned by the rest service
+ *
+ * Objects from this module should be replaced by their corresponding types of `ngx-edu-sharing-api`
+ * once API calls are migrated.
  */
 
 import {ListItem, ListItemType} from '../ui/list-item';
@@ -12,7 +15,11 @@ import {
     NodeRef,
     UserQuota,
     UserStatus,
+    Node as NodeModel,
 } from 'ngx-edu-sharing-api';
+
+export type Collection = NodeModel['collection']
+export type Preview = NodeModel['preview']
 
 export { Organization, NodeRef, UserQuota };
 
@@ -143,32 +150,22 @@ export interface Service {
     statisticsInterface: string;
 }
 export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
-export interface Preview {
-  data?: string; // image, may null, see @this.nodeHelper.appendImageData
-  mimetype? : string;
-  url: string;
-  isGenerated: boolean;
-  type: PreviewType;
-  isIcon: boolean;
-  width: number;
-  height: number;
-}
 
 export interface License {
   icon: string;
   url: string;
 }
 
-export class Node {
+export class Node implements NodeModel {
   ref: NodeRef;
   parent: Parent;
   type: string;
   aspects: string[];
   name: string;
   title: string;
-  createdAt: Date;
+  createdAt: string;
   createdBy: Person;
-  modifiedAt: Date;
+  modifiedAt: string;
   modifiedBy: Person;
   access: string[];
   repositoryType: string;
@@ -179,7 +176,7 @@ export class Node {
   mimetype: string;
   iconURL: string;
   license: License;
-  size: number;
+  size: string;
   commentCount: number;
   preview: Preview;
   owner: Person;
@@ -188,8 +185,8 @@ export class Node {
   version : string;
   collection : Collection;
   rating: NodeRating;
-  usedInCollections?: CollectionRelationReference[];
-  relations: {[key in 'Original']: Node};
+  usedInCollections?: NodeModel[];
+  relations: {[key in 'Original']: NodeModel};
   virtual: boolean; // flag if this node is manually added later and didn't came from the repo
   public constructor(id:string=null) {
     this.ref = { id } as NodeRef;
@@ -389,25 +386,6 @@ export interface Owner {
   profile: Profile;
   homeFolder: HomeFolder;
   sharedFolders: SharedFolder[];
-}
-
-export class Collection{
-  level0: boolean;
-  description: string;
-  type: string;
-  viewtype: string;
-  x: number;
-  y: number;
-  z: number;
-  color: string;
-  childCollectionsCount: number;
-  childReferencesCount: number;
-  preview: Preview;
-  scope : string;
-  pinned : boolean;
-  orderMode: string;
-  orderAscending: boolean;
-  authorFreetext: string;
 }
 
 export interface CollectionWrapper {
@@ -741,12 +719,6 @@ export interface Property {
   values: string[];
 }
 
-export interface Preview {
-  url: string;
-  width: number;
-  height: number;
-}
-
 export interface Pagination {
   total: number;
   from: number;
@@ -997,12 +969,6 @@ export class Reference {
 export class Property {
     name:string;
     values:string[];
-}
-
-export class Preview {
-  url:string;
-  width:number;
-  height:number;
 }
 
 export class Person {
