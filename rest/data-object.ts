@@ -16,12 +16,13 @@ import {
     UserQuota,
     UserStatus,
     Node as NodeModel,
+    Person,
 } from 'ngx-edu-sharing-api';
 
 export type Collection = NodeModel['collection']
 export type Preview = NodeModel['preview']
 
-export { Organization, NodeRef, UserQuota };
+export { Organization, NodeRef, UserQuota, Person };
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -151,43 +152,40 @@ export interface Service {
 }
 export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
 
-export interface License {
-  icon: string;
-  url: string;
-}
+export type License = NodeModel['license'];
 
 export class Node implements NodeModel {
-  ref: NodeRef;
-  parent: Parent;
-  type: string;
-  aspects: string[];
-  name: string;
-  title: string;
+  access: string[];
+  aspects?: string[];
+  collection : Collection;
+  commentCount?: number;
+  content?: NodeContent;
   createdAt: string;
   createdBy: Person;
-  modifiedAt: string;
-  modifiedBy: Person;
-  access: string[];
-  repositoryType: string;
-  content: NodeContent;
   downloadUrl: string;
-  properties: any;
-  mediatype: string;
-  mimetype: string;
-  iconURL: string;
-  license: License;
-  size: string;
-  commentCount: number;
-  preview: Preview;
+  iconURL?: string;
+  isDirectory?: boolean;
+  license?: License;
+  mediatype?: string;
+  metadataset?: string;
+  mimetype?: string;
+  modifiedAt?: string;
+  modifiedBy?: Person;
+  name: string;
   owner: Person;
-  metadataset: string;
-  isDirectory: boolean;
-  version : string;
-  collection : Collection;
-  rating: NodeRating;
+  parent?: Parent;
+  preview?: Preview;
+  properties?: any;
+  rating?: NodeRating;
+  ref: NodeRef;
+  relations?: {[key in 'Original']?: NodeModel};
+  repositoryType?: string;
+  size?: string;
+  title?: string;
+  type?: string;
   usedInCollections?: NodeModel[];
-  relations: {[key in 'Original']: NodeModel};
-  virtual: boolean; // flag if this node is manually added later and didn't came from the repo
+  version? : string;
+  virtual?: boolean; // flag if this node is manually added later and didn't came from the repo
   public constructor(id:string=null) {
     this.ref = { id } as NodeRef;
   }
@@ -198,23 +196,14 @@ export interface DeepLinkResponse {
     ltiDeepLinkReturnUrl: string;
 }
 
-export interface NodeContent {
-  version: string;
-  url: string;
-  hash: string;
-
-}
+export type NodeContent = NodeModel['content'];
 
 export interface NodeRatingDetail{
   sum:number;
   count:number;
   rating:number;
 }
-export interface NodeRating{
-  overall: NodeRatingDetail;
-  user: number;
-  affiliation: any|NodeRatingDetail;
-}
+export type NodeRating = NodeModel['rating'];
 export class SortItem extends ListItem{
   mode: string;
 }
@@ -701,14 +690,6 @@ export interface Parent {
   archived: boolean;
 }
 
-
-export interface Person {
-  firstName: string;
-  lastName: string;
-  mailbox: string;
-  avatar: string;
-}
-
 export interface Access {
   permission: string;
   hasRight: boolean;
@@ -971,18 +952,9 @@ export class Property {
     values:string[];
 }
 
-export class Person {
-  firstName:string;
-  lastName:string;
-  mailbox:string;
-}
-
 export class CollectionReference extends Node{
   originalId:string;
   accessOriginal: string[];
-}
-export class CollectionRelationReference extends Node {
-    relationType: 'Usage'| 'Proposal';
 }
 
 export interface CollectionReferences {
