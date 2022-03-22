@@ -328,21 +328,7 @@ export class RestHelper{
     perm.authority={authorityName:RestConstants.AUTHORITY_EVERYONE,authorityType:RestConstants.AUTHORITY_TYPE_EVERYONE};
     return perm;
   }
-    static addToStore(selection: Node[],bridge:BridgeService,iam:RestIamService,callback:Function,position=0,errors=0) {
-        if(position==selection.length){
-            if(errors==0)
-                bridge.showTemporaryMessage(MessageType.info,'SEARCH.ADDED_TO_NODE_STORE',{count:position,errors:errors});
-            callback();
-            return;
-        }
-        iam.addNodeList(RestConstants.NODE_STORE_LIST,selection[position].ref.id).subscribe(()=>{
-            RestHelper.addToStore(selection,bridge,iam,callback,position+1,errors);
-        },(error)=>{
-            if(RestHelper.errorMessageContains(error,'Node is already in list'))
-                bridge.showTemporaryMessage(MessageType.error,'SEARCH.ADDED_TO_NODE_STORE_EXISTS',{name:RestHelper.getTitle(selection[position])});
-            RestHelper.addToStore(selection,bridge,iam,callback,position+1,errors+1)
-        });
-    }
+
   public static goToLogin(router : Router,config:ConfigurationService,scope:string=null,next=window.location.href) {
     if(config.getLocator().getBridge().isRunningCordova()){
           config.getLocator().getBridge().getCordova().reinitStatus(config.getLocator().endpointUrl,true,next).subscribe(()=>{});
