@@ -31,6 +31,7 @@ import {RestMediacenterService} from "./rest/services/rest-mediacenter.service";
 import {RestStatisticsService} from "./rest/services/rest-statistics.service";
 import {RestRatingService} from "./rest/services/rest-rating.service";
 import {RestTrackingService} from "./rest/services/rest-tracking.service";
+import {RestStateService} from './rest/services/rest-state.service';
 
 @NgModule({
     imports: [
@@ -41,6 +42,7 @@ import {RestTrackingService} from "./rest/services/rest-tracking.service";
     ],
     providers:[
         RestLocatorService,
+        RestStateService,
         RestConnectorService,
         RestConnectorsService,
         RestArchiveService,

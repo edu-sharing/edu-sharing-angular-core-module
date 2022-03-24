@@ -32,20 +32,20 @@ import {VCard} from '../../ui/VCard';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilChanged, filter} from 'rxjs/operators';
 import {Helper} from '../helper';
+import {RestStateService} from './rest-state.service';
 
 @Injectable()
 export class RestIamService extends AbstractRestService {
-  currentUser = new BehaviorSubject<{user: IamUser, login: LoginResult}>(null);
   private currentUserSubscription: Observable<any>;
-    constructor(connector : RestConnectorService, private storage : TemporaryStorageService) {
+    constructor(private state: RestStateService, connector : RestConnectorService, private storage : TemporaryStorageService) {
         super(connector);
         // subscribe login updates and sync the current user state
-        this.connector.currentLogin.pipe(
+        this.state.currentLogin.pipe(
             filter((a) => !!a),
             distinctUntilChanged((a,b) =>
           Helper.objectEquals(a,b)
         )).subscribe(async (login) => {
-          this.currentUser.next(null);
+          this.state.currentUser.next(null);
           await this.getUser().toPromise();
         });
     }
@@ -54,17 +54,17 @@ export class RestIamService extends AbstractRestService {
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.currentUser.value?.user?.person;
+    return this.state.currentUser.value?.user?.person;
   }
   /**
    * Get's the currently authenticated user object (same as calling getUser, but prevents duplicated calls)
    */
   async getCurrentUserAsync() {
-    if(this.currentUser.value) {
+    if(this.state.currentUser.value) {
       this.currentUserSubscription = null;
-      return this.currentUser.value.user;
+      return this.state.currentUser.value.user;
     } else {
-      return (await this.currentUser.toPromise()).user;
+      return (await this.state.currentUser.toPromise()).user;
     }
   }
 
@@ -248,7 +248,7 @@ export class RestIamService extends AbstractRestService {
         this.connector.isLoggedIn(false).subscribe((login) => {
           // fetch current login to have a valid person info
           return this.connector.get<IamUser>(query, this.connector.getRequestOptions()).do((user) => {
-            this.currentUser.next({
+            this.state.currentUser.next({
               user,
               login
             });

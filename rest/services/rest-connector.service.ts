@@ -12,6 +12,7 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
+import {RestStateService} from './rest-state.service';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -28,7 +29,6 @@ export class RestConnectorService {
   public _scope: string;
   private toolPermissions: string[];
   private themesUrl="../themes/default/";
-  currentLogin = new BehaviorSubject<LoginResult>(null);
   isValidatingSession = false;
 
   get autoLogin(): boolean {
@@ -69,6 +69,7 @@ export class RestConnectorService {
               private ngZone : NgZone,
               private config: ConfigurationService,
               private locator: RestLocatorService,
+              private state: RestStateService,
               private bridge: BridgeService,
               private storage : TemporaryStorageService,
               private event:FrameEventsService) {
@@ -123,7 +124,7 @@ export class RestConnectorService {
   public logout() {
     let url=this.createUrl("authentication/:version/destroySession",null);
     return this.get(url,this.getRequestOptions()).do(()=> {
-        this.currentLogin.next(null);
+        this.state.currentLogin.next(null);
         this._scope = null;
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     });
@@ -136,12 +137,12 @@ export class RestConnectorService {
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
     this._scope = null;
-    this.currentLogin.next(null);
+    this.state.currentLogin.next(null);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
   public getCurrentLogin() : LoginResult{
-    return this.currentLogin.value;
+    return this.state.currentLogin.value;
   }
   public getAbout(){
       let url=this.createUrl("_about",null);
@@ -151,14 +152,14 @@ export class RestConnectorService {
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
         if(!forceRenew) {
-            if(!this.isValidatingSession && this.currentLogin.value) {
-                observer.next(this.currentLogin.value);
+            if(!this.isValidatingSession && this.state.currentLogin.value) {
+                observer.next(this.state.currentLogin.value);
                 observer.complete();
                 return;
             }
         }
         if(this.isValidatingSession) {
-            this.currentLogin.filter((result) => result != null).first().subscribe((result) => {
+            this.state.currentLogin.filter((result) => result != null).first().subscribe((result) => {
                 observer.next(result);
                 observer.complete();
             }, error => {
@@ -174,12 +175,12 @@ export class RestConnectorService {
                     this.isValidatingSession = false;
                     this.toolPermissions = data.toolPermissions;
                     this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, data);
-                    this.currentLogin.next(data);
+                    this.state.currentLogin.next(data);
                     this._logoutTimeout = data.sessionTimeout;
                     if(data.statusCode!=RestConstants.STATUS_CODE_OK && this.bridge.isRunningCordova()){
                       this.bridge.getCordova().reinitStatus(this.locator.endpointUrl,false).subscribe(()=>{
                         this.isLoggedIn().subscribe((data:LoginResult)=>{
-                                this.currentLogin.next(data);
+                                this.state.currentLogin.next(data);
                                 observer.next(data);
                                 observer.complete();
                             },(error:any)=>{
@@ -198,7 +199,7 @@ export class RestConnectorService {
                 },
                 (error: any) => {
                     this.isValidatingSession = false;
-                    this.currentLogin.error(error);
+                    this.state.currentLogin.error(error);
                     observer.error(error);
                     observer.complete();
                 }
@@ -246,7 +247,7 @@ export class RestConnectorService {
           scope:scope
         }),this.getRequestOptions()).subscribe(
           (data) => {
-            this.currentLogin.next(data);
+            this.state.currentLogin.next(data);
             if(data.isValidLogin) {
                 this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, data);
             }
@@ -261,7 +262,7 @@ export class RestConnectorService {
       else {
         this.get<LoginResult>(url, this.getRequestOptions("",username,password)).subscribe(
           (data) => {
-            this.currentLogin.next(data);
+            this.state.currentLogin.next(data);
             if(data.isValidLogin) {
                 this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, data);
             }
