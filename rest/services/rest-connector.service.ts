@@ -14,7 +14,7 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
-import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
+import {AuthenticationService, ConfigService, LoginInfo, UserService} from 'ngx-edu-sharing-api';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -64,6 +64,7 @@ export class RestConnectorService {
               private storage : TemporaryStorageService,
               private event:FrameEventsService,
               private configApi: ConfigService,
+              private user: UserService,
               private authenticationApi: AuthenticationService,
   ) {
     this.registerLoginInfo();
@@ -122,7 +123,7 @@ export class RestConnectorService {
 }
   public logout() {
     return this.authenticationApi.logout().pipe(tap(() => {
-        this.storage.remove(TemporaryStorageService.SESSION_INFO);
+        this.currentLogin.next(null);
         this._scope = null;
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     }));
@@ -136,7 +137,7 @@ export class RestConnectorService {
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
     this._scope = null;
-    this.storage.remove(TemporaryStorageService.SESSION_INFO);
+    this.currentLogin.next(null);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
@@ -149,7 +150,6 @@ export class RestConnectorService {
       this.toolPermissions = loginInfo.toolPermissions;
       this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, loginInfo);
       this.currentLogin.next(loginInfo);
-      this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
       this._logoutTimeout = loginInfo.sessionTimeout;
     });
   }
@@ -186,7 +186,7 @@ export class RestConnectorService {
   public hasToolPermission(permission:string){
     return new Observable<boolean>((observer : Observer<boolean>) => {
       if (this.toolPermissions == null) {
-        this.isLoggedIn().subscribe(() => {
+        this.isLoggedIn(false).subscribe(() => {
           observer.next(this.hasToolPermissionInstant(permission));
           observer.complete();
         }, (error: any) => observer.error(error));
@@ -204,7 +204,7 @@ export class RestConnectorService {
         if (loginInfo.isValidLogin) {
           this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, loginInfo);
         }
-        this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
+        this.currentLogin.next(loginInfo);
       })
     )
   }

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { UserEntry, UserService } from 'ngx-edu-sharing-api';
-import { Observable, Subject } from 'rxjs';
-import { first, map, takeUntil } from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {first, map, takeUntil, tap} from 'rxjs/operators';
 import { VCard } from '../../ui/VCard';
 import {
     GroupProfile,
@@ -26,32 +26,15 @@ import { RestConnectorService } from './rest-connector.service';
 
 @Injectable()
 export class RestIamService extends AbstractRestService implements OnDestroy {
-    private currentUser: User;
     private destroyed$ = new Subject<void>();
 
     constructor(connector: RestConnectorService, private userService: UserService) {
         super(connector);
-        this.userService
-            .getCurrentUser()
-            .pipe(takeUntil(this.destroyed$), map(mapVCard))
-            .subscribe((userEntry) => (this.currentUser = userEntry.person));
     }
 
     ngOnDestroy(): void {
         this.destroyed$.next();
         this.destroyed$.complete();
-    }
-
-    /**
-     * Get's the currently authenticated user object (same as calling getUser).
-     *
-     * User data will be fetched automatically, but this method will return `null` until the data is
-     * available.
-     *
-     * Using `getCurrentUserAsync` or `userService.getCurrentUser()` is preferred over this method.
-     */
-    getCurrentUser(): User {
-        return this.currentUser;
     }
 
     getCurrentUserAsync(): Promise<IamUser> {
@@ -61,22 +44,22 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
     /**
      * return the current user as vcard
      */
-    getCurrentUserVCard(): VCard {
+    async getCurrentUserVCard(): Promise<VCard> {
         const vcard = new VCard();
-        if (this.getCurrentUser() && this.getCurrentUser().profile) {
-            vcard.givenname = this.getCurrentUser().profile.firstName;
-            vcard.surname = this.getCurrentUser().profile.lastName;
-            vcard.email = this.getCurrentUser().profile.email;
-            if (this.getCurrentUser().profile.vcard) {
-                vcard.orcid = this.getCurrentUser().profile.vcard.orcid;
-                vcard.gnduri = this.getCurrentUser().profile.vcard.gnduri;
+        const user = (await this.userService.getCurrentUser().toPromise())?.person;
+        if (user && user.profile) {
+            vcard.givenname = user.profile.firstName;
+            vcard.surname = user.profile.lastName;
+            vcard.email = user.profile.email;
+            if (user.profile.vcard) {
+                const userVCard = new VCard(user.profile.vcard);
+                vcard.orcid = userVCard.orcid;
+                vcard.gnduri = userVCard.gnduri;
             }
         }
         vcard.uid =
-            this.getCurrentUser() &&
-            this.getCurrentUser().properties &&
-            this.getCurrentUser().properties[RestConstants.CM_PROP_ESUID]
-                ? this.getCurrentUser().properties[RestConstants.CM_PROP_ESUID][0]
+            user?.properties?.[RestConstants.CM_PROP_ESUID]
+                ? user.properties[RestConstants.CM_PROP_ESUID][0]
                 : null;
         return vcard;
     }
