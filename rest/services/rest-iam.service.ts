@@ -348,60 +348,6 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         return this.connector.put(query, null, this.connector.getRequestOptions());
     };
 
-    public getNodeList = (
-        list: string,
-        request: any = null,
-        user = RestConstants.ME,
-        repository = RestConstants.HOME_REPOSITORY,
-    ) => {
-        const query = this.connector.createUrlNoEscape(
-            'iam/:version/people/:repository/:user/nodeList/:list?:request',
-            repository,
-            [
-                [':user', encodeURIComponent(user)],
-                [':list', encodeURIComponent(list)],
-                [':request', this.connector.createRequestString(request)],
-            ],
-        );
-        return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
-    };
-
-    public removeNodeList = (
-        list: string,
-        node: string,
-        user = RestConstants.ME,
-        repository = RestConstants.HOME_REPOSITORY,
-    ) => {
-        const query = this.connector.createUrl(
-            'iam/:version/people/:repository/:user/nodeList/:list/:node',
-            repository,
-            [
-                [':user', user],
-                [':list', list],
-                [':node', node],
-            ],
-        );
-        return this.connector.delete(query, this.connector.getRequestOptions());
-    };
-
-    public addNodeList = (
-        list: string,
-        node: string,
-        user = RestConstants.ME,
-        repository = RestConstants.HOME_REPOSITORY,
-    ) => {
-        const query = this.connector.createUrl(
-            'iam/:version/people/:repository/:user/nodeList/:list/:node',
-            repository,
-            [
-                [':user', user],
-                [':list', list],
-                [':node', node],
-            ],
-        );
-        return this.connector.put(query, null, this.connector.getRequestOptions());
-    };
-
     getUser(
         user = RestConstants.ME,
         repository = RestConstants.HOME_REPOSITORY,
