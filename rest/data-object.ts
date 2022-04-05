@@ -154,6 +154,8 @@ export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED
 
 export type License = NodeModel['license'];
 
+export type GenericAuthority = Organization|Group|AuthorityProfile|User;
+
 export class Node implements NodeModel {
   access: string[];
   aspects?: string[];
