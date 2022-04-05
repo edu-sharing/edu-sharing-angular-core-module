@@ -14,7 +14,7 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
-import {AuthenticationService, ConfigService, LoginInfo, UserService} from 'ngx-edu-sharing-api';
+import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-api';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -64,7 +64,6 @@ export class RestConnectorService {
               private storage : TemporaryStorageService,
               private event:FrameEventsService,
               private configApi: ConfigService,
-              private user: UserService,
               private authenticationApi: AuthenticationService,
   ) {
     this.registerLoginInfo();

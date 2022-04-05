@@ -7,7 +7,6 @@ import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
-import { AboutService } from 'ngx-edu-sharing-api'
 
 @Injectable()
 export class RestLocatorService {
@@ -69,7 +68,6 @@ export class RestLocatorService {
     constructor(
         private http: HttpClient,
         private bridge: BridgeService,
-        private about: AboutService,
     ) {}
 
     createOAuthFromSession() {
