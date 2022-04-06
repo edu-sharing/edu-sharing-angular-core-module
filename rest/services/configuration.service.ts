@@ -38,7 +38,7 @@ export class ConfigurationService {
       }
       // TODO: cleanup. This method used to directly fetch the config from the API. The wrapping and
       // caching is not needed anymore.
-      this.configApi.getConfig().pipe(first()).subscribe((data)=>{
+      this.configApi.observeConfig().pipe(first()).subscribe((data)=>{
         this.data=data;
         this.applyGlobal();
         observer.next(this.data);

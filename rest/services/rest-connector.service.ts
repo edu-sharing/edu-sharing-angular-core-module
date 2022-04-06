@@ -69,7 +69,7 @@ export class RestConnectorService {
     this.registerLoginInfo();
     this.numberPerRequest=RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
     event.addListener(this);
-    this.configApi.getConfig().subscribe(config => {
+    this.configApi.observeConfig().subscribe(config => {
       if (config.itemsPerRequest) {
         this.numberPerRequest = config.itemsPerRequest
       }
@@ -145,7 +145,7 @@ export class RestConnectorService {
   }
 
   private registerLoginInfo(): void {
-    this.authenticationApi.getLoginInfo().subscribe((loginInfo) => {
+    this.authenticationApi.observeLoginInfo().subscribe((loginInfo) => {
       this.toolPermissions = loginInfo.toolPermissions;
       this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, loginInfo);
       this.currentLogin.next(loginInfo);
@@ -154,7 +154,7 @@ export class RestConnectorService {
   }
 
   public isLoggedIn(forceRenew=true): Observable<LoginInfo> {
-    return this.authenticationApi.getLoginInfo().pipe(
+    return this.authenticationApi.observeLoginInfo().pipe(
       first(),
       switchMap((loginInfo) => {
         if (

@@ -38,7 +38,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
     }
 
     getCurrentUserAsync(): Promise<IamUser> {
-        return this.userService.getCurrentUser().pipe(first(), map(mapVCard)).toPromise();
+        return this.userService.observeCurrentUser().pipe(first(), map(mapVCard)).toPromise();
     }
 
     /**
@@ -46,7 +46,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
      */
     async getCurrentUserVCard(): Promise<VCard> {
         const vcard = new VCard();
-        const user = (await this.userService.getCurrentUser().toPromise())?.person;
+        const user = (await this.userService.observeCurrentUser().pipe(first()).toPromise())?.person;
         if (user && user.profile) {
             vcard.givenname = user.profile.firstName;
             vcard.surname = user.profile.lastName;
