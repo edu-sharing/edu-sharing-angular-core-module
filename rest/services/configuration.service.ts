@@ -27,6 +27,7 @@ export class ConfigurationService {
   /**
    * Gets the whole configuration
    * @returns {any}
+   * @deprecated Use `ConfigService` from `ngx-edu-sharing-api` instead.
    */
   public getAll() : Observable<any>{
     return Observable.create( (observer:Observer<any>) => {
@@ -42,14 +43,14 @@ export class ConfigurationService {
         this.applyGlobal();
         observer.next(this.data);
         observer.complete();
-      },(error)=>{
-        // no language available, so use a fixed string
-        this.bridge.showTemporaryMessage(MessageType.error, 'Error fetching configuration data. Please contact administrator.\nFehler beim Abrufen der Konfigurationsdaten. Bitte Administrator kontaktieren.', null, null, error);
-        console.warn(error)
+      }
+      ,(error)=>{
+        // Error is displayed by global error handling.
         this.data = {};
         observer.next(this.data);
         observer.complete();
-      });
+      }
+      );
     });
   }
   public getDynamic(key:string,name:string,defaultValue:any=null){
