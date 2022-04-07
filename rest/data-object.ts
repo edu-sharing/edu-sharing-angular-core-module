@@ -1156,6 +1156,9 @@ export class LTIRegistrationToken {
     token: string;
     url: string;
     tsCreated: number;
+    tsExpiry: number;
+    registeredAppId: string;
+    expired: boolean;
 }
 export class LTIRegistrationTokens {
     registrationLinks: LTIRegistrationToken[];
