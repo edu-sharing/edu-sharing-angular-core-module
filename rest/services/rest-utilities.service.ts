@@ -3,7 +3,7 @@ import {RestConnectorService} from "./rest-connector.service";
 import {AbstractRestService} from "./abstract-rest-service";
 import {WebsiteInformation} from "../data-object";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestUtilitiesService extends AbstractRestService{
   constructor(connector : RestConnectorService) {
       super(connector);

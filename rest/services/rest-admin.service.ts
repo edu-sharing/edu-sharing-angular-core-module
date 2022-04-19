@@ -28,7 +28,7 @@ import {Observable} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestAdminService extends AbstractRestService{
   constructor(connector : RestConnectorService) {
     super(connector);

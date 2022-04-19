@@ -5,7 +5,7 @@ import { TemporaryStorageService } from './temporary-storage.service';
 import { LTIRegistrationTokens } from '../data-object';
 import { RestConstants } from '../rest-constants';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestLtiService extends AbstractRestService {
     constructor(connector: RestConnectorService, private storage: TemporaryStorageService) {
         super(connector);

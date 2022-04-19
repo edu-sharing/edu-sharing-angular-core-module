@@ -28,7 +28,7 @@ import {FrameEventsService} from './frame-events.service';
 import {MessageType} from '../../ui/message-type';
 import {Values} from '../../../common/ui/mds-editor/types';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestNodeService extends AbstractRestService{
   constructor(connector : RestConnectorService,private events:FrameEventsService, private iam : RestIamService, private bridge : BridgeService) {
     super(connector);

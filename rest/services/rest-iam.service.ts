@@ -24,7 +24,7 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestIamService extends AbstractRestService implements OnDestroy {
     private destroyed$ = new Subject<void>();
 

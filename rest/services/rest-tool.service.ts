@@ -11,7 +11,7 @@ import {RestIamService} from "./rest-iam.service";
 import {RequestObject} from "../request-object";
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestToolService extends AbstractRestService{
   constructor(connector : RestConnectorService) {
       super(connector);

@@ -7,7 +7,7 @@ import {RequestObject} from "../request-object";
 import {ArchiveRestore, ArchiveSearch, Node, Collection, UsageList, CollectionUsage, Usage} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestUsageService extends AbstractRestService{
     public static getNodeUsagesByRepositoryType(list : Usage[]) {
         let groups:any={};

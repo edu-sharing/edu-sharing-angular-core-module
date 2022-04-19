@@ -7,7 +7,7 @@ import {AbstractRestService} from './abstract-rest-service';
 import {IamGroup, Mediacenter, MediacenterProfile, Node, NodeList} from '../data-object';
 import {RestHelper} from '../rest-helper';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestMediacenterService extends AbstractRestService {
   // @TODO: declare the mediacenter type when it is finalized in backend
   constructor(connector : RestConnectorService) {

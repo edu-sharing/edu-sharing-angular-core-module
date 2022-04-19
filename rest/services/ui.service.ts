@@ -7,7 +7,7 @@ import {RestConstants} from '../rest-constants';
 import {MessageType} from '../../ui/message-type';
 import {DateRange} from '@angular/material/datepicker';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class UIService {
   constructor(
       private bridge: BridgeService,

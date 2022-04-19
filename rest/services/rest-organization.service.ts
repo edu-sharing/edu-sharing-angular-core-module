@@ -10,7 +10,7 @@ import {
 } from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestOrganizationService extends AbstractRestService{
   constructor(connector : RestConnectorService) {
       super(connector);

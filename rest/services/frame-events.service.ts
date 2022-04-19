@@ -2,7 +2,7 @@ import {Injectable, NgZone} from '@angular/core';
 export interface EventListener {
   onEvent(event:string, data:any) : void;
 }
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class FrameEventsService {
 
   public static EVENT_UPDATE_LOGIN_STATE="UPDATE_LOGIN_STATE";
