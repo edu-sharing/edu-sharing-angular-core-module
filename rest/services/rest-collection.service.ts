@@ -16,7 +16,7 @@ import {
 import {AbstractRestService} from './abstract-rest-service';
 import {NodeWrapper} from '../data-object';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestCollectionService extends AbstractRestService {
     constructor(connector : RestConnectorService) {
         super(connector);

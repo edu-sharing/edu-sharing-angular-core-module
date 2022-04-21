@@ -9,7 +9,7 @@ import {
 } from "../data-object";
 import {RequestObject} from "../request-object";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestCommentsService {
 
   constructor(private connector : RestConnectorService) {}

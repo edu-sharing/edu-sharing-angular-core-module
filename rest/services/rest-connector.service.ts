@@ -21,8 +21,8 @@ import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-a
  * Use this service to setup your REST Service Connection.
  * NO NOT USE this service to directly perform requests; Use the proper Rest Services for the endpoints instead
  */
-@Injectable()
-export class RestConnectorService {
+ @Injectable({providedIn: 'root'})
+ export class RestConnectorService {
   public static DEFAULT_NUMBER_PER_REQUEST = 25;
   private _currentRequestCount=0;
   private _logoutTimeout: number;

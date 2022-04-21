@@ -7,7 +7,7 @@ import {
 } from "../data-object";
 import {RequestObject} from "../request-object";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestTrackingService {
 
   constructor(private connector : RestConnectorService) {}

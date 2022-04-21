@@ -9,7 +9,7 @@ import {
 import {Observer} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestStatisticsService extends AbstractRestService{
   constructor(connector : RestConnectorService) {
     super(connector);

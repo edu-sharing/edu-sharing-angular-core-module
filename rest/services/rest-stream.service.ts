@@ -5,7 +5,7 @@ import {
   STREAM_STATUS
 } from "../data-object";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestStreamService {
   constructor(private connector : RestConnectorService) {}
 

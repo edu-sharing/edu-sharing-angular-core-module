@@ -9,8 +9,8 @@ import { first } from "rxjs/operators";
 /**
  Service to get configuration data while running (e.g. loaded extension)
  */
-@Injectable()
-export class ConfigurationService {
+ @Injectable({providedIn: 'root'})
+ export class ConfigurationService {
   private data : any=null;
 
   constructor(

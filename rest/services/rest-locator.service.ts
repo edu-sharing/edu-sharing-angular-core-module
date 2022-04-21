@@ -8,7 +8,7 @@ import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestLocatorService {
     readonly apiUrl = 'rest/'
     private ticket: string;

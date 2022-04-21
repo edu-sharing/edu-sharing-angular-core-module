@@ -8,7 +8,7 @@ import {AbstractRestService} from "./abstract-rest-service";
 import {UIService} from "./ui.service";
 import {NodeHelperService} from '../../../core-ui-module/node-helper.service';
 import { tap } from 'rxjs/operators';
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestConnectorsService extends AbstractRestService{
     private static MODE_NONE=0;
     private static MODE_CREATE=1;

@@ -5,7 +5,7 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestMdsService extends AbstractRestService {
     constructor(connector: RestConnectorService) {
         super(connector);
