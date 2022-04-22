@@ -18,6 +18,7 @@ export class FrameEventsService {
   public static EVENT_APPLY_NODE="APPLY_NODE";
   public static EVENT_POST_DATA="POST_DATA";
   public static EVENT_NODE_SAVED="NODE_SAVED";
+  public static EVENT_UPLOAD_CANCELED="UPLOAD_CANCELED";
     /**
      * Hint to ng that the content has changed (e.g. via a connector) and should be reloaded
      * @type {string}
