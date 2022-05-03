@@ -8,7 +8,7 @@ import {ArchiveRestore, ArchiveSearch, Node} from "../data-object";
 import {AbstractRestService} from "./abstract-rest-service";
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestArchiveService extends AbstractRestService{
     constructor(connector : RestConnectorService) {
         super(connector);

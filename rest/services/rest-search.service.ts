@@ -23,7 +23,7 @@ import {map} from 'rxjs/operators';
 import {VCard} from '../../ui/VCard';
 import {Widget} from '../../../common/ui/mds-editor/mds-editor-instance.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestSearchService extends AbstractRestService{
     static readonly MAX_QUERY_CONCAT_PARAMS = 100;
     static convertCritierias(properties:Values,mdsWidgets:MdsWidget[]){

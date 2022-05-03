@@ -14,17 +14,16 @@ import {FrameEventsService} from "./frame-events.service";
 import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
-import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
+import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-api';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
  * Use this service to setup your REST Service Connection.
  * NO NOT USE this service to directly perform requests; Use the proper Rest Services for the endpoints instead
  */
-@Injectable()
-export class RestConnectorService {
+ @Injectable({providedIn: 'root'})
+ export class RestConnectorService {
   public static DEFAULT_NUMBER_PER_REQUEST = 25;
-  private _lastActionTime=0;
   private _currentRequestCount=0;
   private _logoutTimeout: number;
   private _autoLogin = true;
@@ -50,9 +49,6 @@ export class RestConnectorService {
     return this.locator.endpointUrl;
   }
   numberPerRequest = RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
-  get lastActionTime(){
-    return this._lastActionTime;
-  }
   get logoutTimeout(){
     return this._logoutTimeout;
   }
@@ -73,7 +69,7 @@ export class RestConnectorService {
     this.registerLoginInfo();
     this.numberPerRequest=RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
     event.addListener(this);
-    this.configApi.getConfig().subscribe(config => {
+    this.configApi.observeConfig().subscribe(config => {
       if (config.itemsPerRequest) {
         this.numberPerRequest = config.itemsPerRequest
       }
@@ -90,7 +86,7 @@ export class RestConnectorService {
   }
   public onEvent(event:string,request:any){
     if(event==FrameEventsService.EVENT_UPDATE_SESSION_TIMEOUT) {
-      this._lastActionTime=new Date().getTime();
+      this.authenticationApi.reportOutsideApiRequest();
     }
     if(event==FrameEventsService.EVENT_PARENT_REST_REQUEST){
       let method=request.method ? request.method.toLowerCase() : "get";
@@ -126,7 +122,7 @@ export class RestConnectorService {
 }
   public logout() {
     return this.authenticationApi.logout().pipe(tap(() => {
-        this.storage.remove(TemporaryStorageService.SESSION_INFO);
+        this.currentLogin.next(null);
         this._scope = null;
         this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT)
     }));
@@ -140,7 +136,7 @@ export class RestConnectorService {
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
     this._scope = null;
-    this.storage.remove(TemporaryStorageService.SESSION_INFO);
+    this.currentLogin.next(null);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
@@ -149,17 +145,16 @@ export class RestConnectorService {
   }
 
   private registerLoginInfo(): void {
-    this.authenticationApi.getLoginInfo().subscribe((loginInfo) => {
+    this.authenticationApi.observeLoginInfo().subscribe((loginInfo) => {
       this.toolPermissions = loginInfo.toolPermissions;
       this.event.broadcastEvent(FrameEventsService.EVENT_UPDATE_LOGIN_STATE, loginInfo);
       this.currentLogin.next(loginInfo);
-      this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
       this._logoutTimeout = loginInfo.sessionTimeout;
     });
   }
 
   public isLoggedIn(forceRenew=true): Observable<LoginInfo> {
-    return this.authenticationApi.getLoginInfo().pipe(
+    return this.authenticationApi.observeLoginInfo().pipe(
       first(),
       switchMap((loginInfo) => {
         if (
@@ -190,7 +185,7 @@ export class RestConnectorService {
   public hasToolPermission(permission:string){
     return new Observable<boolean>((observer : Observer<boolean>) => {
       if (this.toolPermissions == null) {
-        this.isLoggedIn().subscribe(() => {
+        this.isLoggedIn(false).subscribe(() => {
           observer.next(this.hasToolPermissionInstant(permission));
           observer.complete();
         }, (error: any) => observer.error(error));
@@ -208,7 +203,7 @@ export class RestConnectorService {
         if (loginInfo.isValidLogin) {
           this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, loginInfo);
         }
-        this.storage.set(TemporaryStorageService.SESSION_INFO, loginInfo);
+        this.currentLogin.next(loginInfo);
       })
     )
   }
@@ -300,7 +295,7 @@ export class RestConnectorService {
   }
   private request<T>(method:string,url:string,body:any,options:any,appendUrl=true){
       return new Observable<T>((observer : Observer<T>) => {
-          this._lastActionTime=new Date().getTime();
+          this.authenticationApi.reportOutsideApiRequest();
           this._currentRequestCount++;
           let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
           let call=null;

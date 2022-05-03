@@ -6,7 +6,7 @@ import {RequestObject} from "../request-object";
 import {ArchiveRestore, ArchiveSearch, Node, Collection, UsageList, CollectionUsage} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestRatingService extends AbstractRestService{
     constructor(connector : RestConnectorService) {
         super(connector);

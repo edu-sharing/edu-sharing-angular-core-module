@@ -40,37 +40,6 @@ import {RestLtiService} from './rest/services/rest-lti.service';
     declarations: [
         DebugResultPipe
     ],
-    providers:[
-        RestLocatorService,
-        RestConnectorService,
-        RestConnectorsService,
-        RestArchiveService,
-        RestNetworkService,
-        RestIamService,
-        RestAdminService,
-        RestCollectionService,
-        RestMdsService,
-        RestNodeService,
-        RestSearchService,
-        RestStatisticsService,
-        RestRegisterService,
-        RestStreamService,
-        RestUsageService,
-        RestOrganizationService,
-        RestMediacenterService,
-        RestCommentsService,
-        RestTrackingService,
-        RestToolService,
-        RestRatingService,
-        RestUtilitiesService,
-        RestSharingService,
-        FrameEventsService,
-        SessionStorageService,
-        ConfigurationService,
-        TemporaryStorageService,
-        UIService,
-        RestLtiService
-    ]
 })
 export class CoreModule {}
 

@@ -1,11 +1,28 @@
 
 /**
  * All Object types returned by the rest service
+ *
+ * Objects from this module should be replaced by their corresponding types of `ngx-edu-sharing-api`
+ * once API calls are migrated.
  */
 
 import {ListItem, ListItemType} from '../ui/list-item';
 import {VCard} from '../ui/VCard';
-import {LoginInfo} from 'ngx-edu-sharing-api';
+import {
+    LoginInfo,
+    Organization,
+    UserProfile as ApiUserProfile,
+    NodeRef,
+    UserQuota,
+    UserStatus,
+    Node as NodeModel,
+    Person,
+} from 'ngx-edu-sharing-api';
+
+export type Collection = NodeModel['collection']
+export type Preview = NodeModel['preview']
+
+export { Organization, NodeRef, UserQuota, Person };
 
 export enum STREAM_STATUS {
   OPEN = "OPEN",
@@ -134,56 +151,45 @@ export interface Service {
     statisticsInterface: string;
 }
 export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
-export interface Preview {
-  data?: string[]; // image, may null, see @this.nodeHelper.appendImageData
-  mimetype? : string;
-  url: string;
-  isGenerated: boolean;
-  type: PreviewType;
-  isIcon: boolean;
-  width: number;
-  height: number;
-}
 
-export interface License {
-  icon: string;
-  url: string;
-}
+export type License = NodeModel['license'];
 
-export class Node {
-  ref: NodeRef;
-  parent: Parent;
-  type: string;
-  aspects: string[];
-  name: string;
-  title: string;
+export type GenericAuthority = Organization|Group|AuthorityProfile|User;
+
+export class Node implements NodeModel {
+  access: string[];
+  aspects?: string[];
+  collection : Collection;
+  commentCount?: number;
+  content?: NodeContent;
   createdAt: string;
   createdBy: Person;
-  modifiedAt: string;
-  modifiedBy: Person;
-  access: string[];
-  repositoryType: string;
-  content: NodeContent;
   downloadUrl: string;
-  properties: any;
-  mediatype: string;
-  mimetype: string;
-  iconURL: string;
-  license: License;
-  size: string;
-  commentCount: number;
-  preview: Preview;
+  iconURL?: string;
+  isDirectory?: boolean;
+  license?: License;
+  mediatype?: string;
+  metadataset?: string;
+  mimetype?: string;
+  modifiedAt?: string;
+  modifiedBy?: Person;
+  name: string;
   owner: Person;
-  metadataset: string;
-  isDirectory: boolean;
-  version : string;
-  collection: Collection;
-  rating: NodeRating;
-  usedInCollections?: CollectionRelationReference[];
-  relations: {[key in 'Original']: Node};
-  virtual: boolean; // flag if this node is manually added later and didn't came from the repo
+  parent?: Parent;
+  preview?: Preview;
+  properties?: any;
+  rating?: NodeRating;
+  ref: NodeRef;
+  relations?: {[key in 'Original']?: NodeModel};
+  repositoryType?: string;
+  size?: string;
+  title?: string;
+  type?: string;
+  usedInCollections?: NodeModel[];
+  version? : string;
+  virtual?: boolean; // flag if this node is manually added later and didn't came from the repo
   public constructor(id:string=null) {
-    this.ref=new NodeRef(id);
+    this.ref = { id } as NodeRef;
   }
 }
 
@@ -192,23 +198,14 @@ export interface DeepLinkResponse {
     ltiDeepLinkReturnUrl: string;
 }
 
-export interface NodeContent {
-  version: string;
-  url: string;
-  hash: string;
-
-}
+export type NodeContent = NodeModel['content'];
 
 export interface NodeRatingDetail{
   sum:number;
   count:number;
   rating:number;
 }
-export interface NodeRating{
-  overall: NodeRatingDetail;
-  user: number;
-  affiliation: any|NodeRatingDetail;
-}
+export type NodeRating = NodeModel['rating'];
 export class SortItem extends ListItem{
   mode: string;
 }
@@ -308,20 +305,9 @@ export interface IamAuthorities {
   authorities: AuthorityProfile[];
   pagination: Pagination;
 }
-export interface UserProfile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  primaryAffiliation: string;
-  avatar: string;
-  about: string;
-  skills: string[];
-  types: string[];
+
+export interface UserProfile extends Omit<ApiUserProfile, 'vcard'> {
   vcard: VCard;
-}
-export interface UserStatus {
-  status: string;
-  date: Date;
 }
 export interface UserStats {
   nodeCount: number;
@@ -332,36 +318,25 @@ export interface UserCredentials {
   oldPassword: string;
   newPassword: string;
 }
-export interface NodeRef {
-  repo: string;
-  id: string;
-  archived: boolean;
-}
 
 export interface User extends UserSimple {
-  organizations: Organization[];
-  properties: any;
-  homeFolder: NodeRef;
-  sharedFolders: NodeRef[];
-  quota: UserQuota;
+  properties?: any;
+  homeFolder?: NodeRef;
+  sharedFolders?: NodeRef[];
+  quota?: UserQuota;
   profile: UserProfile;
 }
 export interface UserSimple {
   authorityName: string;
-  authorityType: string;
-  userName: string;
-  status: UserStatus;
+  authorityType?: string;
+  userName?: string;
+  status?: UserStatus;
   profile: UserProfile;
-  organizations: Organization[];
-}
-export interface UserQuota {
-    enabled:boolean;
-    sizeCurrent:number;
-    sizeQuota:number;
+  organizations?: Organization[];
 }
 export interface IamUser {
   person : User;
-  editProfile : boolean;
+  editProfile? : boolean;
 }
 export interface IamPreferences {
   preferences : string;
@@ -402,27 +377,6 @@ export interface Owner {
   profile: Profile;
   homeFolder: HomeFolder;
   sharedFolders: SharedFolder[];
-}
-
-export class Collection {
-  level0: boolean;
-  title: string;
-  description: string;
-  type: string;
-  viewtype: string;
-  x: number;
-  y: number;
-  z: number;
-  color: string;
-  fromUser: boolean;
-  childCollectionsCount: number;
-  childReferencesCount: number;
-  preview: Preview;
-  scope : string;
-  pinned : boolean;
-  orderMode: string;
-  orderAscending: boolean;
-  authorFreetext: string;
 }
 
 export interface CollectionWrapper {
@@ -738,14 +692,6 @@ export interface Parent {
   archived: boolean;
 }
 
-
-export interface Person {
-  firstName: string;
-  lastName: string;
-  mailbox: string;
-  avatar: string;
-}
-
 export interface Access {
   permission: string;
   hasRight: boolean;
@@ -754,12 +700,6 @@ export interface Access {
 export interface Property {
   name: string;
   values: string[];
-}
-
-export interface Preview {
-  url: string;
-  width: number;
-  height: number;
 }
 
 export interface Pagination {
@@ -1014,35 +954,11 @@ export class Property {
     values:string[];
 }
 
-export class Preview {
-  url:string;
-  width:number;
-  height:number;
-}
-
-export class Person {
-  firstName:string;
-  lastName:string;
-  mailbox:string;
-}
-
 export class CollectionReference extends Node{
   originalId:string;
   accessOriginal: string[];
 }
-export class CollectionRelationReference extends Node {
-    relationType: 'Usage'| 'Proposal';
-}
 
-export class NodeRef {
-  repo:string;
-  id:string;
-  archived:boolean;
-  isHomeRepo:boolean;
-  public constructor(id:string=null){
-    this.id=id;
-  }
-}
 export interface CollectionReferences {
     references: Array<CollectionReference>;
     pagination: Pagination;
@@ -1118,9 +1034,6 @@ export class AccessPermission {
   hasRight:boolean;   // signaling if the user has the right above
 }
 
-export interface Organization extends Group {
-  sharedFolder:Reference;
-}
 export interface GroupSignupDetails {
   signupMethod:string;
   signupPassword:string;
@@ -1243,6 +1156,9 @@ export class LTIRegistrationToken {
     token: string;
     url: string;
     tsCreated: number;
+    tsExpiry: number;
+    registeredAppId: string;
+    valid: boolean;
 }
 export class LTIRegistrationTokens {
     registrationLinks: LTIRegistrationToken[];

@@ -8,7 +8,7 @@ import {Helper} from "../helper";
 import { shareReplay } from "rxjs/operators";
 import {UniversalNode} from '../../../common/definitions';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestNetworkService extends AbstractRestService{
   private static currentRepositories:Repository[];
 

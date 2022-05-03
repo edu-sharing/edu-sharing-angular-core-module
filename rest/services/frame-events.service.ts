@@ -2,7 +2,7 @@ import {Injectable, NgZone} from '@angular/core';
 export interface EventListener {
   onEvent(event:string, data:any) : void;
 }
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class FrameEventsService {
 
   public static EVENT_UPDATE_LOGIN_STATE="UPDATE_LOGIN_STATE";
@@ -15,10 +15,10 @@ export class FrameEventsService {
   public static EVENT_GLOBAL_SEARCH="GLOBAL_SEARCH";
   public static EVENT_CONTENT_HEIGHT="CONTENT_HEIGHT";
   public static EVENT_INVALIDATE_HEIGHT="INVALIDATE_HEIGHT";
-  public static EVENT_SESSION_TIMEOUT="SESSION_TIMEOUT";
   public static EVENT_APPLY_NODE="APPLY_NODE";
   public static EVENT_POST_DATA="POST_DATA";
   public static EVENT_NODE_SAVED="NODE_SAVED";
+  public static EVENT_UPLOAD_CANCELED="UPLOAD_CANCELED";
     /**
      * Hint to ng that the content has changed (e.g. via a connector) and should be reloaded
      * @type {string}

@@ -9,7 +9,7 @@ import {
 import {RequestObject} from "../request-object";
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestSharingService extends AbstractRestService{
 
     constructor(connector : RestConnectorService) {

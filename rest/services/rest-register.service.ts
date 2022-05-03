@@ -5,7 +5,7 @@ import {RestConnectorService} from "./rest-connector.service";
 import {IamUsers, IamAuthorities, OrganizationOrganizations, RegisterInformation, RegisterExists} from '../data-object';
 import {AbstractRestService} from "./abstract-rest-service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RestRegisterService extends AbstractRestService{
   constructor(connector : RestConnectorService) {
       super(connector);

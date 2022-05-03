@@ -24,8 +24,8 @@ import { RestConnectorService } from './rest-connector.service';
  * either. Note that it currently only supports strings. If a user is logged in, it will be stored
  * inside the user profile. Otherwise, localStorage will be used.
  */
-@Injectable()
-export class SessionStorageService {
+ @Injectable({providedIn: 'root'})
+ export class SessionStorageService {
     static readonly KEY_WORKSPACE_SORT = 'workspace_sort';
 
     private readonly localStorage = new BrowserStorage(localStorage);

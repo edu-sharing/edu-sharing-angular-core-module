@@ -7,16 +7,14 @@ import { Node } from '../data-object';
  * Note that all components share the same data source. So uses prefixes for your name if
  * applicable!
  */
-@Injectable()
-export class TemporaryStorageService {
+ @Injectable({providedIn: 'root'})
+ export class TemporaryStorageService {
     static APPLY_TO_LMS_PARAMETER_NODE = 'apply_to_lms_node';
     // @Deprecated Use NODE_RENDER_PARAMETER_DATA_SOURCE instead
     static NODE_RENDER_PARAMETER_LIST = 'node_render_list';
     static NODE_RENDER_PARAMETER_DATA_SOURCE = 'node_render_data_source';
     static COLLECTION_ADD_NODES = 'collection_add_nodes';
     static WORKSPACE_LAST_LOCATION = 'WORKSPACE_LAST_LOCATION';
-    static USER_INFO = 'USER_INFO';
-    static SESSION_INFO = 'SESSION_INFO';
     // default: false
     static OPTION_HIDE_MAINNAV: 'option_hide_mainnav';
     // default: false
