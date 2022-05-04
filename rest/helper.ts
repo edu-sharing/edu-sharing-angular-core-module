@@ -161,7 +161,14 @@ export class Helper {
 
     return url+param+"="+encodeURIComponent(value);
   }
-
+  public static getDotPathFromNestedObject(nested: any, path: string) {
+      const split = path.split('.');
+      let obj = nested;
+      for(let key of split) {
+          obj = obj?.[key];
+      }
+      return obj;
+  }
   public static deepCopy(data: any) {
     if(data==null)
       return null;
