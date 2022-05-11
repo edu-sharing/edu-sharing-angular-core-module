@@ -22,7 +22,7 @@ import {
     NodeStatistics,
     Statistics,
     JobDescription,
-    NodeListElastic
+    NodeListElastic, ConfigFilePrefix, PluginStatus
 } from '../data-object';
 import {Observable} from "rxjs";
 import {AbstractRestService} from "./abstract-rest-service";
@@ -40,6 +40,10 @@ export class RestAdminService extends AbstractRestService{
     public getAllJobs(){
         let query=this.connector.createUrl("admin/:version/jobs/all",null);
         return this.connector.get<JobDescription[]>(query,this.connector.getRequestOptions())
+    }
+    public getPlugins(){
+        let query=this.connector.createUrl("admin/:version/plugins",null);
+        return this.connector.get<PluginStatus[]>(query,this.connector.getRequestOptions())
     }
     public cancelJob(job:string){
         let query=this.connector.createUrl("admin/:version/jobs/:job",null,[[":job",job]]);
@@ -346,17 +350,19 @@ export class RestAdminService extends AbstractRestService{
         let options:any=this.connector.getRequestOptions();
         return this.connector.get<any>(query,options);
     }
-    public getConfigFile(filename:string) {
-        let query=this.connector.createUrl("admin/:version/configFile?filename=:filename",null,[
-            [":filename",filename]
+    public getConfigFile(filename:string, pathPrefix: ConfigFilePrefix) {
+        let query=this.connector.createUrl("admin/:version/configFile?filename=:filename&pathPrefix=:pathPrefix",null,[
+            [":filename",filename],
+            [":pathPrefix",pathPrefix]
         ]);
         let options:any=this.connector.getRequestOptions();
         options.responseType='text';
         return this.connector.get<string>(query,options);
     }
-    public updateConfigFile(filename:string,content:string) {
-        let query=this.connector.createUrl("admin/:version/configFile?filename=:filename",null,[
-            [":filename",filename]
+    public updateConfigFile(filename:string, pathPrefix: ConfigFilePrefix,content:string) {
+        let query=this.connector.createUrl("admin/:version/configFile?filename=:filename&pathPrefix=:pathPrefix",null,[
+            [":filename",filename],
+            [":pathPrefix",pathPrefix]
         ]);
         let options:any=this.connector.getRequestOptions();
         options.responseType='text';

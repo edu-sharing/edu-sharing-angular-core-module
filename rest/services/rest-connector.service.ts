@@ -60,6 +60,7 @@ import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-a
               private ngZone : NgZone,
               private config: ConfigurationService,
               private locator: RestLocatorService,
+              private state: RestStateService,
               private bridge: BridgeService,
               private storage : TemporaryStorageService,
               private event:FrameEventsService,
@@ -136,7 +137,7 @@ import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-a
     xhr.open("GET",this.endpointUrl+url,false);
     let result=xhr.send();
     this._scope = null;
-    this.currentLogin.next(null);
+    this.state.currentLogin.next(null);
     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
     return result;
   }
