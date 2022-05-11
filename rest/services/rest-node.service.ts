@@ -26,7 +26,7 @@ import {AbstractRestService} from "./abstract-rest-service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {FrameEventsService} from './frame-events.service';
 import {MessageType} from '../../ui/message-type';
-import {Values} from '../../../common/ui/mds-editor/types';
+import { Values } from '../../../features/mds/types/types';
 
 @Injectable({providedIn: 'root'})
 export class RestNodeService extends AbstractRestService{

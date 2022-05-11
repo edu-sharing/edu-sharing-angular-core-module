@@ -3,9 +3,7 @@ import {ListItem, ListItemType} from '../ui/list-item';
 import {RestConnectorService} from "./services/rest-connector.service";
 import {Collection, Mds, Sort} from './data-object';
 import {TranslateService} from '@ngx-translate/core';
-import {MdsDefinition, MdsWidget, MdsWidgetValue, Values} from '../../common/ui/mds-editor/types';
-import {Widget} from '../../common/ui/mds-editor/mds-editor-instance.service';
-import { MdsSort } from "ngx-edu-sharing-api";
+import { MdsDefinition, MdsSort, MdsWidget } from "ngx-edu-sharing-api";
 
 export class MdsHelper{
     static getSortInfo(mdsSet: Mds|MdsDefinition, name: string): Sort | MdsSort {

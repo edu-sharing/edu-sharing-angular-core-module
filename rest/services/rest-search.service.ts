@@ -18,10 +18,9 @@ import {
 import {AbstractRestService} from "./abstract-rest-service";
 import {Helper} from "../helper";
 import {MdsHelper} from '../mds-helper';
-import {MdsWidget, Values} from '../../../common/ui/mds-editor/types';
 import {map} from 'rxjs/operators';
 import {VCard} from '../../ui/VCard';
-import {Widget} from '../../../common/ui/mds-editor/mds-editor-instance.service';
+import { MdsWidget, Values } from '../../../features/mds/types/types';
 
 @Injectable({providedIn: 'root'})
 export class RestSearchService extends AbstractRestService{
