@@ -1,6 +1,9 @@
 /**
  * Created by shippeli on 23.02.2017.
  */
+import {isNumeric} from 'rxjs/util/isNumeric';
+import {isArray} from 'rxjs/internal/util/isArray';
+
 export class Helper {
   /**
    * Search the a property of the array array[index][property]==needle
@@ -161,11 +164,25 @@ export class Helper {
 
     return url+param+"="+encodeURIComponent(value);
   }
+
+    /**
+     * get data from an object based on a dotted path
+     * also supports arrays like "array.0.key"
+     * @param nested the object to return the data from
+     * @param path the path of the field location in dotted notation
+     */
   public static getDotPathFromNestedObject(nested: any, path: string) {
       const split = path.split('.');
       let obj = nested;
       for(let key of split) {
-          obj = obj?.[key];
+          if(isNumeric(key)) {
+              obj = obj?.[parseInt(key)];
+          } else {
+              if(isArray(obj)) {
+                  return obj;
+              }
+              obj = obj?.[key];
+          }
       }
       return obj;
   }
