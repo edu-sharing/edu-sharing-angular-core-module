@@ -186,6 +186,17 @@ export class Helper {
       }
       return obj;
   }
+  public static filterObjectPropertyNested(obj: any, property: string[]) {
+        for (let i in obj) {
+            if (!obj.hasOwnProperty(i)) continue;
+            if (property.includes(i)) {
+                delete obj[i];
+            } else if (typeof obj[i] === 'object') {
+                Helper.filterObjectPropertyNested(obj[i], property);
+            }
+        }
+        return obj;
+    }
   public static deepCopy(data: any) {
     if(data==null)
       return null;
