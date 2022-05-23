@@ -268,6 +268,8 @@ export interface GroupProfile {
 }
 export type GroupSignupResult = 'InvalidPassword' | 'AlreadyInList' | 'AlreadyMember' | 'Ok';
 
+export type ConfigFilePrefix =  'NODE' | 'NODE_APPLICATION' | 'CLUSTER' | 'DEFAULTS' |
+    'DEFAULTS_METADATASETS' | 'DEFAULTS_MAULTEMPLATES';
 export interface Group {
   authorityName: string;
   authorityType: string;
@@ -1126,6 +1128,12 @@ export interface JobFieldDescription {
   values?: JobFieldDescription[];
 }
 export type JobTag = 'DeletePersonJob';
+
+export interface PluginStatus {
+    name: string;
+    version: string;
+    enabled: boolean;
+}
 export interface JobDescription {
   name: string;
   description: string;
