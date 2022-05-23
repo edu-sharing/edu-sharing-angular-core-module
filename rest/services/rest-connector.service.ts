@@ -378,14 +378,14 @@ import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-a
 
     noConnectionDialog(): any {
       let buttons=[];
-      buttons.push(new DialogButton('LOGIN_APP.NOTINTERNET_RETRY',DialogButton.TYPE_PRIMARY,()=>{
+      buttons.push(new DialogButton('LOGIN_APP.NOTINTERNET_RETRY',{ color: 'primary' },()=>{
           //RouterHelper.navigateToAbsoluteUrl(this.platformLocation,this.router,window.location.href,true);
           this.isLoggedIn().subscribe(()=>{
               window.location.reload();
           });
       }));
       if(this.bridge.isRunningCordova() && this.bridge.getCordova().isAndroid()) {
-          buttons.push(new DialogButton('LOGIN_APP.NOTINTERNET_EXIT', DialogButton.TYPE_CANCEL, () => {
+          buttons.push(new DialogButton('LOGIN_APP.NOTINTERNET_EXIT', { color: 'standard' }, () => {
               this.bridge.getCordova().exitApp();
           }));
       }
