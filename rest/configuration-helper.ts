@@ -7,8 +7,8 @@ import {RestConstants} from "./rest-constants";
 import {RestHelper} from "./rest-helper";
 import {RestNetworkService} from "./services/rest-network.service";
 import {ConfigurationService} from "../core.module";
-import {NodePersonNamePipe} from '../../core-ui-module/pipes/node-person-name.pipe';
 import {ConfigOptionItem} from '../../core-ui-module/node-helper.service';
+import { NodePersonNamePipe } from "src/app/shared/pipes/node-person-name.pipe";
 
 export class ConfigurationHelper {
   public static getBanner(config: ConfigurationService){
