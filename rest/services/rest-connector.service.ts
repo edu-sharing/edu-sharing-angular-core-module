@@ -128,18 +128,6 @@ import {AuthenticationService, ConfigService, LoginInfo} from 'ngx-edu-sharing-a
     }));
   }
 
-  public logoutSync() : any{
-    let url=this.createUrl("authentication/:version/destroySession",null);
-    let xhr = new XMLHttpRequest();
-    let options=this.getRequestOptions("");
-    xhr.withCredentials=options.withCredentials;
-    xhr.open("GET",this.endpointUrl+url,false);
-    let result=xhr.send();
-    this._scope = null;
-    this.currentLogin.next(null);
-    this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
-    return result;
-  }
   public getCurrentLogin() : LoginInfo {
     return this.currentLogin.value;
   }
