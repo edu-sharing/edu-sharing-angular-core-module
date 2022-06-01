@@ -1,60 +1,84 @@
-import {OptionItem} from '../../core-ui-module/option-item';
+import { OptionItem } from '../../core-ui-module/option-item';
+
+export class ButtonConfig {
+    color: 'standard' | 'primary' | 'danger' = 'standard';
+    position?: 'standard' | 'opposite' = 'standard';
+}
 
 export class DialogButton {
-    public disabled=false;
+    readonly color: ButtonConfig['color'];
+    readonly position: ButtonConfig['position'];
 
-    public static getOkCancel(cancel : () => void,ok : () => void) : DialogButton[]{
+    disabled = false;
+    
+    static getOkCancel(cancel: () => void, ok: () => void): DialogButton[] {
         return [
-            new DialogButton("CANCEL",DialogButton.TYPE_CANCEL,cancel),
-            new DialogButton("OK",DialogButton.TYPE_PRIMARY,ok),
+            new DialogButton('CANCEL', { color: 'standard' }, cancel),
+            new DialogButton('OK', { color: 'primary' }, ok),
         ];
     }
-    public static getOk(ok : () => void) : DialogButton[]{
-        return DialogButton.getSingleButton("OK",ok);
+
+    static getOk(ok: () => void): DialogButton[] {
+        return DialogButton.getSingleButton('OK', ok);
     }
-    public static getCancel(cancel : () => void) : DialogButton[]{
-        return DialogButton.getSingleButton("CANCEL",cancel,DialogButton.TYPE_CANCEL);
+
+    static getCancel(cancel: () => void): DialogButton[] {
+        return DialogButton.getSingleButton('CANCEL', cancel, 'standard');
     }
-    public static getSingleButton(label:string,ok : () => void,type = DialogButton.TYPE_PRIMARY) : DialogButton[]{
+
+    static getSingleButton(
+        label: string,
+        ok: () => void,
+        color: ButtonConfig['color'] = 'primary',
+    ): DialogButton[] {
+        return [new DialogButton(label, { color }, ok)];
+    }
+
+    static getYesNo(no: () => void, yes: () => void): DialogButton[] {
         return [
-            new DialogButton(label,type,ok),
+            new DialogButton('NO', { color: 'standard' }, no),
+            new DialogButton('YES', { color: 'primary' }, yes),
         ];
     }
-    public static getYesNo(no : () => void,yes : () => void) : DialogButton[]{
+
+    static getNextCancel(cancel: () => void, next: () => void): DialogButton[] {
         return [
-            new DialogButton("NO",DialogButton.TYPE_CANCEL,no),
-            new DialogButton("YES",DialogButton.TYPE_PRIMARY,yes),
+            new DialogButton('CANCEL', { color: 'standard' }, cancel),
+            new DialogButton('NEXT', { color: 'primary' }, next),
         ];
     }
-    public static getNextCancel(cancel : () => void,next : () => void) : DialogButton[]{
+
+    static getSaveCancel(cancel: () => void, save: () => void): DialogButton[] {
         return [
-            new DialogButton("CANCEL",DialogButton.TYPE_CANCEL,cancel),
-            new DialogButton("NEXT",DialogButton.TYPE_PRIMARY,next),
+            new DialogButton('CANCEL', { color: 'standard' }, cancel),
+            new DialogButton('SAVE', { color: 'primary' }, save),
         ];
     }
-    public static getSaveCancel(cancel : () => void,save : () => void) : DialogButton[]{
-        return [
-            new DialogButton("CANCEL",DialogButton.TYPE_CANCEL,cancel),
-            new DialogButton("SAVE",DialogButton.TYPE_PRIMARY,save),
-        ];
-    }
-    public static fromOptionItem(options: OptionItem[]) {
-        if(options == null) {
+
+    static fromOptionItem(options: OptionItem[]) {
+        if (options == null) {
             return null;
         }
         return options.map((o) => {
-            return new DialogButton(o.name,DialogButton.TYPE_PRIMARY,() => o.callback(null));
+            return new DialogButton(o.name, { color: 'primary' }, () => o.callback(null));
         });
     }
-    public static TYPE_PRIMARY=1;
-    public static TYPE_CANCEL=2;
-    public static TYPE_DANGER=4; // red colored for danger actions, like deleting
-    public static TYPE_SECONDARY=8; // showed on the left side of the dialog in cards
+
+    /** Button config with `color: 'primary'` for compatibility. */
+    static readonly TYPE_PRIMARY: ButtonConfig = { color: 'primary' };
+    /** Button config with `color: 'standard'` for compatibility. */
+    static readonly TYPE_CANCEL: ButtonConfig = { color: 'standard' };
+    /** Button config with `color: 'danger'` for compatibility. */
+    static readonly TYPE_DANGER: ButtonConfig = { color: 'danger' };
+
     /**
-     * @param name the button name, which is used for the translation
-     * @param type the button type, use one of the constants
-     * @param callback A function callback when this option is choosen.
+     * @param label the button name, which is used for the translation
+     * @param config the button type
+     * @param callback A function callback when this option is chosen.
      */
-    constructor(public name: string,public type : number, public callback: () => void) {
+    constructor(public label: string, config: ButtonConfig, public callback: () => void) {
+        config = { ...new ButtonConfig(), ...config };
+        this.color = config.color;
+        this.position = config.position;
     }
 }
