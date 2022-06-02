@@ -7,8 +7,8 @@ import { Node } from '../data-object';
  * Note that all components share the same data source. So uses prefixes for your name if
  * applicable!
  */
- @Injectable({providedIn: 'root'})
- export class TemporaryStorageService {
+@Injectable({ providedIn: 'root' })
+export class TemporaryStorageService {
     static APPLY_TO_LMS_PARAMETER_NODE = 'apply_to_lms_node';
     // @Deprecated Use NODE_RENDER_PARAMETER_DATA_SOURCE instead
     static NODE_RENDER_PARAMETER_LIST = 'node_render_list';

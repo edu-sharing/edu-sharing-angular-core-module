@@ -4,10 +4,10 @@
  * Endpoints using this includes Node.searchNodes, Node.getChildren or Archive.search
  */
 
-export interface RequestObject{
-  sortBy? : string[];
-  sortAscending? : boolean[];
-  offset? : number;
-  count? : number;
-  propertyFilter? : string[];
+export interface RequestObject {
+    sortBy?: string[];
+    sortAscending?: boolean[];
+    offset?: number;
+    count?: number;
+    propertyFilter?: string[];
 }

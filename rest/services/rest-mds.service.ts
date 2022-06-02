@@ -5,17 +5,14 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class RestMdsService extends AbstractRestService {
     constructor(connector: RestConnectorService) {
         super(connector);
     }
 
     getSets = (repository = RestConstants.HOME_REPOSITORY): Observable<any> => {
-        const query = this.connector.createUrl(
-            'mds/:version/metadatasets/:repository',
-            repository,
-        );
+        const query = this.connector.createUrl('mds/:version/metadatasets/:repository', repository);
         return this.connector.get<MdsMetadatasets>(query, this.connector.getRequestOptions());
     };
 
@@ -48,14 +45,23 @@ export class RestMdsService extends AbstractRestService {
         );
     };
 
-    getValuesForKeys = (keys:string[], metadataset = RestConstants.DEFAULT, mdsQuery: string, property: string,
-        repository = RestConstants.HOME_REPOSITORY): Observable<MdsValueList> => {
+    getValuesForKeys = (
+        keys: string[],
+        metadataset = RestConstants.DEFAULT,
+        mdsQuery: string,
+        property: string,
+        repository = RestConstants.HOME_REPOSITORY,
+    ): Observable<MdsValueList> => {
         const query = this.connector.createUrl(
             'mds/:version/metadatasets/:repository/:metadataset/values_for_keys?query=:query&property=:property',
             repository,
-            [[':metadataset', metadataset],[':query',mdsQuery],[':property',property]],
+            [
+                [':metadataset', metadataset],
+                [':query', mdsQuery],
+                [':property', property],
+            ],
         );
-        return  this.connector.post<MdsValueList>(
+        return this.connector.post<MdsValueList>(
             query,
             JSON.stringify(keys),
             this.connector.getRequestOptions(),

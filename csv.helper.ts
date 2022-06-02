@@ -1,13 +1,13 @@
-import {Helper} from './rest/helper';
+import { Helper } from './rest/helper';
 
 /**
  * Helper class to generate comma seperated (csv) data from arrays
  */
 export class CsvHelper {
-    public static fromArray(header: string[], data: string[][]|any) {
+    public static fromArray(header: string[], data: string[][] | any) {
         let csv = header ? header.map((h) => '"' + h + '"').join(';') : '';
         for (const d of data) {
-            if(csv) {
+            if (csv) {
                 csv += '\n';
             }
             const i = 0;
@@ -19,11 +19,11 @@ export class CsvHelper {
                     line.push(d[h]);
                 }
             }
-            csv += line.map((l) => '"' + (l ? (l + '').replace(/"/g,'""') : '') + '"').join(';');
+            csv += line.map((l) => '"' + (l ? (l + '').replace(/"/g, '""') : '') + '"').join(';');
         }
         return csv;
     }
-    public static download(filename: string, header: string[], data: string[][]){
+    public static download(filename: string, header: string[], data: string[][]) {
         Helper.downloadContent(filename + '.csv', CsvHelper.fromArray(header, data));
     }
 }

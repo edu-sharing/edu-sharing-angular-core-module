@@ -1,19 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {BehaviorSubject, Observable, Observer} from 'rxjs';
+import { BehaviorSubject, Observable, Observer } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class RestLocatorService {
-    readonly apiUrl = 'rest/'
+    readonly apiUrl = 'rest/';
     private ticket: string;
     // @DEPRECATED
-    get endpointUrl(){
+    get endpointUrl() {
         return this.apiUrl;
     }
     /**
@@ -25,11 +25,7 @@ export class RestLocatorService {
      * second the replace value The search value may ends with |noescape. E.g.
      * :sort|noescape. This tells the method to not escape the value content
      */
-    static createUrl(
-        url: string,
-        repository: string,
-        urlParams: string[][] = [],
-    ): string {
+    static createUrl(url: string, repository: string, urlParams: string[][] = []): string {
         for (const params of urlParams) {
             params[1] = encodeURIComponent(params[1]);
         }
@@ -40,11 +36,7 @@ export class RestLocatorService {
      * Same as createUrl, but does not escape the params. Escaping needs to be
      * done when calling the method
      */
-    static createUrlNoEscape(
-        url: string,
-        repository: string,
-        urlParams: string[][] = [],
-    ): string {
+    static createUrlNoEscape(url: string, repository: string, urlParams: string[][] = []): string {
         urlParams.push([':version', RestConstants.API_VERSION]);
         urlParams.push([':repository', encodeURIComponent(repository)]);
 
@@ -65,10 +57,7 @@ export class RestLocatorService {
         return url;
     }
 
-    constructor(
-        private http: HttpClient,
-        private bridge: BridgeService,
-    ) {}
+    constructor(private http: HttpClient, private bridge: BridgeService) {}
 
     createOAuthFromSession() {
         return new Observable((observer: Observer<OAuthResult>) => {
@@ -76,7 +65,7 @@ export class RestLocatorService {
                 .getCordova()
                 .loginOAuth(this.apiUrl, null, null, 'client_credentials')
                 .subscribe(
-                    oauthTokens => {
+                    (oauthTokens) => {
                         this.bridge
                             .getCordova()
                             .setPermanentStorage(
@@ -86,7 +75,7 @@ export class RestLocatorService {
                         observer.next(oauthTokens);
                         observer.complete();
                     },
-                    error => {
+                    (error) => {
                         observer.error(error);
                         observer.complete();
                     },
@@ -96,27 +85,20 @@ export class RestLocatorService {
 
     getConfigDynamic(key: string): Observable<any> {
         return new Observable<any>((observer: Observer<any>) => {
-            const query = RestLocatorService.createUrl(
-                'config/:version/dynamic/:key',
-                null,
-                [[':key', key]],
+            const query = RestLocatorService.createUrl('config/:version/dynamic/:key', null, [
+                [':key', key],
+            ]);
+            this.http.get<any>(this.apiUrl + query, this.getRequestOptions()).subscribe(
+                (response) => {
+                    // Unmarshall encapuslated json response
+                    observer.next(JSON.parse(response.body.value));
+                    observer.complete();
+                },
+                (error: any) => {
+                    observer.error(error);
+                    observer.complete();
+                },
             );
-            this.http
-                .get<any>(
-                    this.apiUrl + query,
-                    this.getRequestOptions(),
-                )
-                .subscribe(
-                    response => {
-                        // Unmarshall encapuslated json response
-                        observer.next(JSON.parse(response.body.value));
-                        observer.complete();
-                    },
-                    (error: any) => {
-                        observer.error(error);
-                        observer.complete();
-                    },
-                );
         });
     }
 
@@ -136,17 +118,12 @@ export class RestLocatorService {
         headers.Accept = 'application/json';
         if (locale) headers.locale = locale;
         if (username != null) {
-            headers.Authorization =
-                'Basic ' + btoa(username + ':' + password);
+            headers.Authorization = 'Basic ' + btoa(username + ':' + password);
         } else if (this.ticket != null) {
             headers.Authorization = 'EDU-TICKET ' + this.ticket;
             this.ticket = null;
-        } else if (
-            this.bridge.isRunningCordova() &&
-            this.bridge.getCordova().oauth != null
-        ) {
-            headers.Authorization =
-                'Bearer ' + this.bridge.getCordova().oauth.access_token;
+        } else if (this.bridge.isRunningCordova() && this.bridge.getCordova().oauth != null) {
+            headers.Authorization = 'Bearer ' + this.bridge.getCordova().oauth.access_token;
         } else {
             headers.Authorization = '';
         }

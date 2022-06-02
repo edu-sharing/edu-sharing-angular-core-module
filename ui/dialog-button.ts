@@ -10,7 +10,7 @@ export class DialogButton {
     readonly position: ButtonConfig['position'];
 
     disabled = false;
-    
+
     static getOkCancel(cancel: () => void, ok: () => void): DialogButton[] {
         return [
             new DialogButton('CANCEL', { color: 'standard' }, cancel),
