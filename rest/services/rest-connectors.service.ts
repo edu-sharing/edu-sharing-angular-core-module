@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Connector, ConnectorList, ConnectorService } from 'ngx-edu-sharing-api';
 import { Observable, Observer } from 'rxjs';
-import { RestConnectorService } from './rest-connector.service';
-import { RestConstants } from '../rest-constants';
-import {
-    CollectionReference,
-    Connector,
-    ConnectorList,
-    Filetype,
-    Node,
-    NodesRightMode,
-} from '../data-object';
-import { RestNodeService } from './rest-node.service';
-import { AbstractRestService } from './abstract-rest-service';
-import { UIService } from './ui.service';
+import { take } from 'rxjs/operators';
 import { NodeHelperService } from '../../../core-ui-module/node-helper.service';
-import { tap } from 'rxjs/operators';
+import { CollectionReference, Filetype, Node, NodesRightMode } from '../data-object';
+import { RestConstants } from '../rest-constants';
+import { AbstractRestService } from './abstract-rest-service';
+import { RestConnectorService } from './rest-connector.service';
+import { RestNodeService } from './rest-node.service';
+import { UIService } from './ui.service';
+
 @Injectable({ providedIn: 'root' })
 export class RestConnectorsService extends AbstractRestService {
     private static MODE_NONE = 0;
@@ -27,19 +22,18 @@ export class RestConnectorsService extends AbstractRestService {
         public nodeApi: RestNodeService,
         private nodeHelper: NodeHelperService,
         public ui: UIService,
+        private connectorApi: ConnectorService,
     ) {
         super(connector);
+        // FIXME: This causes the connectors list to always be fetched, even if no one needs it. In
+        // order to change that, all functions depending on `currentList` need to be asynchronous.
+        this.connectorApi.observeConnectorList().subscribe((list) => (this.currentList = list));
     }
 
-    public list = (repository = RestConstants.HOME_REPOSITORY) => {
-        let query = this.connector.createUrl(
-            'connector/:version/connectors/:repository/list',
-            repository,
-        );
-        return this.connector
-            .get<ConnectorList>(query, this.connector.getRequestOptions())
-            .pipe(tap((data) => (this.currentList = data)));
-    };
+    public list(repository = RestConstants.HOME_REPOSITORY): Observable<ConnectorList> {
+        return this.connectorApi.observeConnectorList({ repository }).pipe(take(1));
+    }
+
     public connectorSupportsEdit(node: Node) {
         const connectors = this.getConnectors();
         if (connectors == null) return null;
@@ -95,6 +89,7 @@ export class RestConnectorsService extends AbstractRestService {
         }
         return null;
     }
+
     public generateToolUrl(
         connectorType: Connector,
         type: Filetype,
@@ -124,12 +119,13 @@ export class RestConnectorsService extends AbstractRestService {
     }
 
     getConnectors() {
-        if (this.currentList && this.currentList.connectors) {
-            // filter connectors which are only available on desktop
-            return this.currentList.connectors.filter(
-                (connector) => !connector.onlyDesktop || !this.ui.isMobile(),
-            );
-        }
-        return null;
+        return this.filterConnectors(this.currentList?.connectors);
+    }
+
+    /** Filters connectors which are only available on desktop. */
+    filterConnectors(connectors?: Connector[]): Connector[] | null {
+        return (
+            connectors?.filter((connector) => !connector.onlyDesktop || !this.ui.isMobile()) ?? null
+        );
     }
 }

@@ -5,23 +5,23 @@
  * once API calls are migrated.
  */
 
-import { ListItem, ListItemType } from '../ui/list-item';
-import { VCard } from '../ui/VCard';
 import {
     LoginInfo,
-    Organization,
-    UserProfile as ApiUserProfile,
+    Node as NodeModel,
     NodeRef,
+    Organization,
+    Person,
+    UserProfile as ApiUserProfile,
     UserQuota,
     UserStatus,
-    Node as NodeModel,
-    Person,
 } from 'ngx-edu-sharing-api';
+import { ListItem, ListItemType } from '../ui/list-item';
+import { VCard } from '../ui/VCard';
+export { Connector, ConnectorList } from 'ngx-edu-sharing-api';
+export { Organization, NodeRef, UserQuota, Person };
 
 export type Collection = NodeModel['collection'];
 export type Preview = NodeModel['preview'];
-
-export { Organization, NodeRef, UserQuota, Person };
 
 export enum STREAM_STATUS {
     OPEN = 'OPEN',
@@ -904,19 +904,6 @@ export interface Filetype {
 }
 export interface NodeLock {
     isLocked: boolean;
-}
-export class Connector {
-    id: string;
-    icon: string;
-    showNew: boolean;
-    onlyDesktop: boolean;
-    hasViewMode: boolean;
-    parameters: string[];
-    filetypes: Filetype[];
-}
-export class ConnectorList {
-    url: string;
-    connectors: Connector[];
 }
 
 /*
