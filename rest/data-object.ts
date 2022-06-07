@@ -274,6 +274,7 @@ export interface Group {
   groupName: string;
   groupType: string;
   profile: GroupProfile;
+  properties: {[key in string]: string[]};
   organizations: Organization[];
   administrationAccess: boolean;
   signupMethod:string;
