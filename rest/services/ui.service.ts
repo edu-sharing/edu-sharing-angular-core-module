@@ -1,14 +1,15 @@
-import { Injectable, NgZone } from '@angular/core';
-import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { HttpClient } from '@angular/common/http';
-import { RestConnectorService } from './rest-connector.service';
-import { Observable, Observer } from 'rxjs';
-import { RestConstants } from '../rest-constants';
+import { Injectable, NgZone } from '@angular/core';
+import { BehaviorSubject, Observable, Observer } from 'rxjs';
+import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { MessageType } from '../../ui/message-type';
-import { DateRange } from '@angular/material/datepicker';
+import { RestConstants } from '../rest-constants';
+import { RestConnectorService } from './rest-connector.service';
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
+    private isTouchSubject = new BehaviorSubject(false);
+
     constructor(
         private bridge: BridgeService,
         private ngZone: NgZone,
@@ -35,6 +36,12 @@ export class UIService {
                     this.shiftCmd = false;
                 }
             });
+            window.addEventListener('pointerdown', (event) => {
+                const isTouch = (event as PointerEvent).pointerType === 'touch';
+                if (this.isTouchSubject.value !== isTouch) {
+                    this.ngZone.run(() => this.isTouchSubject.next(isTouch));
+                }
+            });
         });
     }
     private appleCmd: boolean;
@@ -43,23 +50,7 @@ export class UIService {
      *
      */
     public isMobile() {
-        if (this.bridge.isRunningCordova()) {
-            return true;
-        }
-        // http://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
-        if (
-            navigator.userAgent.match(/Android/i) ||
-            navigator.userAgent.match(/webOS/i) ||
-            navigator.userAgent.match(/iPhone/i) ||
-            navigator.userAgent.match(/iPad/i) ||
-            navigator.userAgent.match(/iPod/i) ||
-            navigator.userAgent.match(/BlackBerry/i) ||
-            navigator.userAgent.match(/Windows Phone/i)
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.isTouchSubject.value;
     }
     public isAppleCmd() {
         return this.appleCmd;
