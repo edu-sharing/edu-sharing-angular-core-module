@@ -6,6 +6,7 @@ import { AbstractRestService } from './abstract-rest-service';
 import { NetworkRepositories, Node, Repository, Service } from '../../core.module';
 import { Helper } from '../helper';
 import { shareReplay } from 'rxjs/operators';
+import { UniversalNode } from '../../../common/definitions';
 
 @Injectable({ providedIn: 'root' })
 export class RestNetworkService extends AbstractRestService {
@@ -59,7 +60,7 @@ export class RestNetworkService extends AbstractRestService {
         }
         return repositories.filter((r) => r.id === node.ref.repo)[0];
     }
-    static isFromHomeRepo(node: Node, repositories = this.currentRepositories) {
+    static isFromHomeRepo(node: UniversalNode, repositories = this.currentRepositories) {
         if (!node || !node.ref) {
             return false;
         }
