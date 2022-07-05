@@ -333,7 +333,7 @@ export class RestIamService extends AbstractRestService {
   }
   public editUser = (user : string,profile : UserProfile,repository=RestConstants.HOME_REPOSITORY) => {
     const query=this.connector.createUrl('iam/:version/people/:repository/:user/profile',repository,[[':user',user]]);
-    (profile.vcard as unknown) = profile.vcard.toVCardString();
+    (profile.vcard as unknown) = profile.vcard?.toVCardString();
     return this.connector.put(query,JSON.stringify(profile),this.connector.getRequestOptions());
   }
   public editUserCredentials = (user : string,credentials : UserCredentials,repository=RestConstants.HOME_REPOSITORY) => {
