@@ -407,7 +407,7 @@ export class RestConnectorService {
                                   });
                                   return;
                               }
-                              else {
+                              else if(!requestUrl.endsWith('iam/v1/people/-home-/-me-')) {
                                   this.goToLogin();
                               }
                           };
