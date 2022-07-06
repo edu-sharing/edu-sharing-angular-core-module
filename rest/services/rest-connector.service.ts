@@ -380,7 +380,10 @@ export class RestConnectorService {
                                         );
                                     });
                                 return;
-                            } else {
+                            } else if(!(
+                                requestUrl.endsWith('iam/v1/people/-home-/-me-') ||
+                                requestUrl.endsWith('network/v1/repositories')
+                            )) {
                                 this.goToLogin();
                             }
                         };
