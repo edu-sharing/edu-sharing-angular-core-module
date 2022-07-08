@@ -275,15 +275,15 @@ export type ConfigFilePrefix =
     | 'DEFAULTS_METADATASETS'
     | 'DEFAULTS_MAULTEMPLATES';
 export interface Group {
-  authorityName: string;
-  authorityType: string;
-  groupName: string;
-  groupType: string;
-  profile: GroupProfile;
-  properties: {[key in string]: string[]};
-  organizations: Organization[];
-  administrationAccess: boolean;
-  signupMethod:string;
+    authorityName: string;
+    authorityType: string;
+    groupName: string;
+    groupType: string;
+    profile: GroupProfile;
+    properties: { [key in string]: string[] };
+    organizations: Organization[];
+    administrationAccess: boolean;
+    signupMethod: string;
 }
 
 export interface IamGroups {
