@@ -13,6 +13,7 @@ import {TemporaryStorageService} from "./temporary-storage.service";
 import {BridgeService} from "../../../core-bridge-module/bridge.service";
 import {DialogButton} from "../../ui/dialog-button";
 import {RestStateService} from './rest-state.service';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -369,6 +370,8 @@ export class RestConnectorService {
               this._lastActionTime=new Date().getTime();
               this._currentRequestCount++;
               let requestUrl=(appendUrl ? this.endpointUrl : '') + url;
+              const traceId = uuidv4();
+              options.headers['X-Client-Trace-Id'] = traceId;
               let call=null;
               if(method=='GET'){
                 call=this.http.get<T>(requestUrl, options);
@@ -392,6 +395,7 @@ export class RestConnectorService {
                       observer.complete();
                   },
                   error => {
+                      error.traceId = traceId;
                       this._currentRequestCount--;
 
                       if (!this._autoLogin) {
