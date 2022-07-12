@@ -14,6 +14,7 @@ import { TemporaryStorageService } from './temporary-storage.service';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { DialogButton } from '../../ui/dialog-button';
 import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
@@ -318,6 +319,8 @@ export class RestConnectorService {
             this.authenticationApi.reportOutsideApiRequest();
             this._currentRequestCount++;
             let requestUrl = (appendUrl ? this.endpointUrl : '') + url;
+              const traceId = uuidv4();
+              options.headers['X-Client-Trace-Id'] = traceId;
             let call = null;
             if (method == 'GET') {
                 call = this.http.get<T>(requestUrl, options);
@@ -337,7 +340,8 @@ export class RestConnectorService {
                     observer.next(response.body);
                     observer.complete();
                 },
-                (error) => {
+                  error => {
+                    error.traceId = traceId;
                     this._currentRequestCount--;
 
                     if (!this._autoLogin) {
