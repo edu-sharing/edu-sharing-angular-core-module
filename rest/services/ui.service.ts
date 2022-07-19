@@ -9,6 +9,19 @@ import { RestConnectorService } from './rest-connector.service';
 @Injectable({ providedIn: 'root' })
 export class UIService {
     private isTouchSubject = new BehaviorSubject(false);
+    // private _metaKeyPressed: boolean;
+    private _shiftKeyPressed: boolean;
+    // private _ctrlKeyPressed: boolean;
+
+    // get ctrlOrCmdKeyPressed() {
+    //     // `event.metaKey` is not used on Windows, means the Super/Windows key on Linux, and Cmd on
+    //     // Mac. On Linux, Super + Click events are usually intercepted by the OS.
+    //     return this._metaKeyPressed || this._ctrlKeyPressed;
+    // }
+
+    get shiftKeyPressed() {
+        return this._shiftKeyPressed;
+    }
 
     constructor(
         private bridge: BridgeService,
@@ -19,24 +32,17 @@ export class UIService {
         // HostListener not working, so use window
         this.ngZone.runOutsideAngular(() => {
             window.addEventListener('keydown', (event) => {
-                if (event.key == 'Shift') {
-                    this.shiftCmd = true;
-                }
-                if (event.keyCode == 91 || event.keyCode == 93) {
-                    this.appleCmd = true;
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
+                this.updateModifierKeys(event);
             });
             window.addEventListener('keyup', (event) => {
-                if (event.keyCode == 91 || event.keyCode == 93) {
-                    this.appleCmd = false;
-                }
-                if (event.key == 'Shift') {
-                    this.shiftCmd = false;
-                }
+                this.updateModifierKeys(event);
             });
             window.addEventListener('pointerdown', (event) => {
+                // Usually, properties for modifier keys will be set correctly on keydown and keyup
+                // events, but there are situations where the operating system intercepts key
+                // presses, e.g. the Windows key on Linux systems, so we update again on mouse
+                // clicks to be sure.
+                // this.updateModifierKeys(event);
                 const isTouch = (event as PointerEvent).pointerType === 'touch';
                 if (this.isTouchSubject.value !== isTouch) {
                     this.ngZone.run(() => this.isTouchSubject.next(isTouch));
@@ -44,19 +50,18 @@ export class UIService {
             });
         });
     }
-    private appleCmd: boolean;
-    private shiftCmd: boolean;
+
+    private updateModifierKeys(event: PointerEvent | KeyboardEvent) {
+        // this._metaKeyPressed = event.metaKey;
+        this._shiftKeyPressed = event.shiftKey;
+        // this._ctrlKeyPressed = event.ctrlKey;
+    }
+
     /** Returns true if the current sessions seems to be running on a mobile device
      *
      */
     public isMobile() {
         return this.isTouchSubject.value;
-    }
-    public isAppleCmd() {
-        return this.appleCmd;
-    }
-    public isShiftCmd() {
-        return this.shiftCmd;
     }
 
     /**
