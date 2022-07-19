@@ -319,8 +319,8 @@ export class RestConnectorService {
             this.authenticationApi.reportOutsideApiRequest();
             this._currentRequestCount++;
             let requestUrl = (appendUrl ? this.endpointUrl : '') + url;
-              const traceId = uuidv4();
-              options.headers['X-Client-Trace-Id'] = traceId;
+            const traceId = uuidv4();
+            options.headers['X-Client-Trace-Id'] = traceId;
             let call = null;
             if (method == 'GET') {
                 call = this.http.get<T>(requestUrl, options);
@@ -340,7 +340,7 @@ export class RestConnectorService {
                     observer.next(response.body);
                     observer.complete();
                 },
-                  error => {
+                (error) => {
                     error.traceId = traceId;
                     this._currentRequestCount--;
 
@@ -380,10 +380,12 @@ export class RestConnectorService {
                                         );
                                     });
                                 return;
-                            } else if(!(
-                                requestUrl.endsWith('iam/v1/people/-home-/-me-') ||
-                                requestUrl.endsWith('network/v1/repositories')
-                            )) {
+                            } else if (
+                                !(
+                                    requestUrl.endsWith('iam/v1/people/-home-/-me-') ||
+                                    requestUrl.endsWith('network/v1/repositories')
+                                )
+                            ) {
                                 this.goToLogin();
                             }
                         };
