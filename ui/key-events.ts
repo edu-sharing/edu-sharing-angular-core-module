@@ -1,9 +1,27 @@
 import { ElementRef } from '@angular/core';
 
 export class KeyEvents {
-    public static eventFromInputField(event: any) {
-        return event.srcElement && (event.srcElement.minLength || event.srcElement.maxLength);
+    static eventFromInputField(event: KeyboardEvent) {
+        return (
+            isInputElement(event.target) &&
+            [
+                'text',
+                'password',
+                'number',
+                'email',
+                'tel',
+                'url',
+                'search',
+                'date',
+                'datetime',
+                'datetime-local',
+                'time',
+                'month',
+                'week',
+            ].includes(event.target.type)
+        );
     }
+
     static isChildEvent(event: Event, parent: ElementRef<Element>) {
         let target: HTMLElement = event?.target as HTMLElement;
         while (target) {
@@ -14,4 +32,8 @@ export class KeyEvents {
         }
         return false;
     }
+}
+
+function isInputElement(target?: EventTarget): target is HTMLInputElement {
+    return target && target.constructor === HTMLInputElement;
 }
