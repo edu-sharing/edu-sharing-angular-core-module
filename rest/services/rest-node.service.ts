@@ -282,15 +282,25 @@ export class RestNodeService extends AbstractRestService{
   public updateNodeShare = (node : string,
                              shareId : string,
                              expiryDate=RestConstants.SHARE_EXPIRY_UNLIMITED,
-                             password="",
+                             password?: string,
                              repository=RestConstants.HOME_REPOSITORY) => {
-    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate&password=:password",repository,
-      [
-        [":node",node],
-        [":shareId",shareId],
-        [":expiryDate",""+expiryDate],
-        [":password",password]
-      ]);
+    let query: string;
+    if (typeof password === 'string') {
+      query=this.connector.createUrl("node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate&password=:password",repository,
+        [
+          [":node",node],
+          [":shareId",shareId],
+          [":expiryDate",""+expiryDate],
+          [":password",password]
+        ]);
+    } else {
+      query=this.connector.createUrl("node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate",repository,
+        [
+          [":node",node],
+          [":shareId",shareId],
+          [":expiryDate",""+expiryDate],
+        ]);      
+    }
     return this.connector.post<NodeShare>(query,"",this.connector.getRequestOptions());
   }
   /**
