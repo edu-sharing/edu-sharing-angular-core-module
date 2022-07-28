@@ -181,7 +181,7 @@ export class RestHelper{
 
 
 
-    public static isUserAllowedToEdit(collection: Node, person: User) : boolean {
+    public static isUserAllowedToEdit(collection: Node, person: User = null) : boolean {
 
         // check access permissions on collection
         if (RestHelper.hasAccessPermission(collection, 'Write')) return true;
