@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
+import * as rxjs from 'rxjs';
 import { BehaviorSubject, Observable, Observer } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { MessageType } from '../../ui/message-type';
 import { RestConstants } from '../rest-constants';
@@ -9,18 +11,12 @@ import { RestConnectorService } from './rest-connector.service';
 @Injectable({ providedIn: 'root' })
 export class UIService {
     private isTouchSubject = new BehaviorSubject(false);
-    // private _metaKeyPressed: boolean;
-    private _shiftKeyPressed: boolean;
-    // private _ctrlKeyPressed: boolean;
-
-    // get ctrlOrCmdKeyPressed() {
-    //     // `event.metaKey` is not used on Windows, means the Super/Windows key on Linux, and Cmd on
-    //     // Mac. On Linux, Super + Click events are usually intercepted by the OS.
-    //     return this._metaKeyPressed || this._ctrlKeyPressed;
-    // }
+    private metaKeyPressedSubject = new BehaviorSubject(false);
+    private shiftKeyPressedSubject = new BehaviorSubject(false);
+    private ctrlKeyPressedSubject = new BehaviorSubject(false);
 
     get shiftKeyPressed() {
-        return this._shiftKeyPressed;
+        return this.shiftKeyPressedSubject.value;
     }
 
     constructor(
@@ -32,17 +28,17 @@ export class UIService {
         // HostListener not working, so use window
         this.ngZone.runOutsideAngular(() => {
             window.addEventListener('keydown', (event) => {
-                this.updateModifierKeys(event);
+                this.onKeyDownOrKeyUp(event);
             });
             window.addEventListener('keyup', (event) => {
-                this.updateModifierKeys(event);
+                this.onKeyDownOrKeyUp(event);
             });
             window.addEventListener('pointerdown', (event) => {
                 // Usually, properties for modifier keys will be set correctly on keydown and keyup
                 // events, but there are situations where the operating system intercepts key
                 // presses, e.g. the Windows key on Linux systems, so we update again on mouse
                 // clicks to be sure.
-                // this.updateModifierKeys(event);
+                this.updateModifierKeys(event);
                 const isTouch = (event as PointerEvent).pointerType === 'touch';
                 if (this.isTouchSubject.value !== isTouch) {
                     this.ngZone.run(() => this.isTouchSubject.next(isTouch));
@@ -51,10 +47,26 @@ export class UIService {
         });
     }
 
+    private onKeyDownOrKeyUp(event: KeyboardEvent) {
+        // `event.metaKey` is not consistent across browsers on the actual keypress of the modifier
+        // key. So we handle these events separately.
+        if (event.key === 'Control') {
+            this.ctrlKeyPressedSubject.next(event.type === 'keydown');
+        } else if (event.key === 'Shift') {
+            this.shiftKeyPressedSubject.next(event.type === 'keydown');
+        } else if (event.key === 'Meta') {
+            this.metaKeyPressedSubject.next(event.type === 'keydown');
+        } else {
+            // In case we miss modifier events because the browser didn't have focus during the
+            // event, we update modifier keys on unrelated key events as well.
+            this.updateModifierKeys(event);
+        }
+    }
+
     private updateModifierKeys(event: PointerEvent | KeyboardEvent) {
-        // this._metaKeyPressed = event.metaKey;
-        this._shiftKeyPressed = event.shiftKey;
-        // this._ctrlKeyPressed = event.ctrlKey;
+        this.metaKeyPressedSubject.next(event.metaKey);
+        this.shiftKeyPressedSubject.next(event.shiftKey);
+        this.ctrlKeyPressedSubject.next(event.ctrlKey);
     }
 
     /** Returns true if the current sessions seems to be running on a mobile device
@@ -62,6 +74,13 @@ export class UIService {
      */
     public isMobile() {
         return this.isTouchSubject.value;
+    }
+
+    observeCtrlOrCmdKeyPressedOutsideZone(): Observable<boolean> {
+        return rxjs.combineLatest([this.metaKeyPressedSubject, this.ctrlKeyPressedSubject]).pipe(
+            map(([metaKeyPressed, ctrlKeyPressed]) => metaKeyPressed || ctrlKeyPressed),
+            distinctUntilChanged(),
+        );
     }
 
     /**
