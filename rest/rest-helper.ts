@@ -25,6 +25,7 @@ import { Helper } from './helper';
 import { MessageType } from '../ui/message-type';
 import { Observable } from 'rxjs';
 import { UniversalNode } from '../../common/definitions';
+import { NodeTools } from 'ngx-edu-sharing-api';
 
 export class RestHelper {
     private static SPACES_STORE_REF = 'workspace://SpacesStore/';
@@ -312,14 +313,17 @@ export class RestHelper {
         return node.properties[name];
     }
 
+    /**
+     * @DEPRECATED use NodeTools from edu-sharing-api!
+     */
     static createSpacesStoreRef(node: Node) {
-        return RestHelper.SPACES_STORE_REF + node.ref.id;
+        return NodeTools.createSpacesStoreRef(node.ref.id);
     }
+    /**
+     * @DEPRECATED use NodeTools from edu-sharing-api!
+     */
     static removeSpacesStoreRef(id: string) {
-        if (id.startsWith(RestHelper.SPACES_STORE_REF)) {
-            return id.substr(RestHelper.SPACES_STORE_REF.length);
-        }
-        return id;
+        return NodeTools.removeSpacesStoreRef(id);
     }
 
     static getAllAuthoritiesPermission() {
