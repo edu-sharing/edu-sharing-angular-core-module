@@ -9,6 +9,7 @@ import { RestNetworkService } from './services/rest-network.service';
 import { ConfigurationService } from '../core.module';
 import { NodePersonNamePipe } from '../../shared/pipes/node-person-name.pipe';
 import { ConfigOptionItem } from '../../core-ui-module/node-helper.service';
+import { MdsService } from 'ngx-edu-sharing-api';
 
 export class ConfigurationHelper {
     public static getBanner(config: ConfigurationService) {
@@ -26,6 +27,47 @@ export class ConfigurationHelper {
     static getPersonWithConfigDisplayName(person: any, config: ConfigurationService) {
         return new NodePersonNamePipe(config).transform(person);
     }
+    public static async getAvailableMds(
+        repository: string | Repository,
+        mds: MdsService,
+        config: ConfigurationService,
+    ) {
+        const metadatasets = await mds.getAvailableMetadataSets().toPromise();
+        let validMds = await config.get('availableMds').toPromise();
+        if (validMds && validMds.length) {
+            for (let mds of validMds) {
+                if (
+                    !(
+                        mds.repository == repository ||
+                        mds.repository == (repository as Repository).id ||
+                        (mds.repository == RestConstants.HOME_REPOSITORY &&
+                            (repository == RestConstants.HOME_REPOSITORY ||
+                                (repository as Repository).isHomeRepo))
+                    )
+                ) {
+                    continue;
+                }
+                // no metadatasets provided (happens for "all" search -> simply return the allowed list)
+                if (metadatasets == null) {
+                    return mds.mds;
+                }
+                for (let i = 0; i < metadatasets.length; i++) {
+                    if (mds.mds.indexOf(metadatasets[i].id) == -1) {
+                        metadatasets.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+        }
+        return metadatasets;
+    }
+
+    /**
+     * @deprecated use getAvailableMds instead
+     * @param repository
+     * @param metadatasets
+     * @param config
+     */
     public static filterValidMds(
         repository: string | Repository,
         metadatasets: MdsInfo[],

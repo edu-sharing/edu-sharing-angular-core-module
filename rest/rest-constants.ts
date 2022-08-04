@@ -16,6 +16,7 @@ export class RestConstants {
     public static API_VERSION_4_0 = 1.1;
 
     public static CM_NAME = 'cm:name';
+    public static CM_DESCRIPTION = 'cm:description';
     public static SORT_BY_FIELDS = [RestConstants.CM_NAME];
 
     public static BASIC_PERMISSIONS = ['Consumer', 'Collaborator', 'Coordinator'];
