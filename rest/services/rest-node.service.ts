@@ -27,6 +27,7 @@ import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { FrameEventsService } from './frame-events.service';
 import { MessageType } from '../../ui/message-type';
 import { Values } from '../../../features/mds/types/types';
+import * as rxjs from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class RestNodeService extends AbstractRestService {
@@ -37,7 +38,7 @@ export class RestNodeService extends AbstractRestService {
         private bridge: BridgeService,
     ) {
         super(connector);
-        events.addListener(this);
+        events.addListener(this, rxjs.EMPTY);
     }
     onEvent(event: string, data: any) {
         if (event == FrameEventsService.EVENT_PARENT_ADD_NODE_URL) {
