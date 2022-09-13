@@ -378,7 +378,7 @@ export class RestConnectorService implements OnDestroy {
                                                 observer.complete();
                                             },
                                             (error: any) => {
-                                                this.goToLogin();
+                                                this.goToLogin({ forceLoginInfoRefresh: true });
                                                 observer.error(error);
                                                 observer.complete();
                                             },
@@ -391,7 +391,7 @@ export class RestConnectorService implements OnDestroy {
                                     requestUrl.endsWith('network/v1/repositories')
                                 )
                             ) {
-                                this.goToLogin();
+                                this.goToLogin({ forceLoginInfoRefresh: true });
                             }
                         };
                         if (error.status === RestConstants.HTTP_FORBIDDEN) {
@@ -547,14 +547,25 @@ export class RestConnectorService implements OnDestroy {
         const headerScope =
             response.headers.get('X-Edu-Scope') || response.headers.get('x-edu-scope');
         if (this._scope !== headerScope) {
-            this.goToLogin(null);
+            this.goToLogin({ scope: null });
             console.warn(
                 'current scope ' + this._scope + ' != ' + headerScope + ' enforcing re-login',
                 response.url,
             );
         }
     }
-    private goToLogin(scope = this._scope) {
+    /**
+     * Navigates to the login page.
+     *
+     * @param forceLoginInfoRefresh - Requests current login information from the backen. Usually,
+     * we rely on our internal state for login information, but in case we get unexpected
+     * 'forbidden' or 'unauthorized' errors from the backend, we need to check whether our session
+     * unexpectedly changed.
+     */
+    private goToLogin({ scope = this._scope, forceLoginInfoRefresh = false } = {}) {
+        if (forceLoginInfoRefresh) {
+            this.authenticationApi.forceLoginInfoRefresh();
+        }
         if (this.currentPageIsLogin()) return;
         RestHelper.goToLogin(this.router, this.config, scope);
         //this.router.navigate([UIConstants.ROUTER_PREFIX+"login"],{queryParams:{scope:scope?scope:"",next:window.location}});
