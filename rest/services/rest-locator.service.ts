@@ -8,9 +8,11 @@ import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
 
+const EDU_SHARING_API_URL = (window as any).__env?.EDU_SHARING_API_URL;
+
 @Injectable({ providedIn: 'root' })
 export class RestLocatorService {
-    readonly apiUrl = 'rest/';
+    readonly apiUrl = EDU_SHARING_API_URL ? EDU_SHARING_API_URL + '/' : 'rest/';
     private ticket: string;
     // @DEPRECATED
     get endpointUrl() {
