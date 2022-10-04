@@ -10,6 +10,8 @@ import { UniversalNode } from '../../../common/definitions';
 
 @Injectable({ providedIn: 'root' })
 export class RestNetworkService extends AbstractRestService {
+    // FIXME: if methods of this service get called before `currentRepositories` is populated, we
+    // will cause errors.
     private static currentRepositories: Repository[];
 
     private readonly getRepositories_ = new Observable<NetworkRepositories>((observer) => {

@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 export interface EventListener {
     onEvent(event: string, data: any): void;
 }
@@ -88,8 +89,13 @@ export class FrameEventsService {
      * add listener that listens ONLY for all events posted by opened windows or iframes
      * @param listener
      */
-    public addListener(listener: EventListener): void {
+    public addListener(listener: EventListener, until: Observable<void>): void {
         this.eventListeners.push(listener);
+        until.subscribe(() => this.removeListener(listener));
+    }
+
+    private removeListener(listener: EventListener): void {
+        this.eventListeners = this.eventListeners.filter((l) => l !== listener);
     }
 
     /**

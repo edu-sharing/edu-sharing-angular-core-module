@@ -1,8 +1,8 @@
 import { tap, first, switchMap } from 'rxjs/operators';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { RestHelper } from '../rest-helper';
-import { BehaviorSubject, Observable, Observer, of } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, of, Subject } from 'rxjs';
 import { RequestObject } from '../request-object';
 import { OAuthResult } from '../data-object';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,7 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
  * NO NOT USE this service to directly perform requests; Use the proper Rest Services for the endpoints instead
  */
 @Injectable({ providedIn: 'root' })
-export class RestConnectorService {
+export class RestConnectorService implements OnDestroy {
     public static DEFAULT_NUMBER_PER_REQUEST = 25;
     private _currentRequestCount = 0;
     private _logoutTimeout: number;
@@ -30,6 +30,7 @@ export class RestConnectorService {
     public _scope: string;
     private toolPermissions: string[];
     private themesUrl = '../themes/default/';
+    private destroyed = new Subject<void>();
     currentLogin = new BehaviorSubject<LoginInfo>(null);
     get autoLogin(): boolean {
         return this._autoLogin;
@@ -73,12 +74,16 @@ export class RestConnectorService {
     ) {
         this.registerLoginInfo();
         this.numberPerRequest = RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
-        event.addListener(this);
+        event.addListener(this, this.destroyed);
         this.configApi.observeConfig().subscribe((config) => {
             if (config.itemsPerRequest) {
                 this.numberPerRequest = config.itemsPerRequest;
             }
         });
+    }
+    ngOnDestroy(): void {
+        this.destroyed.next();
+        this.destroyed.complete();
     }
     public getBridgeService() {
         return this.bridge;
@@ -373,7 +378,7 @@ export class RestConnectorService {
                                                 observer.complete();
                                             },
                                             (error: any) => {
-                                                this.goToLogin();
+                                                this.goToLogin({ forceLoginInfoRefresh: true });
                                                 observer.error(error);
                                                 observer.complete();
                                             },
@@ -386,7 +391,7 @@ export class RestConnectorService {
                                     requestUrl.endsWith('network/v1/repositories')
                                 )
                             ) {
-                                this.goToLogin();
+                                this.goToLogin({ forceLoginInfoRefresh: true });
                             }
                         };
                         if (error.status === RestConstants.HTTP_FORBIDDEN) {
@@ -542,14 +547,25 @@ export class RestConnectorService {
         const headerScope =
             response.headers.get('X-Edu-Scope') || response.headers.get('x-edu-scope');
         if (this._scope !== headerScope) {
-            this.goToLogin(null);
+            this.goToLogin({ scope: null });
             console.warn(
                 'current scope ' + this._scope + ' != ' + headerScope + ' enforcing re-login',
                 response.url,
             );
         }
     }
-    private goToLogin(scope = this._scope) {
+    /**
+     * Navigates to the login page.
+     *
+     * @param forceLoginInfoRefresh - Requests current login information from the backen. Usually,
+     * we rely on our internal state for login information, but in case we get unexpected
+     * 'forbidden' or 'unauthorized' errors from the backend, we need to check whether our session
+     * unexpectedly changed.
+     */
+    private goToLogin({ scope = this._scope, forceLoginInfoRefresh = false } = {}) {
+        if (forceLoginInfoRefresh) {
+            this.authenticationApi.forceLoginInfoRefresh();
+        }
         if (this.currentPageIsLogin()) return;
         RestHelper.goToLogin(this.router, this.config, scope);
         //this.router.navigate([UIConstants.ROUTER_PREFIX+"login"],{queryParams:{scope:scope?scope:"",next:window.location}});

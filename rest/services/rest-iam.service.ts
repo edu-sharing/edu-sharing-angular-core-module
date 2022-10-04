@@ -541,10 +541,10 @@ function mapVCard(userEntry: UserEntry): IamUser {
     return {
         ...userEntry,
         person: {
-            ...userEntry.person,
+            ...userEntry?.person,
             profile: {
-                ...userEntry.person.profile,
-                vcard: new VCard(userEntry.person.profile.vcard),
+                ...userEntry?.person?.profile,
+                vcard: new VCard(userEntry?.person?.profile?.vcard),
             },
         },
     };
