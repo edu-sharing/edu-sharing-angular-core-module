@@ -47,6 +47,8 @@ export class RestIamService extends AbstractRestService {
         )).subscribe(async (login) => {
           this.currentUser.next(null);
           await this.getUser().toPromise();
+        }, error => {
+          this.currentUser.next(null);
         });
     }
   /**
@@ -257,6 +259,7 @@ export class RestIamService extends AbstractRestService {
             observer.complete();
           }, error => {
             observer.error(error);
+            this.currentUser.error(error);
             observer.complete();
           })
         });

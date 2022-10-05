@@ -141,13 +141,14 @@ export class RestConnectorService {
     return result;
   }
   public getCurrentLogin() : LoginResult{
-    return this.currentLogin.value;
+    return this.currentLogin.hasError ? null : this.currentLogin.value;
   }
   public getAbout(){
       let url=this.createUrl("_about",null);
       return this.get<About>(url,this.getRequestOptions());
   }
   public isLoggedIn(forceRenew = true){
+      console.log('isLoggedIn');
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
         if(!forceRenew) {
@@ -169,6 +170,7 @@ export class RestConnectorService {
             }
         this.isValidatingSession = true;
         this.locator.locateApi().subscribe(() => {
+            console.log('result');
             this.get<LoginResult>(url, this.getRequestOptions()).subscribe(
                 (data: LoginResult) => {
                     this.isValidatingSession = false;
@@ -197,8 +199,10 @@ export class RestConnectorService {
                     observer.complete();
                 },
                 (error: any) => {
+                    console.error('validateSession failed', error);
                     this.isValidatingSession = false;
                     this.currentLogin.error(error);
+                    this.bridge.showError(error);
                     observer.error(error);
                     observer.complete();
                 }

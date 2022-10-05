@@ -6,6 +6,10 @@ import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
+import {DialogButton} from "../../ui/dialog-button";
+import {
+    GlobalContainerComponent
+} from "../../../common/ui/global-container/global-container.component";
 
 @Injectable()
 export class RestLocatorService {
@@ -327,6 +331,16 @@ export class RestLocatorService {
                     console.error(
                         'Could not contact rest api at location ' + url,
                     );
+                    GlobalContainerComponent.finishPreloading();
+                    this.bridge.showModalDialog({
+                        title: 'Connection Error',
+                        message: 'Could not contact the server. Please try again by reloading',
+                        buttons: [
+                            new DialogButton('Reload', DialogButton.TYPE_PRIMARY, () => {
+                                window.location.reload()
+                            })
+                        ]
+                    });
                 }
             },
         );
