@@ -258,9 +258,16 @@ export class RestIamService extends AbstractRestService {
             observer.next(user);
             observer.complete();
           }, error => {
-            observer.error(error);
-            this.currentUser.error(error);
-            observer.complete();
+              // expected error if not logged in
+              if(error.status === RestConstants.HTTP_UNAUTHORIZED) {
+                  this.currentUser.next(null);
+                  observer.next(null);
+                  observer.complete();
+              } else {
+                  this.currentUser.error(error);
+                  observer.error(error);
+                  observer.complete();
+              }
           })
         });
       });

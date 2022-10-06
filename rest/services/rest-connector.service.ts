@@ -148,7 +148,6 @@ export class RestConnectorService {
       return this.get<About>(url,this.getRequestOptions());
   }
   public isLoggedIn(forceRenew = true){
-      console.log('isLoggedIn');
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {
         if(!forceRenew) {
