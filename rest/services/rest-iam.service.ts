@@ -56,7 +56,7 @@ export class RestIamService extends AbstractRestService {
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.currentUser.value?.user?.person;
+    return this.currentUser.hasError ? null : this.currentUser.value?.user?.person;
   }
   /**
    * Get's the currently authenticated user object (same as calling getUser, but prevents duplicated calls)
