@@ -69,11 +69,6 @@ export interface MediacenterCatalog {
     name: string;
     url: string;
 }
-export interface CollectionFeedback {
-    createdAt: Date;
-    creator: string;
-    feedback: any;
-}
 export interface Parent {
     repo: string;
     id: string;

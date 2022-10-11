@@ -8,7 +8,6 @@ import { RestConstants } from '../rest-constants';
 import * as EduData from '../data-object';
 import {
     AbstractList,
-    CollectionFeedback,
     CollectionProposalStatus,
     CollectionSubcollections,
     CollectionWrapper,
@@ -266,29 +265,4 @@ export class RestCollectionService extends AbstractRestService {
 
         return this.connector.delete(query, this.connector.getRequestOptions());
     };
-
-    public addFeedback(
-        collectionId: string,
-        feedbackData: any,
-        repository: string = RestConstants.HOME_REPOSITORY,
-    ) {
-        const query: string = this.connector.createUrl(
-            'collection/:version/collections/:repository/:collectionid/feedback',
-            repository,
-            [[':collectionid', collectionId]],
-        );
-        return this.connector.post(
-            query,
-            JSON.stringify(feedbackData),
-            this.connector.getRequestOptions(),
-        );
-    }
-    public getFeedbacks(collectionId: string, repository: string = RestConstants.HOME_REPOSITORY) {
-        const query: string = this.connector.createUrl(
-            'collection/:version/collections/:repository/:collectionid/feedback',
-            repository,
-            [[':collectionid', collectionId]],
-        );
-        return this.connector.get<CollectionFeedback[]>(query, this.connector.getRequestOptions());
-    }
 }
