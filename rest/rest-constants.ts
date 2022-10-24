@@ -245,6 +245,7 @@ export class RestConstants {
   public static COMMENT_BULK_CREATE="BULK_CREATE";
   public static COMMENT_BULK_UPDATE="BULK_UPDATE";
   public static COMMENT_BULK_UPDATE_RESYNC="BULK_UPDATE_RESYNC";
+  public static COMMENT_MIGRATION="BULK_MIGRATION";
   public static COMMENT_REMOTE_OBJECT_INIT="REMOTE_OBJECT_INIT";
   public static COMMENT_BLOCKED_IMPORT="IMPORT_BLOCKED";
   public static ACCESS_ADD_CHILDREN="AddChildren";

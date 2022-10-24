@@ -30,7 +30,7 @@ import {AbstractRestService} from './abstract-rest-service';
 import {TemporaryStorageService} from './temporary-storage.service';
 import {VCard} from '../../ui/VCard';
 import {BehaviorSubject} from 'rxjs';
-import {distinctUntilChanged, filter} from 'rxjs/operators';
+import {distinctUntilChanged, filter, first} from 'rxjs/operators';
 import {Helper} from '../helper';
 import {RestStateService} from './rest-state.service';
 
@@ -42,11 +42,13 @@ export class RestIamService extends AbstractRestService {
         // subscribe login updates and sync the current user state
         this.state.currentLogin.pipe(
             filter((a) => !!a),
-            distinctUntilChanged((a,b) =>
-          Helper.objectEquals(a,b)
-        )).subscribe(async (login) => {
+            distinctUntilChanged((a, b) =>
+                Helper.objectEquals(a, b)
+            )).subscribe(async (login) => {
           this.state.currentUser.next(null);
-          await this.getUser().toPromise();
+            await this.getUser().toPromise();
+        }, error => {
+          this.currentUser.next(null);
         });
     }
   /**
@@ -54,7 +56,7 @@ export class RestIamService extends AbstractRestService {
    * Please note that getUser() has to be called before, otherwise it will return null
    */
   getCurrentUser() : User {
-    return this.state.currentUser.value?.user?.person;
+    return this.state.currentUser.error ? null : this.state.currentUser.value?.user?.person;
   }
   /**
    * Get's the currently authenticated user object (same as calling getUser, but prevents duplicated calls)
@@ -64,7 +66,10 @@ export class RestIamService extends AbstractRestService {
       this.currentUserSubscription = null;
       return this.state.currentUser.value.user;
     } else {
-      return (await this.state.currentUser.toPromise()).user;
+        return (await this.state.currentUser.pipe(
+            filter(u => !!u),
+            first()
+        ).toPromise()).user;
     }
   }
 
@@ -247,7 +252,7 @@ export class RestIamService extends AbstractRestService {
       return new Observable<IamUser>((observer) => {
         this.connector.isLoggedIn(false).subscribe((login) => {
           // fetch current login to have a valid person info
-          return this.connector.get<IamUser>(query, this.connector.getRequestOptions()).do((user) => {
+            return this.connector.get<IamUser>(query, this.connector.getRequestOptions()).do((user) => {
             this.state.currentUser.next({
               user,
               login
@@ -256,8 +261,16 @@ export class RestIamService extends AbstractRestService {
             observer.next(user);
             observer.complete();
           }, error => {
-            observer.error(error);
-            observer.complete();
+              // expected error if not logged in
+              if(error.status === RestConstants.HTTP_UNAUTHORIZED) {
+                  this.state.currentUser.next(null);
+                  observer.next(null);
+                  observer.complete();
+              } else {
+                  this.state.currentUser.error(error);
+                  observer.error(error);
+                  observer.complete();
+              }
           })
         });
       });
