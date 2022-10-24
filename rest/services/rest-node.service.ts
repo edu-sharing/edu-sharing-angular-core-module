@@ -299,7 +299,7 @@ export class RestNodeService extends AbstractRestService{
           [":node",node],
           [":shareId",shareId],
           [":expiryDate",""+expiryDate],
-        ]);      
+        ]);
     }
     return this.connector.post<NodeShare>(query,"",this.connector.getRequestOptions());
   }
@@ -578,14 +578,16 @@ export class RestNodeService extends AbstractRestService{
    */
   public uploadNodePreview = (node : string,
                               file : File,
+                              createVersion=true,
                               mimetype="auto",
                               repository=RestConstants.HOME_REPOSITORY) : Observable<XMLHttpRequest> => {
     if(mimetype=="auto")
       mimetype=RestHelper.guessMimeType(file);
-    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/preview?mimetype=:mime",repository,
+    let query=this.connector.createUrl("node/:version/nodes/:repository/:node/preview?mimetype=:mime&createVersion=:createVersion",repository,
       [
         [":node",node],
-        [":mime",mimetype]
+        [":mime",mimetype],
+        [":createVersion",""+createVersion]
       ]);
     let options=this.connector.getRequestOptions();
 
