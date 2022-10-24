@@ -48,7 +48,7 @@ export class RestIamService extends AbstractRestService {
           this.state.currentUser.next(null);
             await this.getUser().toPromise();
         }, error => {
-          this.currentUser.next(null);
+          this.state.currentUser.next(null);
         });
     }
   /**
