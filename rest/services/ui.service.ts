@@ -93,8 +93,10 @@ export class UIService {
             this.ngZone.runOutsideAngular(() => {
                 const interval = setInterval(() => {
                     if (clz[componentName]) {
-                        observer.next(clz[componentName]);
-                        observer.complete();
+                        this.ngZone.run(() => {
+                            observer.next(clz[componentName]);
+                            observer.complete();
+                        });
                         clearInterval(interval);
                     } else if (!clz) {
                         clearInterval(interval);
