@@ -3,7 +3,7 @@ import {RestConstants} from '../rest-constants';
 import {RestHelper} from '../rest-helper';
 import {BehaviorSubject, Observable, Observer} from 'rxjs';
 import {RequestObject} from '../request-object';
-import {OAuthResult, LoginResult, AccessScope, About} from '../data-object';
+import {OAuthResult, LoginResult, AccessScope, About, Licenses} from '../data-object';
 import {Router, ActivatedRoute} from '@angular/router';
 import {RestLocatorService} from './rest-locator.service';
 import {HttpClient} from '@angular/common/http';
@@ -149,6 +149,11 @@ export class RestConnectorService {
       let url=this.createUrl("_about",null);
       return this.get<About>(url,this.getRequestOptions());
   }
+  public getLicenses(){
+      let url=this.createUrl("_about/licenses",null);
+      return this.get<Licenses>(url,this.getRequestOptions());
+  }
+
   public isLoggedIn(forceRenew = true){
     const url = this.createUrl("authentication/:version/validateSession",null);
     return new Observable<LoginResult>((observer : Observer<LoginResult>)=> {

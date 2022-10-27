@@ -1166,6 +1166,11 @@ export interface Version {
     services: any;
 }
 
+export interface Licenses {
+    repository: {[key in string]: string};
+    applications: {[key in string]: {[key in string]: string}};
+}
+
 export class Statistics {
   counts: any;
   fields: any;
