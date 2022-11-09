@@ -1062,6 +1062,11 @@ export interface About {
     services: any;
 }
 
+export interface Licenses {
+    repository: { [key in string]: string };
+    services: { [key in string]: { [key in string]: string } };
+}
+
 export class Statistics {
     counts: any;
     fields: any;

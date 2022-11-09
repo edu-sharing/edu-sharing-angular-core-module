@@ -143,17 +143,8 @@ export class RestAdminService extends AbstractRestService {
         return this.connector.get<ServerUpdate[]>(query, this.connector.getRequestOptions());
     }
     public getRepositoryVersion() {
-        let query = this.connector.createUrl('../version.html', null);
-        let options: any = this.connector.getRequestOptions();
-        options.responseType = 'text';
-        options.headers = {
-            'Cache-Control': 'no-cache, no-store, must-revalidate, post-check=0, pre-check=0',
-            Pragma: 'no-cache',
-            Expires: '0',
-        };
-        return this.connector
-            .get(query, options)
-            .pipe(map((response: string) => this.readRepositoryVersion(response)));
+        let query = this.connector.createUrl('admin/:version/version', null);
+        return this.connector.get<any>(query, this.connector.getRequestOptions());
     }
 
     public getOAIClasses() {

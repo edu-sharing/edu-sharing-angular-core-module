@@ -365,27 +365,6 @@ export class RestHelper {
         });
     }
 
-    /**
-     * returns the (in some cases guessed) version for a given "about" object from the rest/_about endpoint
-     * @param about
-     */
-    static getRepositoryVersionFromAbout(about: any) {
-        if (about.version.major == 1) {
-            if (about.version.minor == 0) {
-                return '4.0';
-            }
-            if (about.version.minor == 1) {
-                return '4.0';
-            }
-            if (about.version.minor == 2) {
-                return '4.1';
-            }
-            if (about.version.minor == 3) {
-                return '4.2';
-            }
-        }
-        return null;
-    }
     static guessMediatypeForFile(file: File) {
         if (file.type.startsWith('image')) return 'file-image';
         if (file.type.startsWith('video')) return 'file-video';
