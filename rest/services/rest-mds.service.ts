@@ -5,6 +5,9 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
+/**
+ * @Deprecated Use the new MdsService instead
+ */
 @Injectable({ providedIn: 'root' })
 export class RestMdsService extends AbstractRestService {
     constructor(connector: RestConnectorService) {
@@ -16,6 +19,9 @@ export class RestMdsService extends AbstractRestService {
         return this.connector.get<MdsMetadatasets>(query, this.connector.getRequestOptions());
     };
 
+    /**
+     * @Deprecated Does not cache, use the new MdsService instead
+     */
     getSet = (
         metadataset = RestConstants.DEFAULT,
         repository = RestConstants.HOME_REPOSITORY,
