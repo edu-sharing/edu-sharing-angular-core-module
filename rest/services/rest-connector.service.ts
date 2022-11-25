@@ -4,7 +4,7 @@ import { RestConstants } from '../rest-constants';
 import { RestHelper } from '../rest-helper';
 import { BehaviorSubject, Observable, Observer, of, Subject } from 'rxjs';
 import { RequestObject } from '../request-object';
-import { OAuthResult } from '../data-object';
+import { OAuthResult, LoginResult, AccessScope, About, Licenses } from '../data-object';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestLocatorService } from './rest-locator.service';
 import { HttpClient } from '@angular/common/http';
@@ -147,6 +147,11 @@ export class RestConnectorService implements OnDestroy {
 
     public getCurrentLogin(): LoginInfo {
         return this.currentLogin.value;
+    }
+
+    public getLicenses() {
+        let url = this.createUrl('_about/licenses', null);
+        return this.get<Licenses>(url, this.getRequestOptions());
     }
 
     private registerLoginInfo(): void {

@@ -777,7 +777,7 @@ export class RestNodeService extends AbstractRestService {
      * Upload binary data to a node and create a new version
      * @param node The node id
      * @param file The @File to upload
-     * @param versionComment The version comment string
+     * @param createVersion Determines whether to create a new node version
      * @param mimetype when default "auto" is used, the mimetype is guessed from the content type
      * @param repository
      * @returns {Observable<void>}
@@ -785,6 +785,7 @@ export class RestNodeService extends AbstractRestService {
     public uploadNodePreview = (
         node: string,
         file: File,
+        createVersion = true,
         mimetype = 'auto',
         repository = RestConstants.HOME_REPOSITORY,
     ): Observable<XMLHttpRequest> => {
@@ -795,6 +796,7 @@ export class RestNodeService extends AbstractRestService {
             [
                 [':node', node],
                 [':mime', mimetype],
+                [':createVersion', '' + createVersion],
             ],
         );
         let options = this.connector.getRequestOptions();

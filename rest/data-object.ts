@@ -69,11 +69,6 @@ export interface MediacenterCatalog {
     name: string;
     url: string;
 }
-export interface CollectionFeedback {
-    createdAt: Date;
-    creator: string;
-    feedback: any;
-}
 export interface Parent {
     repo: string;
     id: string;
@@ -1065,6 +1060,11 @@ export interface About {
     themesUrl: string;
     version: Version;
     services: any;
+}
+
+export interface Licenses {
+    repository: { [key in string]: string };
+    services: { [key in string]: { [key in string]: string } };
 }
 
 export class Statistics {

@@ -7,6 +7,8 @@ import { environment } from '../../../../environments/environment';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
+import { DialogButton } from '../../ui/dialog-button';
+import { GlobalContainerComponent } from '../../../common/ui/global-container/global-container.component';
 
 @Injectable({ providedIn: 'root' })
 export class RestLocatorService {
