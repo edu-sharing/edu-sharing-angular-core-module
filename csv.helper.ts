@@ -4,7 +4,10 @@ import { Helper } from './rest/helper';
  * Helper class to generate comma seperated (csv) data from arrays
  */
 export class CsvHelper {
-    public static fromArray(header: string[], data: string[][] | any) {
+    /**
+     * if data is an object, the values for each row will be fetched based on the headerInternal list or (if it is not present) the header list
+     */
+    public static fromArray(header: string[], data: string[][] | any, headerInternal?: string[]) {
         let csv = header ? header.map((h) => '"' + h + '"').join(';') : '';
         for (const d of data) {
             if (csv) {
@@ -15,7 +18,7 @@ export class CsvHelper {
             if (d instanceof Array) {
                 line = d;
             } else {
-                for (const h of header) {
+                for (const h of headerInternal || header) {
                     line.push(d[h]);
                 }
             }
@@ -23,7 +26,15 @@ export class CsvHelper {
         }
         return csv;
     }
-    public static download(filename: string, header: string[], data: string[][]) {
-        Helper.downloadContent(filename + '.csv', CsvHelper.fromArray(header, data));
+    public static download(
+        filename: string,
+        header: string[],
+        data: string[][],
+        headerInternal: string[] = null,
+    ) {
+        Helper.downloadContent(
+            filename + '.csv',
+            CsvHelper.fromArray(header, data, headerInternal),
+        );
     }
 }
