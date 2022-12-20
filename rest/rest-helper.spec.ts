@@ -29,7 +29,7 @@ describe('testing format duration', () => {
     });
     it('formatting Hms', () => {
         expect(RestHelper.getDurationFormatted('0:0:1', DurationFormat.Hms)).toEqual('1s');
-        expect(RestHelper.getDurationFormatted('0:1:0', DurationFormat.Hms)).toEqual('1m 1s');
+        expect(RestHelper.getDurationFormatted('0:1:0', DurationFormat.Hms)).toEqual('1m');
         expect(RestHelper.getDurationFormatted('1:1:1', DurationFormat.Hms)).toEqual('1h 1m 1s');
         expect(RestHelper.getDurationFormatted('1:0:0', DurationFormat.Hms)).toEqual('1h');
         expect(RestHelper.getDurationFormatted('0:0:0', DurationFormat.Hms)).toEqual('');
