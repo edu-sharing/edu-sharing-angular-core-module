@@ -27,6 +27,16 @@ import { Observable } from 'rxjs';
 import { UniversalNode } from '../../common/definitions';
 import { NodeTools } from 'ngx-edu-sharing-api';
 
+export enum DurationFormat {
+    /**
+     * format with colon, i.e. H:MM:SS
+     */
+    Colon = 'colon',
+    /**
+     * format with Hh Mm Ss
+     */
+    Hms = 'hms',
+}
 export class RestHelper {
     private static SPACES_STORE_REF = 'workspace://SpacesStore/';
     public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
@@ -247,7 +257,10 @@ export class RestHelper {
             return value as unknown as number;
         }
     }
-    public static getDurationFormatted(duration: string): string {
+    public static getDurationFormatted(
+        duration: string,
+        format: DurationFormat = DurationFormat.Colon,
+    ): string {
         let time = RestHelper.getDurationInSeconds(duration);
         if (!time) return '';
         let h = Math.floor(time / 60 / 60);
@@ -257,7 +270,7 @@ export class RestHelper {
             minimumIntegerDigits: 2,
             maximumFractionDigits: 0,
         };
-        let format = new NumberFormat([], options);
+        let numberFormat = new NumberFormat([], options);
         let str = '';
         /*
       if(h>0) {
@@ -274,7 +287,25 @@ export class RestHelper {
         str += format.format(s) + "s";
       }
       */
-        str = format.format(h) + ':' + format.format(m) + ':' + format.format(s);
+        if (format === DurationFormat.Colon) {
+            str =
+                numberFormat.format(h) +
+                ':' +
+                numberFormat.format(m) +
+                ':' +
+                numberFormat.format(s);
+        } else {
+            if (h > 0) {
+                str += h + 'h';
+            }
+            if (m > 0) {
+                str += ' ' + m + 'm';
+            }
+            if (s > 0) {
+                str += ' ' + s + 's';
+            }
+            str = str.trim();
+        }
         return str;
     }
     public static getTitle(node: UniversalNode): string {
