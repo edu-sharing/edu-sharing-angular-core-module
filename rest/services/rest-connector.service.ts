@@ -444,6 +444,15 @@ export class RestConnectorService {
                               });
                               return;
                           } else {
+                              const IgnoredUrls = [
+                                  'network/v1/repositories',
+                              ];
+                              if(IgnoredUrls.find((url) => requestUrl.endsWith(url))) {
+                                  console.info(error.status + ' code is ignored for url ' + requestUrl);
+                                  observer.error(error);
+                                  observer.complete();
+                                  return;
+                              }
                               callback();
                           }
 
