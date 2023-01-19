@@ -206,9 +206,10 @@ export class UIService {
         });
     }
     /**
-     * smoothly scroll to the given y offset inside an element (use offsetTop on the child to determine this position)
-     * @param {y} number
-     * @param {smoothness} lower numbers indicate less smoothness, higher more smoothness
+     * Smoothly scrolls to the given y offset inside an element (use offsetTop on the child to
+     * determine this position).
+     *
+     * @param smoothness lower numbers indicate less smoothness, higher more smoothness
      */
     scrollSmoothElement(pos: number = 0, element: Element, smoothness = 1, axis = 'y') {
         return new Promise<void>((resolve) => {
@@ -255,6 +256,9 @@ export class UIService {
                             Math.max((pos - currentPos) / divider, minSpeed),
                         );
                         finished = currentPos >= pos;
+                    }
+                    if (finished) {
+                        currentPos = pos;
                     }
 
                     if (axis == 'x') {
