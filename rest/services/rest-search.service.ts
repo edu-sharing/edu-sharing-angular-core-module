@@ -46,7 +46,7 @@ export class RestSearchService extends AbstractRestService {
                     }
                 }
             }
-            if (properties[property]?.length && properties[property].every((p) => p != null))
+            if (properties[property]?.length && properties[property].every((p) => p != null && !!p))
                 criterias.push({
                     property: property,
                     values: properties[property],
