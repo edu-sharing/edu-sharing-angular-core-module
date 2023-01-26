@@ -38,3 +38,9 @@ export class ListItem {
         return columns;
     }
 }
+export class DefaultListItem {
+    /**
+     * the type icon (mimetype)
+     */
+    static NODE_TYPE = new ListItem('NODE', 'type');
+}
