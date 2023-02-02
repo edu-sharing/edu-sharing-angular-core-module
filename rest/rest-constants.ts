@@ -445,6 +445,7 @@ export class RestConstants {
     public static CCM_PROP_SAVED_SEARCH_MDS = 'ccm:saved_search_mds';
     public static CCM_PROP_SAVED_SEARCH_REPOSITORY = 'ccm:saved_search_repository';
     public static CCM_PROP_SAVED_SEARCH_PARAMETERS = 'ccm:saved_search_parameters';
+    public static GROUP_ALFRESCO_ADMINISTRATORS = 'GROUP_ALFRESCO_ADMINISTRATORS';
     public static GROUP_TYPE_ADMINISTRATORS = 'ORG_ADMINISTRATORS';
     public static GROUP_TYPE_EDITORIAL = 'EDITORIAL';
     public static GROUP_TYPE_TEACHER = 'TEACHER';
