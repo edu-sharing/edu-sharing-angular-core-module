@@ -390,10 +390,10 @@ export class RestConstants {
     };
     public static POSSIBLE_SORT_BY_FIELDS_SOLR = [
         new ListItemSort('NODE', RestConstants.CM_NAME),
-        new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
+        // new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
         new ListItemSort('NODE', RestConstants.CM_MODIFIED_DATE),
         new ListItemSort('NODE', RestConstants.CM_PROP_C_CREATED),
-        new ListItemSort('NODE', RestConstants.CM_CREATOR),
+        // new ListItemSort('NODE', RestConstants.CM_CREATOR),
     ];
 
     public static POSSIBLE_SORT_BY_FIELDS = [
@@ -401,7 +401,7 @@ export class RestConstants {
         new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
         new ListItemSort('NODE', RestConstants.CM_MODIFIED_DATE),
         new ListItemSort('NODE', RestConstants.CM_PROP_C_CREATED),
-        new ListItemSort('NODE', RestConstants.CM_CREATOR),
+        // new ListItemSort('NODE', RestConstants.CM_CREATOR),
         new ListItemSort('NODE', RestConstants.NODE_ID),
         new ListItemSort('NODE', RestConstants.CCM_PROP_WF_STATUS),
         new ListItemSort('NODE', RestConstants.CM_ARCHIVED_DATE),
