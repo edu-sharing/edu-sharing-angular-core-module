@@ -391,10 +391,10 @@ export class RestConstants {
     };
     public static POSSIBLE_SORT_BY_FIELDS_SOLR = [
         new ListItemSort('NODE', RestConstants.CM_NAME),
-        new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
+        // new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
         new ListItemSort('NODE', RestConstants.CM_MODIFIED_DATE),
         new ListItemSort('NODE', RestConstants.CM_PROP_C_CREATED),
-        new ListItemSort('NODE', RestConstants.CM_CREATOR),
+        // new ListItemSort('NODE', RestConstants.CM_CREATOR),
     ];
 
     public static POSSIBLE_SORT_BY_FIELDS = [
@@ -402,7 +402,7 @@ export class RestConstants {
         new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
         new ListItemSort('NODE', RestConstants.CM_MODIFIED_DATE),
         new ListItemSort('NODE', RestConstants.CM_PROP_C_CREATED),
-        new ListItemSort('NODE', RestConstants.CM_CREATOR),
+        // new ListItemSort('NODE', RestConstants.CM_CREATOR),
         new ListItemSort('NODE', RestConstants.NODE_ID),
         new ListItemSort('NODE', RestConstants.CCM_PROP_WF_STATUS),
         new ListItemSort('NODE', RestConstants.CM_ARCHIVED_DATE),
@@ -446,6 +446,7 @@ export class RestConstants {
     public static CCM_PROP_SAVED_SEARCH_MDS = 'ccm:saved_search_mds';
     public static CCM_PROP_SAVED_SEARCH_REPOSITORY = 'ccm:saved_search_repository';
     public static CCM_PROP_SAVED_SEARCH_PARAMETERS = 'ccm:saved_search_parameters';
+    public static GROUP_ALFRESCO_ADMINISTRATORS = 'GROUP_ALFRESCO_ADMINISTRATORS';
     public static GROUP_TYPE_ADMINISTRATORS = 'ORG_ADMINISTRATORS';
     public static GROUP_TYPE_EDITORIAL = 'EDITORIAL';
     public static GROUP_TYPE_TEACHER = 'TEACHER';

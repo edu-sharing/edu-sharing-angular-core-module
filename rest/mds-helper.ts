@@ -46,7 +46,11 @@ export class MdsHelper {
             }
         }
         if (!columns.length) {
-            console.warn('mds does not define columns for ' + name + ', invalid configuration!');
+            if (mdsSet !== null) {
+                console.warn(
+                    'mds does not define columns for ' + name + ', invalid configuration!',
+                );
+            }
             if (name === 'search' || name === 'collectionReferences') {
                 columns.push(new ListItem('NODE', RestConstants.LOM_PROP_TITLE));
                 columns.push(new ListItem('NODE', RestConstants.CM_MODIFIED_DATE));
