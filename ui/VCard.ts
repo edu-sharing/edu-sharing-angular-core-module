@@ -158,7 +158,7 @@ export class VCard {
     return this.lines.join('\n');
   }
   public getDisplayName() {
-    const string = (this.givenname ?? '') + ' ' + (this.surname ?? '');
+    const string = (this.title ?? '') + ' ' + (this.givenname ?? '') + ' ' + (this.surname ?? '');
     if(string.trim() === '') {
       return this.org || '';
     }
