@@ -9,6 +9,7 @@ import { shareReplay } from 'rxjs/operators';
 import { UniversalNode } from '../../../common/definitions';
 
 @Injectable({ providedIn: 'root' })
+/** @deprecated use `NetworkService` from `ngx-edu-sharing-api` instead. */
 export class RestNetworkService extends AbstractRestService {
     // FIXME: if methods of this service get called before `currentRepositories` is populated, we
     // will cause errors.
