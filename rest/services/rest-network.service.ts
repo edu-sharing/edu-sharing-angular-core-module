@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { RestConstants } from '../rest-constants';
-import { Observable, Observer } from 'rxjs';
-import { RestConnectorService } from './rest-connector.service';
-import { AbstractRestService } from './abstract-rest-service';
-import { NetworkRepositories, Node, Repository, Service } from '../../core.module';
-import { Helper } from '../helper';
-import { shareReplay } from 'rxjs/operators';
+import { NetworkService } from 'ngx-edu-sharing-api';
+import { Observable } from 'rxjs';
 import { UniversalNode } from '../../../common/definitions';
+import { Node, Repository, Service } from '../../core.module';
+import { Helper } from '../helper';
+import { RestConstants } from '../rest-constants';
+import { AbstractRestService } from './abstract-rest-service';
+import { RestConnectorService } from './rest-connector.service';
 
 @Injectable({ providedIn: 'root' })
 /** @deprecated use `NetworkService` from `ngx-edu-sharing-api` instead. */
@@ -14,25 +14,6 @@ export class RestNetworkService extends AbstractRestService {
     // FIXME: if methods of this service get called before `currentRepositories` is populated, we
     // will cause errors.
     private static currentRepositories: Repository[];
-
-    private readonly getRepositories_ = new Observable<NetworkRepositories>((observer) => {
-        let query = this.connector.createUrl('network/:version/repositories', null);
-        return this.connector
-            .get<NetworkRepositories>(query, this.connector.getRequestOptions())
-            .subscribe(
-                (repositories) => {
-                    RestNetworkService.currentRepositories = repositories.repositories;
-                    observer.next(repositories);
-                    observer.complete();
-                },
-                (error) => {
-                    observer.error(error);
-                    observer.complete();
-                },
-            );
-    }).pipe(
-        shareReplay(1), // Cache result
-    );
 
     public static supportsImport(repository: string, repositories: Repository[]) {
         if (repositories == null) return false;
@@ -91,11 +72,18 @@ export class RestNetworkService extends AbstractRestService {
         }
         return false;
     }
-    constructor(connector: RestConnectorService) {
+
+    private _repositories = this.networkApi.getRepositories();
+
+    constructor(connector: RestConnectorService, private networkApi: NetworkService) {
         super(connector);
+        this._repositories.subscribe(
+            (repositories) => (RestNetworkService.currentRepositories = repositories),
+        );
     }
+
     public getRepositories = () => {
-        return this.getRepositories_;
+        return this._repositories;
     };
 
     public addService = (jsondata: string): Observable<any> => {
