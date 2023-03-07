@@ -107,7 +107,7 @@ export class RestMediacenterService extends AbstractRestService {
 
     public getLicensedNodes(
         mediacenter: string,
-        criterias: any[],
+        criteria: any[],
         repository = RestConstants.HOME_REPOSITORY,
         request: any = null,
     ) {
@@ -123,7 +123,7 @@ export class RestMediacenterService extends AbstractRestService {
         return this.connector.post<NodeList>(
             query,
             JSON.stringify({
-                criterias,
+                criteria,
             }),
             this.connector.getRequestOptions(),
         );
