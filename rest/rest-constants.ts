@@ -156,6 +156,8 @@ export class RestConstants {
   public static CONTRIBUTOR_ROLES_METADATA=["creator","validator","provider"];
   public static CONTENT_QUOTA_EXCEPTION="DAOQuotaException";
   public static CONTENT_VIRUS_EXCEPTION="DAOVirusDetectedException";
+  public static CONTENT_MIMETYPE_VERIFICATION_EXCEPTION="DAOMimetypeVerificationException";
+  public static CONTENT_FILE_EXTENSION_VERIFICATION_EXCEPTION="DAOFileExtensionVerificationException";
   public static USER_PRIMARY_AFFILIATIONS = ["teacher","student","employee","extern","system","function"];
   public static getAllVCardFields(){
       let list=[];
@@ -376,6 +378,7 @@ export class RestConstants {
   public static HTTP_UNAUTHORIZED = 401;
   public static HTTP_FORBIDDEN = 403;
   public static HTTP_NOT_FOUND = 404;
+  public static UNSUPPORTED_MEDIA_TYPE = 415;
   public static HOME_APPLICATION_XML="homeApplication.properties.xml";
   public static CCMAIL_APPLICATION_XML="ccmail.properties.xml";
   public static NODE_VERSION_CURRENT = "-1";
