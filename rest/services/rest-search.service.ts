@@ -29,7 +29,7 @@ export class RestSearchService extends AbstractRestService {
         const criterias = [];
         properties = Helper.deepCopy(properties);
         for (const property in properties) {
-            let widget = MdsHelper.getWidget(property, null, mdsWidgets);
+            let widget = MdsHelper.getWidget(property, undefined, mdsWidgets);
             if (widget && widget.type == 'multivalueTree') {
                 let attach = RestSearchService.unfoldTreeChilds(properties[property], widget);
                 if (attach) {
