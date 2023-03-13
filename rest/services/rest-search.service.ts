@@ -24,7 +24,7 @@ import { MdsWidget, Values } from '../../../features/mds/types/types';
 
 @Injectable({ providedIn: 'root' })
 export class RestSearchService extends AbstractRestService {
-    static readonly MAX_QUERY_CONCAT_PARAMS = 100;
+    static readonly MAX_QUERY_CONCAT_PARAMS = 400;
     static convertCritierias(properties: Values, mdsWidgets: MdsWidget[]) {
         const criterias = [];
         properties = Helper.deepCopy(properties);
