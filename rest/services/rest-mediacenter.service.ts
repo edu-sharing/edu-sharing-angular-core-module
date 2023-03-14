@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { RestConnectorService } from './rest-connector.service';
 import { AbstractRestService } from './abstract-rest-service';
-import { IamGroup, Mediacenter, MediacenterProfile, Node, NodeList } from '../data-object';
-import { RestHelper } from '../rest-helper';
+import { IamGroup, Mediacenter, MediacenterProfile, NodeList } from '../data-object';
 
+/**
+ * @Deprecated Use the new api service MediacenterService instead
+ */
 @Injectable({ providedIn: 'root' })
 export class RestMediacenterService extends AbstractRestService {
     // @TODO: declare the mediacenter type when it is finalized in backend
@@ -131,7 +133,6 @@ export class RestMediacenterService extends AbstractRestService {
 
     public importMediacenters(file: File) {
         const query = this.connector.createUrl('mediacenter/:version/import/mediacenters', null);
-        const options = this.connector.getRequestOptions();
 
         return this.connector.sendDataViaXHR(query, file, 'POST', 'mediacenters').pipe(
             map((response: XMLHttpRequest) => {
@@ -142,7 +143,6 @@ export class RestMediacenterService extends AbstractRestService {
 
     public importOrganisations(file: File) {
         const query = this.connector.createUrl('mediacenter/:version/import/organisations', null);
-        const options = this.connector.getRequestOptions();
 
         return this.connector.sendDataViaXHR(query, file, 'POST', 'organisations').pipe(
             map((response: XMLHttpRequest) => {
@@ -156,7 +156,6 @@ export class RestMediacenterService extends AbstractRestService {
             'mediacenter/:version/import/mc_org?removeSchoolsFromMC=' + removeSchoolsFromMC,
             null,
         );
-        const options = this.connector.getRequestOptions();
 
         return this.connector.sendDataViaXHR(query, file, 'POST', 'mcOrgs').pipe(
             map((response: XMLHttpRequest) => {

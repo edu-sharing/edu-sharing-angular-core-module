@@ -1,4 +1,5 @@
 import { Helper } from './rest/helper';
+import { Values } from '../features/mds/types/types';
 
 /**
  * Helper class to generate comma seperated (csv) data from arrays
@@ -7,13 +8,16 @@ export class CsvHelper {
     /**
      * if data is an object, the values for each row will be fetched based on the headerInternal list or (if it is not present) the header list
      */
-    public static fromArray(header: string[], data: string[][] | any, headerInternal?: string[]) {
+    public static fromArray(
+        header: string[],
+        data: string[][] | Values,
+        headerInternal?: string[],
+    ) {
         let csv = header ? header.map((h) => '"' + h + '"').join(';') : '';
-        for (const d of data) {
+        for (const d of data as any) {
             if (csv) {
                 csv += '\n';
             }
-            const i = 0;
             let line: string[] = [];
             if (d instanceof Array) {
                 line = d;
@@ -29,7 +33,7 @@ export class CsvHelper {
     public static download(
         filename: string,
         header: string[],
-        data: string[][],
+        data: string[][] | Values,
         headerInternal: string[] = null,
     ) {
         Helper.downloadContent(
