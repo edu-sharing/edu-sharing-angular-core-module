@@ -25,12 +25,12 @@ import { MdsWidget, Values } from '../../../features/mds/types/types';
 @Injectable({ providedIn: 'root' })
 export class RestSearchService extends AbstractRestService {
     static readonly MAX_QUERY_CONCAT_PARAMS = 400;
-    static convertCritierias(properties: Values, mdsWidgets: MdsWidget[]) {
+    static convertCritierias(properties: Values, mdsWidgets: MdsWidget[], unfoldTrees = true) {
         const criterias = [];
         properties = Helper.deepCopy(properties);
         for (const property in properties) {
             let widget = MdsHelper.getWidget(property, undefined, mdsWidgets);
-            if (widget && widget.type == 'multivalueTree') {
+            if (widget && widget.type == 'multivalueTree' && unfoldTrees) {
                 let attach = RestSearchService.unfoldTreeChilds(properties[property], widget);
                 if (attach) {
                     if (attach.length > RestSearchService.MAX_QUERY_CONCAT_PARAMS) {
