@@ -6,15 +6,10 @@ import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
 
 import * as EduData from '../data-object';
-import {
-    AbstractList,
-    CollectionProposalStatus,
-    CollectionSubcollections,
-    CollectionWrapper,
-    ProposalNode,
-} from '../data-object';
+import { AbstractList, CollectionSubcollections, CollectionWrapper } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 import { NodeWrapper } from '../data-object';
+import { CollectionProposalStatus, ProposalNode } from 'ngx-edu-sharing-api';
 
 @Injectable({ providedIn: 'root' })
 export class RestCollectionService extends AbstractRestService {

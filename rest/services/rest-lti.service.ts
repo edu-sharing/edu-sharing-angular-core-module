@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
-import { TemporaryStorageService } from './temporary-storage.service';
+import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
 import { LTIRegistrationTokens } from '../data-object';
-import { RestConstants } from '../rest-constants';
 
 @Injectable({ providedIn: 'root' })
 export class RestLtiService extends AbstractRestService {

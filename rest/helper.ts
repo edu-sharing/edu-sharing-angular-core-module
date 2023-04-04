@@ -1,7 +1,8 @@
+import { Helper as HelperBase } from 'ngx-edu-sharing-ui';
 /**
  * Created by shippeli on 23.02.2017.
  */
-export class Helper {
+export class Helper extends HelperBase {
     /**
      * Search the a property of the array array[index][property]==needle
      * Returns the index or -1 if no match was found
@@ -58,18 +59,6 @@ export class Helper {
             if (array1[i] != array2[i]) return false;
         }
         return true;
-    }
-    /**
-     * Returns true if both objects have the same values stored
-     * will not work for classes including methods or similar dynamic data
-     * @param object1
-     * @param object2
-     * @returns {boolean}
-     */
-    public static objectEquals(object1: any, object2: any) {
-        if (object1 == null) return object2 == null;
-        if (object2 == null) return object1 == null;
-        return JSON.stringify(object1) == JSON.stringify(object2);
     }
 
     /**
@@ -145,15 +134,6 @@ export class Helper {
         else url += '&';
 
         return url + param + '=' + encodeURIComponent(value);
-    }
-
-    public static deepCopy(data: any) {
-        if (data == null) return null;
-        return JSON.parse(JSON.stringify(data));
-    }
-    public static deepCopyArray(data: any[]) {
-        if (!Array.isArray(data)) return data;
-        return data.slice();
     }
 
     /**

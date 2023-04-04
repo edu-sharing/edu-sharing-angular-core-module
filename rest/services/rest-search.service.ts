@@ -19,7 +19,7 @@ import { AbstractRestService } from './abstract-rest-service';
 import { Helper } from '../helper';
 import { MdsHelper } from '../mds-helper';
 import { map } from 'rxjs/operators';
-import { VCard } from '../../ui/VCard';
+import { VCard } from 'ngx-edu-sharing-ui';
 import { MdsWidget, Values } from '../../../features/mds/types/types';
 
 @Injectable({ providedIn: 'root' })

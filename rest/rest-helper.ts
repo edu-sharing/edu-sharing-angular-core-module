@@ -5,7 +5,6 @@
 import { RestConstants } from './rest-constants';
 import {
     Authority,
-    Collection,
     CollectionReference,
     LocalPermissions,
     Node,
@@ -15,30 +14,16 @@ import {
 } from './data-object';
 import { Router } from '@angular/router';
 import { RestConnectorService } from './services/rest-connector.service';
-import { RestIamService } from './services/rest-iam.service';
-import { UIConstants } from '../ui/ui-constants';
 import { ConfigurationService } from './services/configuration.service';
-import { BridgeService } from '../../core-bridge-module/bridge.service';
-import NumberFormat = Intl.NumberFormat;
-import NumberFormatOptions = Intl.NumberFormatOptions;
+import { UIConstants, RestHelper as RestHelperBase } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
-import { MessageType } from '../ui/message-type';
 import { Observable } from 'rxjs';
 import { UniversalNode } from '../../common/definitions';
 import { NodeTools } from 'ngx-edu-sharing-api';
+import NumberFormat = Intl.NumberFormat;
+import NumberFormatOptions = Intl.NumberFormatOptions;
 
-export enum DurationFormat {
-    /**
-     * format with colon, i.e. H:MM:SS
-     */
-    Colon = 'colon',
-    /**
-     * format with Hh Mm Ss
-     */
-    Hms = 'hms',
-}
-export class RestHelper {
-    private static SPACES_STORE_REF = 'workspace://SpacesStore/';
+export class RestHelper extends RestHelperBase {
     public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
         let data = new Array<string>(nodes.length);
         for (let i = 0; i < nodes.length; i++) {
@@ -214,103 +199,6 @@ export class RestHelper {
             node.type != null &&
             (node.type == 'ccm:map' || node.type == '{http://www.campuscontent.de/model/1.0}map')
         );
-    }
-
-    public static getName(node: Node): string {
-        if (node.name) return node.name;
-        if (node.title) return node.title;
-        if (node.ref) return node.ref.id;
-        return null;
-    }
-    public static getDurationInSeconds(value: string): number {
-        // PT1H5M23S
-        // or 00:00:00
-        // or 00:00
-        if (!value) return 0;
-        try {
-            let result = value.split(':');
-            if (result.length == 3) {
-                let h = result[0] ? parseInt(result[0]) : 0;
-                let m = result[1] ? parseInt(result[1]) : 0;
-                let s = result[2] ? parseInt(result[2]) : 0;
-                let time = h * 60 * 60 + m * 60 + s;
-                return time;
-            }
-            if (result.length == 2) {
-                let m = result[0] ? parseInt(result[0]) : 0;
-                let s = result[1] ? parseInt(result[1]) : 0;
-                let time = m * 60 + s;
-                return time;
-            }
-        } catch (e) {
-            return value as unknown as number;
-        }
-        try {
-            let regexp = new RegExp('PT(\\d+H)?(\\d+M)?(\\d+S)?');
-            let result = regexp.exec(value);
-            let h = result[1] ? parseInt(result[1]) : 0;
-            let m = result[2] ? parseInt(result[2]) : 0;
-            let s = result[3] ? parseInt(result[3]) : 0;
-            let time = h * 60 * 60 + m * 60 + s;
-            return time;
-        } catch (e) {
-            return value as unknown as number;
-        }
-    }
-    public static getDurationFormatted(
-        duration: string,
-        format: DurationFormat = DurationFormat.Colon,
-    ): string {
-        let time = RestHelper.getDurationInSeconds(duration);
-        if (!time) return '';
-        let h = Math.floor(time / 60 / 60);
-        let m = Math.floor(Math.floor(time / 60) % 60);
-        let s = Math.floor(time % 60);
-        let options: NumberFormatOptions = {
-            minimumIntegerDigits: 2,
-            maximumFractionDigits: 0,
-        };
-        let numberFormat = new NumberFormat([], options);
-        let str = '';
-        /*
-      if(h>0) {
-        str = format.format(h) + "h";
-      }
-      if(m>0) {
-        if (str)
-          str += " ";
-        str += format.format(m) + "m";
-      }
-      if(s>0) {
-        if (str)
-          str += " ";
-        str += format.format(s) + "s";
-      }
-      */
-        if (format === DurationFormat.Colon) {
-            str =
-                numberFormat.format(h) +
-                ':' +
-                numberFormat.format(m) +
-                ':' +
-                numberFormat.format(s);
-        } else {
-            if (h > 0) {
-                str += h + 'h';
-            }
-            if (m > 0) {
-                str += ' ' + m + 'm';
-            }
-            if (s > 0) {
-                str += ' ' + s + 's';
-            }
-            str = str.trim();
-        }
-        return str;
-    }
-    public static getTitle(node: UniversalNode): string {
-        if (node?.title) return node.title;
-        return node?.name;
     }
     public static getTitleFromProperties(properties: any): string {
         return properties[RestConstants.LOM_PROP_TITLE]

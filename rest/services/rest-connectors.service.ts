@@ -3,7 +3,8 @@ import { Connector, ConnectorList, ConnectorService } from 'ngx-edu-sharing-api'
 import { Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NodeHelperService } from '../../../core-ui-module/node-helper.service';
-import { CollectionReference, Filetype, Node, NodesRightMode } from '../data-object';
+import { CollectionReference, Filetype, Node } from '../data-object';
+import { NodesRightMode } from 'ngx-edu-sharing-ui';
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';

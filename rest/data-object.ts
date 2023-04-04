@@ -15,8 +15,8 @@ import {
     UserQuota,
     UserStatus,
 } from 'ngx-edu-sharing-api';
-import { ListItem, ListItemType } from '../ui/list-item';
-import { VCard } from '../ui/VCard';
+import { ListItem, VCard } from 'ngx-edu-sharing-ui';
+
 export { Connector, ConnectorList } from 'ngx-edu-sharing-api';
 export { Organization, NodeRef, UserQuota, Person };
 
@@ -89,12 +89,6 @@ export interface CacheInfo {
     statisticHits: number;
 }
 
-export interface WorkflowDefinition {
-    id: string;
-    color: string;
-    hasReceiver: boolean;
-    next: string[];
-}
 export class WorkflowEntry {
     time?: number;
     editor?: UserSimple;
@@ -147,8 +141,6 @@ export interface Service {
 export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED' | 'TYPE_DEFAULT';
 
 export type License = NodeModel['license'];
-
-export type GenericAuthority = Organization | Group | AuthorityProfile | User;
 
 export class Node implements NodeModel {
     access: string[];
@@ -913,12 +905,6 @@ export enum GETCOLLECTIONS_SCOPE {
     ALL,
 }
 
-export enum NodesRightMode {
-    Local,
-    Original,
-    Both,
-}
-
 export class Reference {
     repo: string;
     id: string;
@@ -1124,27 +1110,6 @@ export class VCardResult {
     property: string;
     vcard: VCard;
 }
-export type CollectionProposalStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED';
-export class ProposalNode extends Node {
-    proposal: Node;
-    status: CollectionProposalStatus;
-    // collection this proposal is for
-    proposalCollection?: Node;
-    accessible: boolean;
-}
-export class ListItemSort extends ListItem {
-    constructor(
-        public type: ListItemType,
-        public name: string,
-        public mode: 'ascending' | 'descending' | null = null,
-        public config = {
-            showLabel: false,
-        },
-    ) {
-        super(type, name, config);
-    }
-}
-
 export class LTIRegistrationToken {
     token: string;
     url: string;

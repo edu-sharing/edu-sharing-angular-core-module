@@ -1,4 +1,4 @@
-import { OptionItem } from '../../core-ui-module/option-item';
+import { OptionItem } from 'ngx-edu-sharing-ui';
 
 export class ButtonConfig {
     color: 'standard' | 'primary' | 'danger' = 'standard';
