@@ -3,23 +3,13 @@ import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
-import {
-    NodeRef,
-    Node,
-    NodeWrapper,
-    NodePermissions,
-    LocalPermissions,
-    NodeVersions,
-    NodeVersion,
-    NodeList,
-    VCardResult,
-    SearchRequestBody,
-} from '../data-object';
+import { NodeList, NodeWrapper, SearchRequestBody, VCardResult } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 import { Helper } from '../helper';
 import { MdsHelper } from '../mds-helper';
 import { map } from 'rxjs/operators';
 import { VCard } from 'ngx-edu-sharing-ui';
+import { MdsService } from 'ngx-edu-sharing-api';
 import { MdsWidget, Values } from '../../../features/mds/types/types';
 
 @Injectable({ providedIn: 'root' })
@@ -31,7 +21,7 @@ export class RestSearchService extends AbstractRestService {
         for (const property in properties) {
             let widget = MdsHelper.getWidget(property, undefined, mdsWidgets);
             if (widget && widget.type == 'multivalueTree') {
-                let attach = RestSearchService.unfoldTreeChilds(properties[property], widget);
+                let attach = MdsService.unfoldTreeChilds(properties[property], widget);
                 if (attach) {
                     if (attach.length > RestSearchService.MAX_QUERY_CONCAT_PARAMS) {
                         console.info(
@@ -53,32 +43,6 @@ export class RestSearchService extends AbstractRestService {
                 });
         }
         return criterias;
-    }
-    static unfoldTreeChilds(props: string[], widget: any) {
-        let attach: string[] = [];
-        if (props) {
-            for (let prop of props) {
-                for (let child of widget.values) {
-                    let copy = child;
-                    for (let i = 0; i <= 100 && copy.parent; i++) {
-                        if (copy.parent == prop && attach.indexOf(child.id) == -1) {
-                            attach.push(child.id);
-                        }
-                        if (copy.parent) {
-                            copy = widget.values.find((v: any) => v.id == copy.parent);
-                        } else break;
-                        if (i == 100) {
-                            console.warn(
-                                'possible tree recursion detected in valuespace for widget ' +
-                                    widget.id,
-                            );
-                        }
-                    }
-                }
-            }
-            return attach;
-        }
-        return null;
     }
     constructor(connector: RestConnectorService) {
         super(connector);
