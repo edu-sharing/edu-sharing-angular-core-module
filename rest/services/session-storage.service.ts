@@ -24,8 +24,8 @@ import { RestConnectorService } from './rest-connector.service';
  * either. Note that it currently only supports strings. If a user is logged in, it will be stored
  * inside the user profile. Otherwise, localStorage will be used.
  */
- @Injectable({providedIn: 'root'})
- export class SessionStorageService {
+@Injectable({ providedIn: 'root' })
+export class SessionStorageService {
     static readonly KEY_WORKSPACE_SORT = 'workspace_sort';
 
     private readonly localStorage = new BrowserStorage(localStorage);
@@ -64,11 +64,11 @@ import { RestConnectorService } from './rest-connector.service';
                 // We use `null` as an indicator that preferences cannot be stored with the user
                 // profile.
                 user
-                    // The backend might return `null` in case no preferences have been saved yet.
-                    // We map to the empty object if that happens.
-                    ? this.iam.getUserPreferences().pipe(map((preferences) => preferences ?? {}))
-                    // We pass null when there is no valid user.
-                    : of(null),
+                    ? // The backend might return `null` in case no preferences have been saved yet.
+                      // We map to the empty object if that happens.
+                      this.iam.getUserPreferences().pipe(map((preferences) => preferences ?? {}))
+                    : // We pass null when there is no valid user.
+                      of(null),
             ),
         );
         // User preferences combining data from the backend and local changes pushed to the backend.

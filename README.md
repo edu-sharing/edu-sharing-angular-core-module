@@ -6,7 +6,6 @@ Also, multiple helper and common formatting features are included to provide con
 
 This repository is a submodule in the edu-sharing main repository, found at Frontend/src/app/core-module
 
-
 This module also has dependencies to the RouterModule and HttpClientModule from Angular:
 
 Include this module by importing it:
@@ -21,7 +20,6 @@ Include this module by importing it:
   ],
 ```
 
-  
 Some callbacks of this module make use of the "BridgeModule". Your application has to implement this module and the service.
 
 Take a look at the BridgeModule of the edu-sharing repository.

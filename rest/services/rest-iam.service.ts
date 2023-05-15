@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { UserEntry, UserService } from 'ngx-edu-sharing-api';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {first, map, takeUntil, tap} from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { first, map, takeUntil, tap } from 'rxjs/operators';
 import { VCard } from '../../ui/VCard';
 import {
     GroupProfile,
@@ -24,7 +24,7 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class RestIamService extends AbstractRestService implements OnDestroy {
     private destroyed$ = new Subject<void>();
 
@@ -46,7 +46,8 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
      */
     async getCurrentUserVCard(): Promise<VCard> {
         const vcard = new VCard();
-        const user = (await this.userService.observeCurrentUser().pipe(first()).toPromise())?.person;
+        const user = (await this.userService.observeCurrentUser().pipe(first()).toPromise())
+            ?.person;
         if (user && user.profile) {
             vcard.givenname = user.profile.firstName;
             vcard.surname = user.profile.lastName;
@@ -57,10 +58,9 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
                 vcard.gnduri = userVCard.gnduri;
             }
         }
-        vcard.uid =
-            user?.properties?.[RestConstants.CM_PROP_ESUID]
-                ? user.properties[RestConstants.CM_PROP_ESUID][0]
-                : null;
+        vcard.uid = user?.properties?.[RestConstants.CM_PROP_ESUID]
+            ? user.properties[RestConstants.CM_PROP_ESUID][0]
+            : null;
         return vcard;
     }
 
@@ -541,10 +541,10 @@ function mapVCard(userEntry: UserEntry): IamUser {
     return {
         ...userEntry,
         person: {
-            ...userEntry.person,
+            ...userEntry?.person,
             profile: {
-                ...userEntry.person.profile,
-                vcard: new VCard(userEntry.person.profile.vcard),
+                ...userEntry?.person?.profile,
+                vcard: new VCard(userEntry?.person?.profile?.vcard),
             },
         },
     };

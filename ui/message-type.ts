@@ -1,4 +1,4 @@
 export enum MessageType {
-  info,
-  error
+    info,
+    error,
 }
