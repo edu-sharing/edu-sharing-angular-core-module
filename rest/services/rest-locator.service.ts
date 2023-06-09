@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Observer } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -142,11 +142,23 @@ export class RestLocatorService {
         }; // Warn: withCredentials true will ignore a Bearer from OAuth!
     }
 
-    setRoute(route: ActivatedRoute): Observable<void> {
+    setRoute(route: ActivatedRoute, router: Router): Observable<void> {
         return new Observable<void>((observer: Observer<void>) => {
-            route.queryParams.subscribe((params: any) => {
+            route.queryParams.subscribe(async (params: any) => {
                 this.ticket = null;
-                if (params.ticket) this.ticket = params.ticket;
+                if (params.ticket) {
+                    this.ticket = params.ticket;
+                    // clean up ticket
+                    await router.navigate([], {
+                        relativeTo: route,
+                        skipLocationChange: false,
+                        replaceUrl: true,
+                        queryParamsHandling: 'merge',
+                        queryParams: {
+                            ticket: null,
+                        },
+                    });
+                }
                 observer.next(null);
                 observer.complete();
             });
