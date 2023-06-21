@@ -54,6 +54,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
             vcard.email = user.profile.email;
             if (user.profile.vcard) {
                 const userVCard = new VCard(user.profile.vcard);
+                vcard.title = userVCard.title;
                 vcard.orcid = userVCard.orcid;
                 vcard.gnduri = userVCard.gnduri;
             }
