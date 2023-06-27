@@ -95,6 +95,7 @@ export class RestConstants {
     public static CCM_TYPE_MAP = 'ccm:map';
     public static CCM_TYPE_COLLECTION_PROPOSAL = 'ccm:collection_proposal';
     public static SYS_TYPE_CONTAINER = 'sys:container';
+    public static SYS_NODE_UUID = 'sys:node-uuid';
     public static CCM_TYPE_TOOLPERMISSION = 'ccm:toolpermission';
     public static CCM_TYPE_REMOTEOBJECT = 'ccm:remoteobject';
     public static CCM_TYPE_TOOL_INSTANCE = 'ccm:tool_instance';

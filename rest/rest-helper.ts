@@ -310,7 +310,13 @@ export class RestHelper {
     }
     public static getTitle(node: UniversalNode): string {
         if (node?.title) return node.title;
-        return node?.name;
+        if (node?.name) {
+            return node?.name;
+        }
+        if (node?.properties) {
+            return RestHelper.getTitleFromProperties(node?.properties);
+        }
+        return '';
     }
     public static getTitleFromProperties(properties: any): string {
         return properties[RestConstants.LOM_PROP_TITLE]
