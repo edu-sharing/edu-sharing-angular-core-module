@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RestUtilitiesService } from './rest/services/rest-utilities.service';
-import { RestLocatorService } from './rest/services/rest-locator.service';
 import { RestCollectionService } from './rest/services/rest-collection.service';
 import { RestConnectorsService } from './rest/services/rest-connectors.service';
 import { RestToolService } from './rest/services/rest-tool.service';
@@ -19,19 +18,12 @@ import { RestStreamService } from './rest/services/rest-stream.service';
 import { RestUsageService } from './rest/services/rest-usage.service';
 import { RestSharingService } from './rest/services/rest-sharing.service';
 import { DebugResultPipe } from './rest/pipes/debug-result.pipe';
-import { FrameEventsService } from './rest/services/frame-events.service';
-import { SessionStorageService } from './rest/services/session-storage.service';
-import { TemporaryStorageService } from './rest/services/temporary-storage.service';
 import { UIService } from './rest/services/ui.service';
 import { CoreBridgeModule } from '../core-bridge-module/core.bridge.module';
-import { ConfigurationService } from './rest/services/configuration.service';
 import { DialogButton } from './ui/dialog-button';
-import { UIConstants } from './ui/ui-constants';
 import { RestMediacenterService } from './rest/services/rest-mediacenter.service';
 import { RestStatisticsService } from './rest/services/rest-statistics.service';
 import { RestRatingService } from './rest/services/rest-rating.service';
-import { RestTrackingService } from './rest/services/rest-tracking.service';
-import { RestLtiService } from './rest/services/rest-lti.service';
 
 @NgModule({
     imports: [CoreBridgeModule],
@@ -44,14 +36,12 @@ export * from './rest/rest-constants';
 export * from './rest/request-object';
 export * from './rest/rest-helper';
 export { DialogButton } from './ui/dialog-button';
-export { ListItem } from './ui/list-item';
-export { UIConstants } from './ui/ui-constants';
+export { UIConstants } from 'ngx-edu-sharing-ui';
 export * from './rest/configuration-helper';
 export * from './rest/services/configuration.service';
 export * from './rest/services/rest-locator.service';
 export * from './rest/services/frame-events.service';
 export * from './rest/services/session-storage.service';
-export * from './rest/services/temporary-storage.service';
 export { UIService } from './rest/services/ui.service';
 export { RestUtilitiesService } from './rest/services/rest-utilities.service';
 export { RestCollectionService } from './rest/services/rest-collection.service';
@@ -77,3 +67,4 @@ export { RestSharingService } from './rest/services/rest-sharing.service';
 export { DebugResultPipe } from './rest/pipes/debug-result.pipe';
 export { DeleteMode } from './rest/data-object';
 export { EventType } from './rest/data-object';
+export { TemporaryStorageService } from 'ngx-edu-sharing-ui';

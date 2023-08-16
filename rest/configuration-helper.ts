@@ -4,36 +4,34 @@
 
 import { MdsInfo, Repository } from './data-object';
 import { RestConstants } from './rest-constants';
-import { RestHelper } from './rest-helper';
-import { RestNetworkService } from './services/rest-network.service';
-import { ConfigurationService } from '../core.module';
-import { NodePersonNamePipe } from '../../shared/pipes/node-person-name.pipe';
-import { ConfigOptionItem } from '../../core-ui-module/node-helper.service';
-import { MdsService } from 'ngx-edu-sharing-api';
+import { ConfigService, MdsService } from 'ngx-edu-sharing-api';
+import { NodePersonNamePipe } from 'ngx-edu-sharing-ui';
+import { take } from 'rxjs/operators';
 
 export class ConfigurationHelper {
-    public static getBanner(config: ConfigurationService) {
+    public static getBanner(config: ConfigService) {
         let banner = config.instant<any>('banner');
         if (!banner) banner = {};
         if (!banner.components || !banner.components.length) banner.components = ['search'];
         return banner;
     }
-    public static hasMenuButton(config: ConfigurationService, button: string): boolean {
+    public static hasMenuButton(config: ConfigService, button: string): boolean {
         let hide = config.instant('hideMainMenu');
         if (!hide) return true;
         // if button was not found in hide -> it has the menu button
         return hide.indexOf(button) == -1;
     }
-    static getPersonWithConfigDisplayName(person: any, config: ConfigurationService) {
+    static getPersonWithConfigDisplayName(person: any, config: ConfigService) {
         return new NodePersonNamePipe(config).transform(person);
     }
     public static async getAvailableMds(
         repository: string | Repository,
         mds: MdsService,
-        config: ConfigurationService,
+        config: ConfigService,
     ) {
         const metadatasets = await mds.getAvailableMetadataSets().toPromise();
-        let validMds = await config.get('availableMds').toPromise();
+        await config.observeConfig().pipe(take(1)).toPromise();
+        let validMds = config.instant<any>('availableMds');
         if (validMds && validMds.length) {
             for (let mds of validMds) {
                 if (
@@ -71,7 +69,7 @@ export class ConfigurationHelper {
     public static filterValidMds(
         repository: string | Repository,
         metadatasets: MdsInfo[],
-        config: ConfigurationService,
+        config: ConfigService,
     ) {
         let validMds = config.instant<any>('availableMds');
         if (validMds && validMds.length) {
@@ -103,7 +101,7 @@ export class ConfigurationHelper {
     }
     public static filterValidRepositories(
         repositories: Repository[],
-        config: ConfigurationService,
+        config: ConfigService,
         onlyLocal: boolean,
     ) {
         let validRepositories = config.instant<string[]>('availableRepositories');

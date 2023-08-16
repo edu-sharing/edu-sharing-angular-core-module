@@ -1,5 +1,5 @@
 import { RestConstants } from './rest-constants';
-import { ListItem, ListItemType } from '../ui/list-item';
+import { ListItem, ListItemType } from 'ngx-edu-sharing-ui';
 import { RestConnectorService } from './services/rest-connector.service';
 import { Collection, Mds, Sort } from './data-object';
 import { TranslateService } from '@ngx-translate/core';

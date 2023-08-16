@@ -1,16 +1,16 @@
-import { tap, first, switchMap } from 'rxjs/operators';
+import { first, switchMap, tap } from 'rxjs/operators';
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { RestHelper } from '../rest-helper';
 import { BehaviorSubject, Observable, Observer, of, Subject } from 'rxjs';
 import { RequestObject } from '../request-object';
-import { OAuthResult, LoginResult, AccessScope, About, Licenses } from '../data-object';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Licenses, OAuthResult } from '../data-object';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RestLocatorService } from './rest-locator.service';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationService } from './configuration.service';
 import { FrameEventsService } from './frame-events.service';
-import { TemporaryStorageService } from './temporary-storage.service';
+import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { DialogButton } from '../../ui/dialog-button';
 import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
@@ -552,8 +552,8 @@ export class RestConnectorService implements OnDestroy {
         this.event.broadcastEvent(FrameEventsService.EVENT_REST_RESPONSE, result);
     }
 
-    public setRoute(route: ActivatedRoute, router: Router) {
-        return this.locator.setRoute(route, router);
+    public setRoute(route: ActivatedRoute) {
+        return this.locator.setRoute(route, this.router);
     }
 
     private checkHeaders(response: Response) {

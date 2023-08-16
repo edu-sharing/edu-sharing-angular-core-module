@@ -1,8 +1,8 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { UserEntry, UserService } from 'ngx-edu-sharing-api';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { first, map, takeUntil, tap } from 'rxjs/operators';
-import { VCard } from '../../ui/VCard';
+import { Observable, Subject } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { VCard } from 'ngx-edu-sharing-ui';
 import {
     GroupProfile,
     GroupSignupDetails,
@@ -12,9 +12,7 @@ import {
     IamGroups,
     IamUser,
     IamUsers,
-    NodeList,
     ProfileSettings,
-    User,
     UserCredentials,
     UserProfile,
     UserSimple,
