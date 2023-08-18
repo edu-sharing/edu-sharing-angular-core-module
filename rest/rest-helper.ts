@@ -200,11 +200,6 @@ export class RestHelper extends RestHelperBase {
             (node.type == 'ccm:map' || node.type == '{http://www.campuscontent.de/model/1.0}map')
         );
     }
-    public static getTitleFromProperties(properties: any): string {
-        return properties[RestConstants.LOM_PROP_TITLE]
-            ? properties[RestConstants.LOM_PROP_TITLE]
-            : properties[RestConstants.CM_NAME];
-    }
     public static getCreatorName(node: Node): string {
         let result: string = '';
         if (node.createdBy != null) {

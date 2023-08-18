@@ -552,8 +552,8 @@ export class RestConnectorService implements OnDestroy {
         this.event.broadcastEvent(FrameEventsService.EVENT_REST_RESPONSE, result);
     }
 
-    public setRoute(route: ActivatedRoute) {
-        return this.locator.setRoute(route, this.router);
+    public setRoute(route: ActivatedRoute, router: Router) {
+        return this.locator.setRoute(route, router);
     }
 
     private checkHeaders(response: Response) {

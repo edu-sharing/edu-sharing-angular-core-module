@@ -80,6 +80,7 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_TYPE_IO = 'ccm:io';
     public static CCM_TYPE_MAP = 'ccm:map';
     public static SYS_TYPE_CONTAINER = 'sys:container';
+    public static SYS_NODE_UUID = 'sys:node-uuid';
     public static CCM_TYPE_TOOLPERMISSION = 'ccm:toolpermission';
     public static CCM_TYPE_REMOTEOBJECT = 'ccm:remoteobject';
     public static CCM_TYPE_TOOL_INSTANCE = 'ccm:tool_instance';
@@ -93,7 +94,6 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_LIFECYCLE_VERSION_COMMENT = 'ccm:version_comment';
     public static LOM_PROP_TECHNICAL_FORMAT = 'cclom:format';
     public static LOM_PROP_DESCRIPTION = 'cclom:general_description';
-    public static LOM_PROP_TITLE = 'cclom:title';
     public static CCM_PROP_RESTRICTED_ACCESS = 'ccm:restricted_access';
     public static CCM_PROP_METADATACONTRIBUTER_CREATOR = 'ccm:metadatacontributer_creator';
     public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = 'ccm:metadatacontributer_creatorFN';
