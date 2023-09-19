@@ -297,10 +297,7 @@ export class RestConstants {
     // @Deprecated
     public static PERMISSION_CONSUMER = RestConstants.ACCESS_CONSUMER;
 
-    public static IMPLICIT_COLLECTION_PERMISSIONS = [
-        RestConstants.ACCESS_CC_PUBLISH,
-        RestConstants.ACCESS_CONSUMER,
-    ];
+    public static IMPLICIT_COLLECTION_PERMISSIONS = [RestConstants.ACCESS_CONSUMER];
 
     public static COMBINE_MODE_AND = 'AND';
     public static COMBINE_MODE_OR = 'OR';
