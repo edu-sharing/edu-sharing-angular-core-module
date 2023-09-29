@@ -10,7 +10,7 @@ import { RestConnectorService } from './rest-connector.service';
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
-    private isTouchSubject = new BehaviorSubject(false);
+    isTouchSubject = new BehaviorSubject(false);
     private metaKeyPressedSubject = new BehaviorSubject(false);
     private shiftKeyPressedSubject = new BehaviorSubject(false);
     private ctrlKeyPressedSubject = new BehaviorSubject(false);
@@ -69,8 +69,11 @@ export class UIService {
         this.ctrlKeyPressedSubject.next(event.ctrlKey);
     }
 
-    /** Returns true if the current sessions seems to be running on a mobile device
+    /**
+     * @Deprecated
+     * Prefer to subscribe to the isTouchSubject directly if viable
      *
+     * Returns true if the current sessions seems to be running on a mobile device
      */
     public isMobile() {
         return this.isTouchSubject.value;
