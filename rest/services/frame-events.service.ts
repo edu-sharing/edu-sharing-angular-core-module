@@ -29,11 +29,7 @@ export class FrameEventsService {
     public static EVENT_CORDOVA_CAMERA_RESPONSE = 'EVENT_CORDOVA_CAMERA_RESPONSE';
     public static EVENT_REST_RESPONSE = 'PARENT_REST_RESPONSE';
 
-    public static INVALIDATE_HEIGHT_EVENTS = [
-        FrameEventsService.EVENT_VIEW_SWITCHED,
-        FrameEventsService.EVENT_VIEW_OPENED,
-        FrameEventsService.EVENT_NODE_FOLDER_OPENED,
-    ];
+    public static INVALIDATE_HEIGHT_EVENTS = ['VIEW_SWITCHED', 'VIEW_OPENED', 'NODE_FOLDER_OPENED'];
 
     // incomming events
     public static EVENT_PARENT_SCROLL = 'PARENT_SCROLL';
