@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RestConnectorService } from './rest-connector.service';
+import { UploadProgress, RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
 import {
@@ -686,7 +686,7 @@ export class RestNodeService extends AbstractRestService {
         file: File,
         versionComment: string,
         mimetype = 'auto',
-        onProgress: Function = null,
+        onProgress: (progress: UploadProgress) => void = null,
         repository = RestConstants.HOME_REPOSITORY,
     ): Observable<XMLHttpRequest> => {
         if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);

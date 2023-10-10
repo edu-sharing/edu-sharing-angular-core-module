@@ -16,6 +16,21 @@ import { DialogButton } from '../../ui/dialog-button';
 import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
 import { v4 as uuidv4 } from 'uuid';
 
+export interface UploadProgress {
+    /** Current progress from 0 to 1. */
+    progress?: number;
+    /** Start time in milliseconds since midnight, January 1, 1970 UTC. */
+    start?: number;
+    /** Amount of work already done, use in perspective to `total`. */
+    loaded?: number;
+    /** Total work to be done, use in perspective to`loaded`. */
+    total?: number;
+    /** Number of seconds elapsed since working. */
+    elapsed?: number;
+    /** Estimated number of seconds until done. */
+    remaining?: number;
+}
+
 /**
  * The main connector. Manages the API Endpoint as well as common api parameters and url generation
  * Use this service to setup your REST Service Connection.
@@ -278,7 +293,7 @@ export class RestConnectorService implements OnDestroy {
         file: File,
         method = 'POST',
         fieldName = 'file',
-        onProgress: Function = null,
+        onProgress: (progress: UploadProgress) => void,
     ): Observable<XMLHttpRequest> {
         return Observable.create((observer: Observer<XMLHttpRequest>) => {
             try {
@@ -305,7 +320,7 @@ export class RestConnectorService implements OnDestroy {
                 if (file) {
                     formData.append(fieldName, file, file.name);
                 }
-                let progress: any = { start: new Date().getTime() };
+                let progress: UploadProgress = { start: new Date().getTime() };
                 xhr.upload.addEventListener('progress', (event: any) => {
                     if (event.lengthComputable) {
                         progress.progress = event.loaded / event.total;
