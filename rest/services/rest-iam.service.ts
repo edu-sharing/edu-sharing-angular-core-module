@@ -538,7 +538,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
     }
 }
 
-function mapVCard(userEntry: UserEntry): IamUser {
+export function mapVCard(userEntry: UserEntry): IamUser {
     return {
         ...userEntry,
         person: {
