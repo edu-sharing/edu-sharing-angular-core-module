@@ -293,7 +293,7 @@ export class RestConnectorService implements OnDestroy {
         file: File,
         method = 'POST',
         fieldName = 'file',
-        onProgress: (progress: UploadProgress) => void,
+        onProgress?: (progress: UploadProgress) => void,
     ): Observable<XMLHttpRequest> {
         return Observable.create((observer: Observer<XMLHttpRequest>) => {
             try {
