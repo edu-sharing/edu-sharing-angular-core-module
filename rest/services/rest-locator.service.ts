@@ -124,8 +124,6 @@ export class RestLocatorService {
         } else if (this.ticket != null) {
             headers.Authorization = 'EDU-TICKET ' + this.ticket;
             this.ticket = null;
-        } else if (this.bridge.isRunningCordova() && this.bridge.getCordova().oauth != null) {
-            headers.Authorization = 'Bearer ' + this.bridge.getCordova().oauth.access_token;
         } else {
             headers.Authorization = '';
         }
