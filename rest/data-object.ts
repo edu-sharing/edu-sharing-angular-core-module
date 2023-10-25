@@ -36,7 +36,11 @@ export interface RestoreResult {
     parent: string;
     path: string;
     name: string;
-    restoreStatus: string;
+    restoreStatus:
+        | 'FINE'
+        | 'DUPLICATENAME'
+        | 'FALLBACK_PARENT_NOT_EXISTS'
+        | 'FALLBACK_PARENT_NO_PERMISSION';
 }
 
 export class ArchiveRestore {
