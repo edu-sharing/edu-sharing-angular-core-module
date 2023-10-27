@@ -1,20 +1,20 @@
-import { first, switchMap, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
+import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
+import { BehaviorSubject, Observable, Observer, Subject, of } from 'rxjs';
+import { first, switchMap, tap } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
+import { BridgeService } from '../../../core-bridge-module/bridge.service';
+import { Closable } from '../../../features/dialogs/card-dialog/card-dialog-config';
+import { Licenses, OAuthResult } from '../data-object';
+import { RequestObject } from '../request-object';
 import { RestConstants } from '../rest-constants';
 import { RestHelper } from '../rest-helper';
-import { BehaviorSubject, Observable, Observer, of, Subject } from 'rxjs';
-import { RequestObject } from '../request-object';
-import { Licenses, OAuthResult } from '../data-object';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RestLocatorService } from './rest-locator.service';
-import { HttpClient } from '@angular/common/http';
 import { ConfigurationService } from './configuration.service';
 import { FrameEventsService } from './frame-events.service';
-import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
-import { BridgeService } from '../../../core-bridge-module/bridge.service';
-import { DialogButton } from '../../ui/dialog-button';
-import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
-import { v4 as uuidv4 } from 'uuid';
+import { RestLocatorService } from './rest-locator.service';
 
 export interface UploadProgress {
     /** Current progress from 0 to 1. */
@@ -454,29 +454,28 @@ export class RestConnectorService implements OnDestroy {
         });
     }
 
-    noConnectionDialog(): any {
-        let buttons = [];
-        buttons.push(
-            new DialogButton('LOGIN_APP.NOTINTERNET_RETRY', { color: 'primary' }, () => {
-                //RouterHelper.navigateToAbsoluteUrl(this.platformLocation,this.router,window.location.href,true);
+    private async noConnectionDialog(): Promise<void> {
+        const dialogRef = await this.bridge.openGenericDialog({
+            title: 'LOGIN_APP.NOTINTERNET',
+            message: 'LOGIN_APP.NOTINTERNET_TEXT',
+            closable: this.bridge.getCordova().isAndroid() ? Closable.Standard : Closable.Disabled,
+            buttons: [
+                { label: 'LOGIN_APP.NOTINTERNET_RETRY', config: { color: 'primary' } },
+                ...(this.bridge.isRunningCordova() && this.bridge.getCordova().isAndroid()
+                    ? ([
+                          { label: 'LOGIN_APP.NOTINTERNET_EXIT', config: { color: 'standard' } },
+                      ] as const)
+                    : []),
+            ],
+        });
+        dialogRef.afterClosed().subscribe((response) => {
+            if (response === 'LOGIN_APP.NOTINTERNET_RETRY') {
                 this.isLoggedIn().subscribe(() => {
                     window.location.reload();
                 });
-            }),
-        );
-        if (this.bridge.isRunningCordova() && this.bridge.getCordova().isAndroid()) {
-            buttons.push(
-                new DialogButton('LOGIN_APP.NOTINTERNET_EXIT', { color: 'standard' }, () => {
-                    this.bridge.getCordova().exitApp();
-                }),
-            );
-        }
-        this.bridge.showModalDialog({
-            title: 'LOGIN_APP.NOTINTERNET',
-            message: 'LOGIN_APP.NOTINTERNET_TEXT',
-            buttons,
-            isCancelable: this.bridge.getCordova().isAndroid(),
-            onCancel: () => this.bridge.getCordova().exitApp(),
+            } else {
+                this.bridge.getCordova().exitApp();
+            }
         });
     }
 
