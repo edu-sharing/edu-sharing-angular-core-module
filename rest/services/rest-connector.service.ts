@@ -374,9 +374,9 @@ export class RestConnectorService implements OnDestroy {
                         } else {
                             const IgnoredUrls = ['network/v1/repositories'];
                             if (IgnoredUrls.find((url) => requestUrl.endsWith(url))) {
-                                console.info(
+                                /*console.info(
                                     error.status + ' code is ignored for url ' + requestUrl,
-                                );
+                                );*/
                                 observer.error(error);
                                 observer.complete();
                                 return;
