@@ -8,6 +8,14 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
+const shownWarnings: string[] = [];
+function consoleWarn(s: string): void {
+    if (!shownWarnings.includes(s)) {
+        shownWarnings.push(s);
+        console.warn(s);
+    }
+}
+
 @Injectable({ providedIn: 'root' })
 /** @deprecated use `NetworkService` from `ngx-edu-sharing-api` instead. */
 export class RestNetworkService extends AbstractRestService {
@@ -31,7 +39,7 @@ export class RestNetworkService extends AbstractRestService {
     static allFromHomeRepo(nodes: Node[], repositories = this.currentRepositories) {
         if (!nodes) return true;
         if (repositories == null) {
-            console.warn('repository list is empty, home repo might not be detected');
+            consoleWarn('repository list is empty, home repo might not be detected');
         }
         for (let node of nodes) {
             if (!RestNetworkService.isHomeRepo(node.ref.repo, repositories)) return false;
