@@ -85,9 +85,12 @@ export class RestNetworkService extends AbstractRestService {
 
     constructor(connector: RestConnectorService, private networkApi: NetworkService) {
         super(connector);
-        this._repositories.subscribe(
-            (repositories) => (RestNetworkService.currentRepositories = repositories),
-        );
+    }
+
+    init() {
+        this._repositories.subscribe((repositories) => {
+            RestNetworkService.currentRepositories = repositories;
+        });
     }
 
     public getRepositories = () => {
