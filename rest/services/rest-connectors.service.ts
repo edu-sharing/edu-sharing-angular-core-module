@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Connector, ConnectorList, ConnectorService } from 'ngx-edu-sharing-api';
 import { Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { NodeHelperService } from '../../../core-ui-module/node-helper.service';
+import { NodeHelperService } from '../../../services/node-helper.service';
 import { CollectionReference, Filetype, Node } from '../data-object';
 import { NodesRightMode } from 'ngx-edu-sharing-ui';
 import { RestConstants } from '../rest-constants';
