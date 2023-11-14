@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
-import { DebugResultPipe } from './rest/pipes/debug-result.pipe';
 
 @NgModule({
     imports: [],
-    declarations: [DebugResultPipe],
+    declarations: [],
 })
 export class CoreModule {}
 
@@ -11,7 +10,6 @@ export { TemporaryStorageService, UIConstants } from 'ngx-edu-sharing-ui';
 export * from './rest/configuration-helper';
 export * from './rest/data-object';
 export { DeleteMode, EventType } from './rest/data-object';
-export { DebugResultPipe } from './rest/pipes/debug-result.pipe';
 export * from './rest/request-object';
 export * from './rest/rest-constants';
 export * from './rest/rest-helper';
