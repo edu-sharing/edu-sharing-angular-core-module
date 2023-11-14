@@ -14,12 +14,7 @@ Include this module by importing it:
   imports: [
     BrowserModule,
     CoreModule,
-    CoreBridgeModule,
     RouterModule.forRoot([]),
     HttpClientModule
   ],
 ```
-
-Some callbacks of this module make use of the "BridgeModule". Your application has to implement this module and the service.
-
-Take a look at the BridgeModule of the edu-sharing repository.
