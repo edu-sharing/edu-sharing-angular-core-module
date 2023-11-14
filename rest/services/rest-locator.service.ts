@@ -1,14 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Observer } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
+import { Observable, Observer } from 'rxjs';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
-import { DialogButton } from '../../ui/dialog-button';
-import { GlobalContainerComponent } from '../../../common/ui/global-container/global-container.component';
 
 const EDU_SHARING_API_URL = (window as any).__env?.EDU_SHARING_API_URL;
 
