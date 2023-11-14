@@ -18,7 +18,7 @@ import { ConfigurationService } from './services/configuration.service';
 import { UIConstants, RestHelper as RestHelperBase } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
 import { Observable } from 'rxjs';
-import { UniversalNode } from '../../common/definitions';
+import { UniversalNode } from './definitions';
 import { NodeTools } from 'ngx-edu-sharing-api';
 import NumberFormat = Intl.NumberFormat;
 import NumberFormatOptions = Intl.NumberFormatOptions;
