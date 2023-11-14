@@ -25,7 +25,7 @@ import { RestIamService } from './rest-iam.service';
 import { AbstractRestService } from './abstract-rest-service';
 import { BridgeService } from '../../../services/bridge.service';
 import { FrameEventsService } from './frame-events.service';
-import { MessageType } from '../../ui/message-type';
+import { MessageType } from '../../../util/message-type';
 import { Values } from '../../../features/mds/types/types';
 import * as rxjs from 'rxjs';
 

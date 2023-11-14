@@ -1,6 +1,6 @@
 import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
-import { MessageType } from '../../ui/message-type';
+import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
 import { UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../services/bridge.service';

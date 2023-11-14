@@ -41,4 +41,4 @@ export { RestUsageService } from './rest/services/rest-usage.service';
 export { RestUtilitiesService } from './rest/services/rest-utilities.service';
 export * from './rest/services/session-storage.service';
 export { UIService } from './rest/services/ui.service';
-export { DialogButton } from './ui/dialog-button';
+export { DialogButton } from '../util/dialog-button';
