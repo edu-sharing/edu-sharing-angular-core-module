@@ -3,7 +3,7 @@ import { Observable, Observer } from 'rxjs';
 import { MessageType } from '../../ui/message-type';
 import { RestConstants } from '../rest-constants';
 import { UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
-import { BridgeService } from '../../../core-bridge-module/bridge.service';
+import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
 

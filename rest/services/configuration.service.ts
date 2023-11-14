@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { RestLocatorService } from './rest-locator.service';
-import { BridgeService } from '../../../core-bridge-module/bridge.service';
+import { BridgeService } from '../../../services/bridge.service';
 import { MessageType } from '../../ui/message-type';
 import { ConfigService } from 'ngx-edu-sharing-api';
 import { first } from 'rxjs/operators';

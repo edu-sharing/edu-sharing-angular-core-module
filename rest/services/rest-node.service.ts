@@ -23,7 +23,7 @@ import {
 } from '../data-object';
 import { RestIamService } from './rest-iam.service';
 import { AbstractRestService } from './abstract-rest-service';
-import { BridgeService } from '../../../core-bridge-module/bridge.service';
+import { BridgeService } from '../../../services/bridge.service';
 import { FrameEventsService } from './frame-events.service';
 import { MessageType } from '../../ui/message-type';
 import { Values } from '../../../features/mds/types/types';

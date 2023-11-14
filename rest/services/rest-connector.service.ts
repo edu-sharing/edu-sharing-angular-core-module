@@ -6,7 +6,7 @@ import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
 import { BehaviorSubject, Observable, Observer, Subject, of } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
-import { BridgeService } from '../../../core-bridge-module/bridge.service';
+import { BridgeService } from '../../../services/bridge.service';
 import { Closable } from '../../../features/dialogs/card-dialog/card-dialog-config';
 import { Licenses, OAuthResult } from '../data-object';
 import { RequestObject } from '../request-object';
