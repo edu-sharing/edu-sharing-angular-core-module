@@ -254,16 +254,6 @@ export class RestHelper extends RestHelperBase {
         scope: string = null,
         next = window.location.href,
     ) {
-        if (config.getLocator().getBridge().isRunningCordova()) {
-            config
-                .getLocator()
-                .getBridge()
-                .getCordova()
-                .reinitStatus(config.getLocator().endpointUrl, true, next)
-                .subscribe(() => {});
-            return;
-        }
-
         config.get('loginUrl').subscribe((url: string) => {
             if (url && !scope && !config.instant('loginAllowLocal', false)) {
                 window.location.href = url;

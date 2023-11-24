@@ -179,22 +179,7 @@ export class RestConnectorService implements OnDestroy {
     }
 
     public isLoggedIn(forceRenew = true): Observable<LoginInfo> {
-        return this.authenticationApi.observeLoginInfo().pipe(
-            first(),
-            switchMap((loginInfo) => {
-                if (
-                    loginInfo.statusCode !== RestConstants.STATUS_CODE_OK &&
-                    this.bridge.isRunningCordova()
-                ) {
-                    return this.bridge
-                        .getCordova()
-                        .reinitStatus(this.locator.endpointUrl, false)
-                        .pipe(switchMap(() => this.authenticationApi.forceLoginInfoRefresh()));
-                } else {
-                    return of(loginInfo);
-                }
-            }),
-        );
+        return this.authenticationApi.observeLoginInfo().pipe(first());
     }
 
     public hasToolPermissionInstant(permission: string) {
@@ -376,35 +361,8 @@ export class RestConnectorService implements OnDestroy {
                             ['POST', 'PUT', 'DELETE'].indexOf(method) !== -1)
                     ) {
                         let callback = () => {
-                            if (
-                                this.bridge.isRunningCordova() &&
-                                options.headers['Authorization']
-                            ) {
-                                this.bridge
-                                    .getCordova()
-                                    .reinitStatus(this.locator.endpointUrl, true)
-                                    .subscribe(() => {
-                                        options.headers['Authorization'] =
-                                            'Bearer ' + this.bridge.getCordova().oauth.access_token;
-                                        this.request<T>(
-                                            method,
-                                            url,
-                                            body,
-                                            options,
-                                            appendUrl,
-                                        ).subscribe(
-                                            (data) => {
-                                                observer.next(data);
-                                                observer.complete();
-                                            },
-                                            (error: any) => {
-                                                this.goToLogin({ forceLoginInfoRefresh: true });
-                                                observer.error(error);
-                                                observer.complete();
-                                            },
-                                        );
-                                    });
-                                return;
+                            if (this.getBridgeService().getCordova().isRunningCordova()) {
+                                // do nothing here, this is now all handled in the CordovaService!
                             } else if (
                                 !(
                                     requestUrl.endsWith('iam/v1/people/-home-/-me-') ||
@@ -431,9 +389,9 @@ export class RestConnectorService implements OnDestroy {
                         } else {
                             const IgnoredUrls = ['network/v1/repositories'];
                             if (IgnoredUrls.find((url) => requestUrl.endsWith(url))) {
-                                console.info(
+                                /*console.info(
                                     error.status + ' code is ignored for url ' + requestUrl,
-                                );
+                                );*/
                                 observer.error(error);
                                 observer.complete();
                                 return;

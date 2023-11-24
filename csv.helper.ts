@@ -37,7 +37,7 @@ export class CsvHelper {
         headerInternal: string[] = null,
     ) {
         Helper.downloadContent(
-            filename + '.csv',
+            filename.replace(/[^a-z0-9 \-().]/gi, '_') + '.csv',
             CsvHelper.fromArray(header, data, headerInternal),
         );
     }
