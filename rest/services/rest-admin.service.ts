@@ -47,8 +47,11 @@ export class RestAdminService extends AbstractRestService {
         let query = this.connector.createUrl('admin/:version/plugins', null);
         return this.connector.get<PluginStatus[]>(query, this.connector.getRequestOptions());
     }
-    public cancelJob(job: string) {
-        let query = this.connector.createUrl('admin/:version/jobs/:job', null, [[':job', job]]);
+    public cancelJob(job: string, force: boolean) {
+        let query = this.connector.createUrl('admin/:version/jobs/:job?force=:force', null, [
+            [':job', job],
+            [':force', force + ''],
+        ]);
         return this.connector.delete<any>(query, this.connector.getRequestOptions());
     }
     public addToolpermission(name: string) {
