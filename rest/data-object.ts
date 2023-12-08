@@ -1079,6 +1079,7 @@ export enum DeleteMode {
 }
 export enum EventType {
     VIEW_MATERIAL_PLAY_MEDIA = 'VIEW_MATERIAL_PLAY_MEDIA',
+    OPEN_EXTERNAL_LINK = 'OPEN_EXTERNAL_LINK',
 }
 
 /**
