@@ -419,16 +419,19 @@ export class RestConstants {
         new ListItemSort('GROUP', RestConstants.AUTHORITY_DISPLAYNAME),
         new ListItemSort('GROUP', RestConstants.AUTHORITY_GROUPTYPE),
     ];
+    // TODO: these are mostly german; should we instead integrate this into the internationalization?
+    //       might be useful, especially since we allow selecting a locale for the non-4.0-licenses
+    //       or might not be important, as most
     public static LICENSE_URLS = {
         CC_BY_ABOUT: 'https://creativecommons.org/licenses/?lang=de',
-        CC_BY: 'https://creativecommons.org/licenses/by/#version/legalcode.de',
-        CC_BY_ND: 'https://creativecommons.org/licenses/by-nd/#version/legalcode.de',
-        CC_BY_SA: 'https://creativecommons.org/licenses/by-sa/#version/legalcode.de',
-        CC_BY_NC: 'https://creativecommons.org/licenses/by-nc/#version/legalcode.de',
-        CC_BY_NC_ND: 'https://creativecommons.org/licenses/by-nc-nd/#version/legalcode.de',
-        CC_BY_NC_SA: 'https://creativecommons.org/licenses/by-nc-sa/#version/legalcode.de',
-        CC_0: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode',
-        PDM: 'https://creativecommons.org/choose/mark/',
+        CC_BY: 'https://creativecommons.org/licenses/by/#version/de/legalcode.de',
+        CC_BY_ND: 'https://creativecommons.org/licenses/by-nd/#version/de/legalcode.de',
+        CC_BY_SA: 'https://creativecommons.org/licenses/by-sa/#version/de/legalcode.de',
+        CC_BY_NC: 'https://creativecommons.org/licenses/by-nc/#version/de/legalcode.de',
+        CC_BY_NC_ND: 'https://creativecommons.org/licenses/by-nc-nd/#version/de/legalcode.de',
+        CC_BY_NC_SA: 'https://creativecommons.org/licenses/by-nc-sa/#version/de/legalcode.de',
+        CC_0: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode.de',
+        PDM: 'https://creativecommons.org/public-domain/pdm/',
     };
 
     public static DEFAULT_QUERY_NAME = 'ngsearch';
