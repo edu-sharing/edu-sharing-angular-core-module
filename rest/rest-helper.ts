@@ -5,27 +5,26 @@
 import { RestConstants } from './rest-constants';
 import {
     Authority,
-    Collection,
     CollectionReference,
+    Group,
     LocalPermissions,
     Node,
+    NodePermissions,
     Permission,
     Permissions,
     User,
+    UserSimple,
 } from './data-object';
 import { Router } from '@angular/router';
 import { RestConnectorService } from './services/rest-connector.service';
-import { RestIamService } from './services/rest-iam.service';
 import { UIConstants } from '../ui/ui-constants';
 import { ConfigurationService } from './services/configuration.service';
-import { BridgeService } from '../../core-bridge-module/bridge.service';
-import NumberFormat = Intl.NumberFormat;
-import NumberFormatOptions = Intl.NumberFormatOptions;
 import { Helper } from './helper';
-import { MessageType } from '../ui/message-type';
 import { Observable } from 'rxjs';
 import { UniversalNode } from '../../common/definitions';
 import { NodeTools } from 'ngx-edu-sharing-api';
+import NumberFormat = Intl.NumberFormat;
+import NumberFormatOptions = Intl.NumberFormatOptions;
 
 export enum DurationFormat {
     /**
@@ -53,6 +52,20 @@ export class RestHelper {
         return permissions;
     }
 
+    static addCoordinatorPermission(nodePermissions: NodePermissions, authority: Authority) {
+        const permission = new Permission();
+        permission.authority = {
+            authorityName: authority.authorityName,
+            authorityType: authority.authorityType || RestConstants.AUTHORITY_TYPE_USER,
+        };
+        permission.permissions = [RestConstants.PERMISSION_COORDINATOR];
+        nodePermissions.permissions.localPermissions.permissions.push(permission);
+
+        return RestHelper.copyAndCleanPermissions(
+            nodePermissions.permissions.localPermissions.permissions,
+            nodePermissions.permissions.localPermissions.inherited,
+        );
+    }
     static copyAndCleanPermissions(permissionsIn: Permission[], inherited = true) {
         let permissions: LocalPermissions = new LocalPermissions();
         permissions.inherited = inherited;
