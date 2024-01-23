@@ -8,6 +8,7 @@ import {
     CollectionReference,
     LocalPermissions,
     Node,
+    NodePermissions,
     Permission,
     Permissions,
     User,
@@ -20,8 +21,6 @@ import { Helper } from './helper';
 import { Observable } from 'rxjs';
 import { UniversalNode } from './definitions';
 import { NodeTools } from 'ngx-edu-sharing-api';
-import NumberFormat = Intl.NumberFormat;
-import NumberFormatOptions = Intl.NumberFormatOptions;
 
 export class RestHelper extends RestHelperBase {
     public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
@@ -38,6 +37,20 @@ export class RestHelper extends RestHelperBase {
         return permissions;
     }
 
+    static addCoordinatorPermission(nodePermissions: NodePermissions, authority: Authority) {
+        const permission = new Permission();
+        permission.authority = {
+            authorityName: authority.authorityName,
+            authorityType: authority.authorityType || RestConstants.AUTHORITY_TYPE_USER,
+        };
+        permission.permissions = [RestConstants.PERMISSION_COORDINATOR];
+        nodePermissions.permissions.localPermissions.permissions.push(permission);
+
+        return RestHelper.copyAndCleanPermissions(
+            nodePermissions.permissions.localPermissions.permissions,
+            nodePermissions.permissions.localPermissions.inherited,
+        );
+    }
     static copyAndCleanPermissions(permissionsIn: Permission[], inherited = true) {
         let permissions: LocalPermissions = new LocalPermissions();
         permissions.inherited = inherited;
