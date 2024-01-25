@@ -410,6 +410,8 @@ export class RestConstants {
         new ListItemSort('NODE', RestConstants.CCM_PROP_IO_EDITORIAL_STATE),
         new ListItemSort('NODE', RestConstants.CCM_PROP_IO_TECHNICAL_STATE),
         new ListItemSort('NODE', RestConstants.CCM_PROP_IO_MEDIACENTER),
+        new ListItemSort('NODE_PROPOSAL', RestConstants.CM_PROP_C_CREATED),
+        new ListItemSort('NODE_PROPOSAL', RestConstants.CCM_PROP_COLLECTION_PROPOSAL_STATUS),
         // not supported by alfresco/solr atm
         //new SortItem("USER",RestConstants.AUTHORITY_NAME),
         new ListItemSort('USER', RestConstants.AUTHORITY_FIRSTNAME),
