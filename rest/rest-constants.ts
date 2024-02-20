@@ -142,6 +142,7 @@ export class RestConstants extends RestConstantsBase {
     public static CONTENT_VIRUS_SCAN_FAILED_EXCEPTION = 'DAOVirusScanFailedException';
     public static CONTENT_VIRUS_EXCEPTION = 'DAOVirusDetectedException';
     public static CONTENT_MIMETYPE_VERIFICATION_EXCEPTION = 'DAOMimetypeVerificationException';
+    public static CONTENT_NODE_FILE_SIZE_EXCEEDED_EXCEPTION = 'DAONodeFileSizeExceededException';
     public static CONTENT_FILE_EXTENSION_VERIFICATION_EXCEPTION =
         'DAOFileExtensionVerificationException';
     public static USER_PRIMARY_AFFILIATIONS = [
