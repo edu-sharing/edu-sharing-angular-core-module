@@ -47,7 +47,7 @@ export class RestConnectorsService extends AbstractRestService {
                 !this.nodeHelper.getNodesRight(
                     [node],
                     RestConstants.ACCESS_WRITE,
-                    NodesRightMode.Original,
+                    NodesRightMode.Effective,
                 )
             ) {
                 continue;
