@@ -182,6 +182,9 @@ export class RestConstants {
     public static CONTRIBUTOR_ROLES_METADATA = ['creator', 'validator', 'provider'];
     public static CONTENT_QUOTA_EXCEPTION = 'DAOQuotaException';
     public static CONTENT_VIRUS_EXCEPTION = 'DAOVirusDetectedException';
+    public static CONTENT_MIMETYPE_VERIFICATION_EXCEPTION="DAOMimetypeVerificationException";
+    public static CONTENT_FILE_EXTENSION_VERIFICATION_EXCEPTION="DAOFileExtensionVerificationException";
+
     public static USER_PRIMARY_AFFILIATIONS = [
         'teacher',
         'student',
@@ -430,6 +433,7 @@ export class RestConstants {
     public static HTTP_NOT_FOUND = 404;
     public static HOME_APPLICATION_XML = 'homeApplication.properties.xml';
     public static NODE_VERSION_CURRENT = '-1';
+    public static UNSUPPORTED_MEDIA_TYPE = 415;
     public static PRIMARY_SEARCH_CRITERIA = 'ngsearchword';
     public static DISPLAYNAME_SUFFIX = '_DISPLAYNAME';
     public static SAVED_SEARCH = '-saved_search-';
