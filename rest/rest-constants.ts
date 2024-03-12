@@ -180,6 +180,7 @@ export class RestConstants {
         'subject_matter_expert',
     ];
     public static CONTRIBUTOR_ROLES_METADATA = ['creator', 'validator', 'provider'];
+    public static CONTENT_VIRUS_SCAN_FAILED_EXCEPTION = 'DAOVirusScanFailedException';
     public static CONTENT_QUOTA_EXCEPTION = 'DAOQuotaException';
     public static CONTENT_VIRUS_EXCEPTION = 'DAOVirusDetectedException';
     public static CONTENT_MIMETYPE_VERIFICATION_EXCEPTION="DAOMimetypeVerificationException";
