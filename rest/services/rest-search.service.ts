@@ -42,10 +42,12 @@ export class RestSearchService extends AbstractRestService{
                 }
             }
             if(properties[property]?.length && properties[property].every((p) => p != null))
-                criterias.push({
-                    property:property,
-                    values:properties[property]
-                });
+                if(property === RestConstants.PRIMARY_SEARCH_CRITERIA && properties[property].every((p) => p.trim() !== '')) {
+                    criterias.push({
+                        property: property,
+                        values: properties[property]
+                    });
+                }
         }
         return criterias;
     }
