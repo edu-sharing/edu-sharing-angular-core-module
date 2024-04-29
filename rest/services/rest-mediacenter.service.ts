@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { RestConnectorService } from './rest-connector.service';
 import { AbstractRestService } from './abstract-rest-service';
-import { IamGroup, Mediacenter, MediacenterProfile, NodeList } from '../data-object';
+import { Group, IamGroup, Mediacenter, MediacenterProfile, NodeList } from '../data-object';
 
 /**
  * @Deprecated Use the new api service MediacenterService instead
@@ -74,7 +74,7 @@ export class RestMediacenterService extends AbstractRestService {
                 [':group', group],
             ],
         );
-        return this.connector.put<IamGroup[]>(query, null, this.connector.getRequestOptions());
+        return this.connector.put<Group[]>(query, null, this.connector.getRequestOptions());
     }
     public removeManagedGroup(
         mediacenter: string,
@@ -89,7 +89,7 @@ export class RestMediacenterService extends AbstractRestService {
                 [':group', group],
             ],
         );
-        return this.connector.delete<IamGroup[]>(query, this.connector.getRequestOptions());
+        return this.connector.delete<Group[]>(query, this.connector.getRequestOptions());
     }
     public getManagedGroups(mediacenter: string, repository = RestConstants.HOME_REPOSITORY) {
         const query = this.connector.createUrl(
@@ -97,7 +97,7 @@ export class RestMediacenterService extends AbstractRestService {
             repository,
             [[':mediacenter', mediacenter]],
         );
-        return this.connector.get<IamGroup[]>(query, this.connector.getRequestOptions());
+        return this.connector.get<Group[]>(query, this.connector.getRequestOptions());
     }
 
     /*public getLicensedNodes(mediacenter:string,repository = RestConstants.HOME_REPOSITORY){
