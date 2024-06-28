@@ -54,6 +54,7 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_ASPECT_TOOL_DEFINITION = 'ccm:tool_definition';
     public static CCM_ASPECT_TOOL_OBJECT = 'ccm:tool_object';
     public static CCM_ASPECT_TOOL_INSTANCE_LINK = 'ccm:tool_instance_link';
+    public static CCM_ASPECT_IO_REFERENCE = 'ccm:collection_io_reference';
     public static CCM_ASPECT_METADATA_PRESETTING = 'ccm:metadataPresetting';
     public static CCM_ASPECT_PUBLISHED = 'ccm:published';
     public static CCM_ASPECT_MAP_REF = 'ccm:map_ref';
@@ -103,11 +104,16 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR_FN = 'ccm:lifecyclecontributer_authorFN';
     public static CCM_PROP_LIFECYCLECONTRIBUTER_PUBLISHER_FN =
         'ccm:lifecyclecontributer_publisherFN';
+    public static CCM_PROP_EDITOR_TYPE = 'ccm:editorType';
+    public static CCM_PROP_CCRESSOURCETYPE = 'ccm:ccressourcetype';
+    public static CCM_PROP_CCRESSOURCESUBTYPE = 'ccm:ccresourcesubtype';
+    public static CCM_PROP_CCRESSOURCEVERSION = 'ccm:ccressourceversion';
     public static CCM_PROP_EDUCATIONALTYPICALAGERANGE = 'ccm:educationaltypicalagerange';
     public static CCM_PROP_COLLECTION_PINNED_STATUS = 'ccm:collection_pinned_status';
     public static CCM_PROP_COLLECTION_PINNED_ORDER = 'ccm:collection_pinned_order';
     public static CCM_PROP_IO_WWWURL = 'ccm:wwwurl';
     public static CCM_PROP_LINKTYPE = 'ccm:linktype';
+    public static CCM_PROP_IO_ORIGINAL = 'ccm:original';
     public static CCM_PROP_MAP_REF_TARGET = 'ccm:map_ref_target';
     public static CM_PROP_AUTHORITY_DISPLAYNAME = 'cm:authorityDisplayName';
     public static CCM_PROP_AUTHORITY_GROUPTYPE = 'ccm:groupType';
