@@ -118,6 +118,7 @@ export class RestConstants extends RestConstantsBase {
         'ccm:collectionsubcollectionordermode';
     public static CCM_PROP_COLLECTION_ORDER_MODE = 'ccm:collectionordermode';
     public static CCM_PROP_PUBLISHED_HANDLE_ID = 'ccm:published_handle_id';
+    public static CCM_PROP_PUBLISHED_DOI_ID = 'ccm:published_doi_id';
     public static CCM_PROP_PUBLISHED_DATE = 'ccm:published_date';
     public static CCM_PROP_PUBLISHED_ORIGINAL = 'ccm:published_original';
     public static CCM_PROP_TOOL_INSTANCE_KEY = 'ccm:tool_instance_key';
