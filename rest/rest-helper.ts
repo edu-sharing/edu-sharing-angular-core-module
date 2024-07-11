@@ -20,7 +20,7 @@ import { UIConstants, RestHelper as RestHelperBase } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
 import { Observable } from 'rxjs';
 import { UniversalNode } from './definitions';
-import {Ace, Acl, NodeTools } from 'ngx-edu-sharing-api';
+import { Ace, Acl, NodeTools } from 'ngx-edu-sharing-api';
 
 export class RestHelper extends RestHelperBase {
     public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
@@ -33,7 +33,7 @@ export class RestHelper extends RestHelperBase {
     static copyPermissions(permissionsIn: Ace[], inherited = true) {
         return {
             inherited: inherited,
-            permissions: Helper.deepCopy(permissionsIn)
+            permissions: Helper.deepCopy(permissionsIn),
         } as Acl;
     }
 
@@ -41,9 +41,10 @@ export class RestHelper extends RestHelperBase {
         const permission: Ace = {
             authority: {
                 authorityName: authority.authorityName,
-                authorityType: (authority.authorityType || RestConstants.AUTHORITY_TYPE_USER) as any,
+                authorityType: (authority.authorityType ||
+                    RestConstants.AUTHORITY_TYPE_USER) as any,
             },
-            permissions: [RestConstants.PERMISSION_COORDINATOR]
+            permissions: [RestConstants.PERMISSION_COORDINATOR],
         };
         nodePermissions.permissions.push(permission);
         return RestHelper.copyAndCleanPermissions(
