@@ -20,7 +20,7 @@ import { UIConstants, RestHelper as RestHelperBase } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
 import { Observable } from 'rxjs';
 import { UniversalNode } from './definitions';
-import { NodeTools } from 'ngx-edu-sharing-api';
+import {Ace, Acl, NodeTools } from 'ngx-edu-sharing-api';
 
 export class RestHelper extends RestHelperBase {
     public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
@@ -30,29 +30,32 @@ export class RestHelper extends RestHelperBase {
         }
         return data;
     }
-    static copyPermissions(permissionsIn: Permission[], inherited = true) {
-        let permissions: LocalPermissions = new LocalPermissions();
-        permissions.inherited = inherited;
-        permissions.permissions = Helper.deepCopy(permissionsIn);
-        return permissions;
+    static copyPermissions(permissionsIn: Ace[], inherited = true) {
+        return {
+            inherited: inherited,
+            permissions: Helper.deepCopy(permissionsIn)
+        } as Acl;
     }
 
-    static addCoordinatorPermission(nodePermissions: NodePermissions, authority: Authority) {
-        const permission = new Permission();
-        permission.authority = {
-            authorityName: authority.authorityName,
-            authorityType: authority.authorityType || RestConstants.AUTHORITY_TYPE_USER,
+    static addCoordinatorPermission(nodePermissions: Acl, authority: Authority) {
+        const permission: Ace = {
+            authority: {
+                authorityName: authority.authorityName,
+                authorityType: (authority.authorityType || RestConstants.AUTHORITY_TYPE_USER) as any,
+            },
+            permissions: [RestConstants.PERMISSION_COORDINATOR]
         };
-        permission.permissions = [RestConstants.PERMISSION_COORDINATOR];
-        nodePermissions.permissions.localPermissions.permissions.push(permission);
-
+        nodePermissions.permissions.push(permission);
         return RestHelper.copyAndCleanPermissions(
-            nodePermissions.permissions.localPermissions.permissions,
-            nodePermissions.permissions.localPermissions.inherited,
+            nodePermissions.permissions,
+            nodePermissions.inherited,
         );
     }
-    static copyAndCleanPermissions(permissionsIn: Permission[], inherited = true) {
-        let permissions: LocalPermissions = new LocalPermissions();
+    static copyAndCleanPermissions(permissionsIn: Ace[], inherited = true) {
+        let permissions: Acl = {
+            inherited,
+            permissions: [],
+        };
         permissions.inherited = inherited;
         permissions.permissions = [];
         for (let perm of permissionsIn) {
@@ -61,7 +64,7 @@ export class RestHelper extends RestHelperBase {
             permClean.authority.authorityName = perm.authority.authorityName;
             permClean.authority.authorityType = perm.authority.authorityType;
             permClean.permissions = perm.permissions;
-            permissions.permissions.push(permClean);
+            permissions.permissions.push(permClean as unknown as Ace);
         }
         return permissions;
     }
@@ -253,12 +256,13 @@ export class RestHelper extends RestHelperBase {
     }
 
     static getAllAuthoritiesPermission() {
-        let perm = new Permission();
-        perm.authority = {
-            authorityName: RestConstants.AUTHORITY_EVERYONE,
-            authorityType: RestConstants.AUTHORITY_TYPE_EVERYONE,
-        };
-        return perm;
+        return {
+            authority: {
+                authorityName: RestConstants.AUTHORITY_EVERYONE,
+                authorityType: RestConstants.AUTHORITY_TYPE_EVERYONE as 'EVERYONE',
+            },
+            permissions: [],
+        } as Ace;
     }
 
     public static goToLogin(
