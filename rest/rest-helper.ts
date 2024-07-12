@@ -60,12 +60,12 @@ export class RestHelper extends RestHelperBase {
         permissions.inherited = inherited;
         permissions.permissions = [];
         for (let perm of permissionsIn) {
-            let permClean = new Permission();
-            permClean.authority = new Authority();
-            permClean.authority.authorityName = perm.authority.authorityName;
-            permClean.authority.authorityType = perm.authority.authorityType;
-            permClean.permissions = perm.permissions;
-            permissions.permissions.push(permClean as unknown as Ace);
+            permissions.permissions.push({
+                from: perm.from,
+                to: perm.to,
+                authority: perm.authority,
+                permissions: perm.permissions
+            });
         }
         return permissions;
     }
