@@ -455,6 +455,23 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         );
     };
 
+    public setCredentials = (
+        password: { oldPassword?: string; newPassword: string },
+        user = RestConstants.ME,
+        repository = RestConstants.HOME_REPOSITORY,
+    ) => {
+        const query = this.connector.createUrl(
+            'iam/:version/people/:repository/:user/credential/',
+            repository,
+            [[':user', user]],
+        );
+        return this.connector.put(
+            query,
+            JSON.stringify(password),
+            this.connector.getRequestOptions(),
+        );
+    };
+
     public removeUserAvatar = (
         user = RestConstants.ME,
         repository = RestConstants.HOME_REPOSITORY,
