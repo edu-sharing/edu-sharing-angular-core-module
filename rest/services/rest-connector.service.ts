@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService, ConfigService, LoginInfo } from 'ngx-edu-sharing-api';
+import {
+    ApiRequestConfiguration,
+    AuthenticationService,
+    ConfigService,
+    LoginInfo,
+} from 'ngx-edu-sharing-api';
 import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
 import { BehaviorSubject, Observable, Observer, Subject, of } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
@@ -85,6 +90,7 @@ export class RestConnectorService implements OnDestroy {
         private storage: TemporaryStorageService,
         private event: FrameEventsService,
         private configApi: ConfigService,
+        private apiRequestConfiguration: ApiRequestConfiguration,
         private authenticationApi: AuthenticationService,
     ) {
         this.registerLoginInfo();
@@ -331,6 +337,10 @@ export class RestConnectorService implements OnDestroy {
             let requestUrl = (appendUrl ? this.endpointUrl : '') + url;
             const traceId = uuidv4();
             options.headers['X-Client-Trace-Id'] = traceId;
+            if (this.apiRequestConfiguration.getLanguage()) {
+                options.headers['X-Edu-Sharing-Language'] =
+                    this.apiRequestConfiguration.getLanguage();
+            }
             let call = null;
             if (method == 'GET') {
                 call = this.http.get<T>(requestUrl, options);
