@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { UserEntry, UserService } from 'ngx-edu-sharing-api';
+import { Group, User, UserEntry, UserService } from 'ngx-edu-sharing-api';
 import { Observable, Subject } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { VCard } from 'ngx-edu-sharing-ui';
@@ -130,7 +130,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         profile: GroupProfile,
         parent = '',
         repository = RestConstants.HOME_REPOSITORY,
-    ) => {
+    ): Observable<Group> => {
         const query = this.connector.createUrl(
             'iam/:version/groups/:repository/:group?parent=:parent',
             repository,
@@ -150,7 +150,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         group: string,
         profile: GroupProfile,
         repository = RestConstants.HOME_REPOSITORY,
-    ) => {
+    ): Observable<void> => {
         const query = this.connector.createUrl(
             'iam/:version/groups/:repository/:group/profile',
             repository,
@@ -502,7 +502,7 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         password: string,
         profile: UserProfile,
         repository = RestConstants.HOME_REPOSITORY,
-    ) => {
+    ): Observable<User> => {
         const query = this.connector.createUrl(
             'iam/:version/people/:repository/:user/?password=:password',
             repository,
