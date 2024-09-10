@@ -121,7 +121,7 @@ export class RestConnectorsService extends AbstractRestService {
     /** Filters connectors which are only available on desktop. */
     filterConnectors(connectors?: Connector[]): Connector[] | null {
         return (
-            connectors?.filter((connector) => !connector.onlyDesktop || !this.ui.isMobile()) ?? null
+            connectors?.filter((connector) => !connector.onlyDesktop || !this.ui.isMobile()) ?? []
         );
     }
 }
