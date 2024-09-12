@@ -95,19 +95,25 @@ export class RestConnectorsService extends AbstractRestService {
         connectorType: Connector,
         type: Filetype,
         node: Node,
+        parameters: { [key in string]: string[] } = {},
     ): Observable<string> {
         return new Observable<string>((observer: Observer<string>) => {
-            let send: any = {};
-            send['connectorId'] = connectorType.id;
-            send['nodeId'] = node.ref.id;
+            let send: { [key in string]: string[] } = parameters || {};
+            send['connectorId'] = [connectorType.id];
+            send['nodeId'] = [node.ref.id];
             let req = this.connector.getAbsoluteEndpointUrl() + '../eduservlet/connector?';
             let i = 0;
             for (let param in send) {
-                if (i > 0) {
-                    req += '&';
+                if (!send[param]) {
+                    continue;
                 }
-                req += param + '=' + encodeURIComponent(send[param]);
-                i++;
+                for (const value of send[param]) {
+                    if (i > 0) {
+                        req += '&';
+                    }
+                    req += param + '=' + encodeURIComponent(value);
+                    i++;
+                }
             }
             observer.next(req);
             observer.complete();
