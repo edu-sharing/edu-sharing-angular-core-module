@@ -64,7 +64,7 @@ export class RestHelper extends RestHelperBase {
                 from: perm.from,
                 to: perm.to,
                 authority: perm.authority,
-                permissions: perm.permissions
+                permissions: perm.permissions,
             });
         }
         return permissions;
