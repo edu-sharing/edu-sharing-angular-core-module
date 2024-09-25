@@ -80,27 +80,6 @@ export class MdsHelper {
     }
 
     /**
-     * Finds the appropriate widget with the id, but will not check any widget conditions
-     * @param cid
-     * @param template
-     * @param widgets
-     */
-    static getWidget(cid: string, template: string | undefined | null, widgets: MdsWidget[]) {
-        if (widgets == null) {
-            console.warn('Could not iterate widget ' + cid + ': no widgets data provided');
-            return null;
-        }
-        for (let w of widgets) {
-            if (w.id == cid) {
-                if (template === undefined || w.template === template) {
-                    return w;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Same as getWidget, but will also check the widget conditions
      * @param connector
      * @param properties

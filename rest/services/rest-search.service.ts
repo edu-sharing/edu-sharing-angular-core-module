@@ -14,36 +14,6 @@ import { MdsWidget, Values } from '../../../features/mds/types/types';
 
 @Injectable({ providedIn: 'root' })
 export class RestSearchService extends AbstractRestService {
-    static readonly MAX_QUERY_CONCAT_PARAMS = 400;
-    static convertCritierias(properties: Values, mdsWidgets: MdsWidget[], unfoldTrees = true) {
-        const criterias = [];
-        properties = Helper.deepCopy(properties);
-        for (const property in properties) {
-            let widget = MdsHelper.getWidget(property, undefined, mdsWidgets);
-            if (widget && widget.type == 'multivalueTree' && unfoldTrees) {
-                let attach = MdsService.unfoldTreeChilds(properties[property], widget);
-                if (attach) {
-                    if (attach.length > RestSearchService.MAX_QUERY_CONCAT_PARAMS) {
-                        console.info(
-                            'param ' +
-                                property +
-                                ' has too many unfold childs (' +
-                                attach.length +
-                                '), falling back to basic prefix-based search',
-                        );
-                    } else {
-                        properties[property] = properties[property].concat(attach);
-                    }
-                }
-            }
-            if (properties[property]?.length && properties[property].every((p) => p != null && !!p))
-                criterias.push({
-                    property: property,
-                    values: properties[property],
-                });
-        }
-        return criterias;
-    }
     constructor(connector: RestConnectorService) {
         super(connector);
     }
