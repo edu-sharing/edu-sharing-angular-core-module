@@ -63,7 +63,10 @@ export class RestHelper extends RestHelperBase {
             permissions.permissions.push({
                 from: perm.from,
                 to: perm.to,
-                authority: perm.authority,
+                authority: {
+                    authorityName: perm.authority.authorityName,
+                    authorityType: perm.authority.authorityType,
+                },
                 permissions: perm.permissions,
             });
         }
