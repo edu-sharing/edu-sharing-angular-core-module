@@ -125,9 +125,7 @@ export class ConfigurationService {
             const child = document.createElement('style');
             child.id = 'es-custom-css';
             child.innerHTML = this.data.customCSS;
-            child.nonce = document
-                .querySelector('es-router[ngCspNonce]')
-                ?.getAttribute('ngCspNonce');
+            child.nonce = document.querySelector('es-app[ngCspNonce]')?.getAttribute('ngCspNonce');
             document.head.appendChild(child);
         }
     }
