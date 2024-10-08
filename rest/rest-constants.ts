@@ -291,6 +291,9 @@ export class RestConstants extends RestConstantsBase {
     public static GROUP_TYPE_MEDIA_CENTER = 'MEDIA_CENTER';
     public static GROUP_TYPE_MEDIACENTER_PROXY = 'MEDIA_CENTER_PROXY';
     public static GROUP_TYPE_MEDIACENTER_ADMINISTRATORS = 'MEDIACENTER_ADMINISTRATORS';
+    public static GROUP_TYPE_CLASS = 'CLASS';
+    public static GROUP_TYPE_WORKING_GROUP = 'WORKING_GROUP';
+    public static GROUP_TYPE_LESSON = 'LESSON';
     public static GROUP_SCOPETYPE_GLOBAL = 'global';
     public static VALID_GROUP_TYPES = [
         null,
@@ -300,6 +303,9 @@ export class RestConstants extends RestConstantsBase {
         RestConstants.GROUP_TYPE_MEDIACENTER_ADMINISTRATORS,
         RestConstants.GROUP_TYPE_EDITORIAL,
         RestConstants.GROUP_TYPE_TEACHER,
+        RestConstants.GROUP_TYPE_CLASS,
+        RestConstants.GROUP_TYPE_WORKING_GROUP,
+        RestConstants.GROUP_TYPE_LESSON,
     ];
     public static VALID_PERSON_STATUS_TYPES = ['active', 'blocked', 'todelete'];
     public static VALID_GROUP_TYPES_ORG = [null, RestConstants.GROUP_TYPE_EDITORIAL];
