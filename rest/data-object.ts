@@ -4,20 +4,23 @@
  * Objects from this module should be replaced by their corresponding types of `ngx-edu-sharing-api`
  * once API calls are migrated.
  */
-
 import {
     LoginInfo,
     Node as NodeModel,
     NodeRef,
     Organization,
     Person,
+    GroupProfile,
+    MediacenterProfileExtension,
     UserProfile as ApiUserProfile,
     UserQuota,
     UserStatus,
 } from 'ngx-edu-sharing-api';
+
 import { ListItem, VCard } from 'ngx-edu-sharing-ui';
 
 export { Connector, ConnectorList } from 'ngx-edu-sharing-api';
+export { GroupProfile } from 'ngx-edu-sharing-api';
 export { Organization, NodeRef, UserQuota, Person };
 
 export type Collection = NodeModel['collection'];
@@ -59,15 +62,7 @@ export interface Mediacenter extends Group {
     profile: MediacenterProfile;
 }
 export interface MediacenterProfile extends GroupProfile {
-    mediacenter: MediacenterGroupExtension;
-}
-export interface MediacenterGroupExtension {
-    id: string;
-    location: string;
-    districtAbbreviation: string;
-    mainUrl: string;
-    catalogs: MediacenterCatalog[];
-    contentStatus: string;
+    mediacenter: MediacenterProfileExtension;
 }
 export interface MediacenterCatalog {
     name: string;
@@ -250,12 +245,6 @@ export interface RestError {
     stacktraceArray: string[];
 }
 
-export interface GroupProfile {
-    displayName: string;
-    groupEmail: string;
-    groupType: string;
-    scopeType: string;
-}
 export type GroupSignupResult = 'InvalidPassword' | 'AlreadyInList' | 'AlreadyMember' | 'Ok';
 
 export type ConfigFilePrefix =
