@@ -6,6 +6,8 @@ import { UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../core-bridge-module/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
+import { UserService, ConfigValues } from 'ngx-edu-sharing-api';
+import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UIService extends UIServiceBase {
@@ -15,6 +17,7 @@ export class UIService extends UIServiceBase {
         ngZone: NgZone,
         private bridge: BridgeService,
         private connector: RestConnectorService,
+        private userService: UserService,
         private http: HttpClient,
     ) {
         super(componentFactoryResolver, injector, ngZone);
@@ -57,7 +60,7 @@ export class UIService extends UIServiceBase {
             this.connector
                 .getConfigurationService()
                 .getAll()
-                .subscribe((config) => {
+                .subscribe(async (config: ConfigValues) => {
                     if (this.bridge.isRunningCordova()) {
                         this.connector.logout().subscribe(() => {
                             this.bridge.getCordova().restartCordova();
@@ -67,36 +70,38 @@ export class UIService extends UIServiceBase {
                     if (config.logout) {
                         const sessionData = this.connector.getCurrentLogin();
                         if (config.logout.ajax) {
-                            this.http.get(config.logout.url, { responseType: 'text' }).subscribe(
-                                () => {
-                                    if (config.logout.destroySession) {
-                                        this.connector.logout().subscribe((response) => {
-                                            observer.next();
-                                            observer.complete();
-                                        });
-                                        return;
-                                    }
-                                    observer.next();
-                                    observer.complete();
-                                },
-                                (error: any) => {
-                                    this.bridge.showTemporaryMessage(
-                                        MessageType.error,
-                                        null,
-                                        null,
-                                        null,
-                                        error,
-                                    );
-                                },
-                            );
+                            this.http
+                                .get(await this.getLogoutUrl(config), { responseType: 'text' })
+                                .subscribe(
+                                    () => {
+                                        if (config.logout.destroySession) {
+                                            this.connector.logout().subscribe((response) => {
+                                                observer.next();
+                                                observer.complete();
+                                            });
+                                            return;
+                                        }
+                                        observer.next();
+                                        observer.complete();
+                                    },
+                                    (error: any) => {
+                                        this.bridge.showTemporaryMessage(
+                                            MessageType.error,
+                                            null,
+                                            null,
+                                            null,
+                                            error,
+                                        );
+                                    },
+                                );
                         } else {
                             if (config.logout.destroySession) {
-                                this.connector.logout().subscribe((response) => {
+                                this.connector.logout().subscribe(async (response) => {
                                     if (sessionData.currentScope === RestConstants.SAFE_SCOPE) {
                                         observer.next();
                                         observer.complete();
                                     } else {
-                                        window.location.href = config.logout.url;
+                                        window.location.href = await this.getLogoutUrl(config);
                                     }
                                 });
                             } else {
@@ -104,7 +109,7 @@ export class UIService extends UIServiceBase {
                                     observer.next();
                                     observer.complete();
                                 } else {
-                                    window.location.href = config.logout.url;
+                                    window.location.href = await this.getLogoutUrl(config);
                                 }
                             }
                         }
@@ -247,5 +252,16 @@ export class UIService extends UIServiceBase {
         // move the focused element to 1/3 at the top of the container
         y += child.getBoundingClientRect().height / 2 - target.getBoundingClientRect().height / 3;
         return this.scrollSmoothElement(y, target, smoothness);
+    }
+
+    private async getLogoutUrl(config: ConfigValues) {
+        const user = await this.userService.observeCurrentUserInfo().pipe(take(1)).toPromise();
+        const sso = user?.user?.person?.properties?.[RestConstants.CM_PROP_ESSSOTYPE]?.[0];
+        if (sso === RestConstants.SSO_TYPE_Shibboleth) {
+            const url = config.logout.ssoUrl || config.logout.url;
+            console.info('Logging out via sso url', url);
+            return url;
+        }
+        return config.logout.localUrl || config.logout.url;
     }
 }
