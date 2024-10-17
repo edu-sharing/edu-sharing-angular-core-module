@@ -127,6 +127,7 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_PUBLISHED_DOI_ID = 'ccm:published_doi_id';
     public static CCM_PROP_PUBLISHED_DATE = 'ccm:published_date';
     public static CCM_PROP_PUBLISHED_ORIGINAL = 'ccm:published_original';
+    public static CCM_PROP_REVOKED_REASON = 'ccm:revoked_reason';
     public static CCM_PROP_TOOL_INSTANCE_KEY = 'ccm:tool_instance_key';
     public static CCM_PROP_TOOL_INSTANCE_SECRET = 'ccm:tool_instance_secret';
     public static CCM_PROP_FORKED_ORIGIN = 'ccm:forked_origin';
