@@ -27,6 +27,7 @@ import { RestConnectorService } from './rest-connector.service';
 @Injectable({ providedIn: 'root' })
 export class SessionStorageService {
     static readonly KEY_WORKSPACE_SORT = 'workspace_sort';
+    static readonly KEY_WORKSPACE_SAFE_DOWNLOAD_CONFIRM = 'workspace_safe_download_confirm';
 
     private readonly localStorage = new BrowserStorage(localStorage);
     private readonly sessionStorage = new BrowserStorage(sessionStorage);
