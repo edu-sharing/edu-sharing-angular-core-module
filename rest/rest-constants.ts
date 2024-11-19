@@ -97,6 +97,7 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_RESTRICTED_ACCESS = 'ccm:restricted_access';
     public static CCM_PROP_RESTRICTED_ACCESS_PERMISSIONS = 'ccm:restricted_access_permissions';
     public static CCM_PROP_METADATACONTRIBUTER_CREATOR = 'ccm:metadatacontributer_creator';
+    public static CCM_PROP_METADATACONTRIBUTER_PROVIDER = 'ccm:metadatacontributer_provider';
     public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = 'ccm:metadatacontributer_creatorFN';
     public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR = 'ccm:lifecyclecontributer_author';
     public static CCM_PROP_AUTHOR_FREETEXT = 'ccm:author_freetext';
