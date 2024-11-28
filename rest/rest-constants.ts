@@ -178,6 +178,10 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_LICENSE_PROFILE_URL = 'ccm:license_profile_url';
     public static CCM_PROP_LICENSE_CC_VERSION = 'ccm:commonlicense_cc_version';
     public static CCM_PROP_LICENSE_CC_LOCALE = 'ccm:commonlicense_cc_locale';
+    public static CCM_PROP_LICENSE_AI_ALLOW_USAGE = 'ccm:commonlicense_ai_allow_usage';
+    public static CCM_PROP_LICENSE_AI_GENERATED = 'ccm:commonlicense_ai_generated';
+    public static CCM_PROP_LICENSE_AI_MANUALLY_MODIFIED = 'ccm:commonlicense_ai_manually_modified';
+    public static CCM_PROP_LICENSE_AI_TOOL = 'ccm:commonlicense_ai_tool';
     public static LOM_PROP_RIGHTS_DESCRIPTION = 'cclom:rights_description';
     public static CCM_PROP_QUESTIONSALLOWED = 'ccm:questionsallowed';
     public static CM_PROP_METADATASET_EDU_METADATASET = 'cm:edu_metadataset';
