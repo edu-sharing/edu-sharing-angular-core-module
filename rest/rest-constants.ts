@@ -275,6 +275,7 @@ export class RestConstants extends RestConstantsBase {
         new ListItemSort('USER', RestConstants.AUTHORITY_STATUS),
         new ListItemSort('GROUP', RestConstants.AUTHORITY_DISPLAYNAME),
         new ListItemSort('GROUP', RestConstants.AUTHORITY_GROUPTYPE),
+        new ListItemSort('ORG', RestConstants.AUTHORITY_DISPLAYNAME),
     ];
 
     public static DEFAULT_QUERY_NAME = 'ngsearch';
