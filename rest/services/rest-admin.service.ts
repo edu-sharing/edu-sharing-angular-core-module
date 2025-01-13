@@ -271,11 +271,15 @@ export class RestAdminService extends AbstractRestService {
         );
         return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
     }
-    public searchElastic(dsl: string) {
+    public searchElastic(dsl: string, index: string) {
+        console.log('INDEX:' + index);
         let query = this.connector.createUrlNoEscape(
-            'admin/:version/elastic?dsl=:dsl&:request',
+            'admin/:version/elastic?dsl=:dsl&index=:index&:request',
             null,
-            [[':dsl', encodeURIComponent(dsl)]],
+            [
+                [':dsl', encodeURIComponent(dsl)],
+                [':index', encodeURIComponent(index)],
+            ],
         );
         return this.connector.get<NodeListElastic>(query, this.connector.getRequestOptions());
     }
