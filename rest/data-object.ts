@@ -58,9 +58,6 @@ export interface Comment {
     created: number;
     comment: string;
 }
-export interface Mediacenter extends Group {
-    profile: MediacenterProfile;
-}
 export interface MediacenterProfile extends GroupProfile {
     mediacenter: MediacenterProfileExtension;
 }
