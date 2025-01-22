@@ -2,9 +2,9 @@
  * Different helper functions, may be used globally
  */
 
-import { MdsInfo, Repository } from './data-object';
+import { MdsInfo } from './data-object';
 import { RestConstants } from './rest-constants';
-import { ConfigService, MdsService } from 'ngx-edu-sharing-api';
+import { ConfigService, MdsService, Repository } from 'ngx-edu-sharing-api';
 import { NodePersonNamePipe } from 'ngx-edu-sharing-ui';
 import { take } from 'rxjs/operators';
 

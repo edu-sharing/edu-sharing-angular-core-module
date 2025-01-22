@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { NetworkService } from 'ngx-edu-sharing-api';
+import { NetworkService, Repository } from 'ngx-edu-sharing-api';
 import { Observable } from 'rxjs';
 import { UniversalNode } from '../definitions';
-import { Node, Repository, Service } from '../../core.module';
+import { Node, Service } from '../../core.module';
 import { Helper } from '../helper';
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';

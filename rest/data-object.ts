@@ -96,20 +96,6 @@ export class WorkflowEntry {
     comment: string;
 }
 
-export class Repository {
-    id: string;
-    title: string;
-    icon: string;
-    logo: string;
-    isHomeRepo: boolean;
-    repositoryType: string;
-    renderingSupported: boolean;
-}
-
-export interface NetworkRepositories {
-    repositories: Repository[];
-}
-
 export interface Access {
     permission: string;
     hasRight: boolean;
