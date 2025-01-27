@@ -1,25 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Node } from 'ngx-edu-sharing-api';
 import { RestConnectorService } from './rest-connector.service';
-import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
-import {
-    NodeRef,
-    NodeWrapper,
-    Node,
-    NodePermissions,
-    LocalPermissions,
-    NodeVersions,
-    NodeVersion,
-    NodeList,
-    NodePermissionsHistory,
-    NodeLock,
-    NodeShare,
-    WorkflowEntry,
-    ParentList,
-} from '../data-object';
-import { RestIamService } from './rest-iam.service';
-import { RequestObject } from '../request-object';
+import { NodeList } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 
 @Injectable({ providedIn: 'root' })
@@ -50,7 +34,7 @@ export class RestToolService extends AbstractRestService {
                 [':versionComment', encodeURIComponent(versionComment)],
             ],
         );
-        return this.connector.post<NodeWrapper>(
+        return this.connector.post<{ node: Node }>(
             query,
             JSON.stringify(properties),
             this.connector.getRequestOptions(),
@@ -80,7 +64,7 @@ export class RestToolService extends AbstractRestService {
                 [':versionComment', encodeURIComponent(versionComment)],
             ],
         );
-        return this.connector.post<NodeWrapper>(
+        return this.connector.post<{ node: Node }>(
             query,
             JSON.stringify(properties),
             this.connector.getRequestOptions(),

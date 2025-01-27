@@ -7,7 +7,6 @@ import {
     Authority,
     CollectionReference,
     LocalPermissions,
-    Node,
     NodePermissions,
     Permission,
     Permissions,
@@ -16,6 +15,7 @@ import {
 import { Router } from '@angular/router';
 import { RestConnectorService } from './services/rest-connector.service';
 import { ConfigurationService } from './services/configuration.service';
+import { Node } from 'ngx-edu-sharing-api';
 import { UIConstants, RestHelper as RestHelperBase } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
 import { Observable } from 'rxjs';

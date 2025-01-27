@@ -5,13 +5,13 @@
  * once API calls are migrated.
  */
 import {
+    GroupProfile,
     LoginInfo,
+    MediacenterProfileExtension,
     Node as NodeModel,
     NodeRef,
     Organization,
     Person,
-    GroupProfile,
-    MediacenterProfileExtension,
     UserProfile as ApiUserProfile,
     UserQuota,
     UserStatus,
@@ -58,9 +58,16 @@ export interface Comment {
     created: number;
     comment: string;
 }
+
+/**
+ * @Deprecated
+ */
 export interface Mediacenter extends Group {
     profile: MediacenterProfile;
 }
+/**
+ * @Deprecated
+ */
 export interface MediacenterProfile extends GroupProfile {
     mediacenter: MediacenterProfileExtension;
 }
@@ -141,6 +148,9 @@ export type PreviewType = 'TYPE_EXTERNAL' | 'TYPE_USERDEFINED' | 'TYPE_GENERATED
 
 export type License = NodeModel['license'];
 
+/**
+ * @Deprecated
+ */
 export class Node implements NodeModel {
     access: string[];
     aspects?: string[];
@@ -702,6 +712,10 @@ export interface Facette {
     property: string;
     values: Value[];
 }
+
+/**
+ * @Deprecated
+ */
 export interface NodeWrapper {
     node: Node;
 }
@@ -711,13 +725,13 @@ export interface NodeTemplate extends NodeWrapper {
 export interface NodeRemoteWrapper extends NodeWrapper {
     remote: Node;
 }
-export interface AbstractList<T extends Node> {
+export interface AbstractList<T extends NodeModel> {
     nodes: T[];
     pagination: Pagination;
     facets?: Facette[];
 }
-export interface NodeList extends AbstractList<Node> {
-    nodes: Node[];
+export interface NodeList extends AbstractList<NodeModel> {
+    nodes: NodeModel[];
     pagination: Pagination;
     facets?: Facette[];
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Connector, ConnectorList, ConnectorService } from 'ngx-edu-sharing-api';
+import { Connector, ConnectorList, ConnectorService, Node } from 'ngx-edu-sharing-api';
 import { Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NodeHelperService } from '../../../services/node-helper.service';
-import { CollectionReference, Filetype, Node } from '../data-object';
+import { CollectionReference, Filetype } from '../data-object';
 import { NodesRightMode } from 'ngx-edu-sharing-ui';
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
@@ -69,19 +69,19 @@ export class RestConnectorsService extends AbstractRestService {
                     if (
                         (!filetype.ccressourceversion ||
                             filetype.ccressourceversion ==
-                                node.properties[RestConstants.CCM_PROP_CCRESSOURCEVERSION]) &&
+                                node.properties[RestConstants.CCM_PROP_CCRESSOURCEVERSION]?.[0]) &&
                         filetype.ccressourcetype ==
-                            node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE] &&
+                            node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] &&
                         (!filetype.ccresourcesubtype ||
                             filetype.ccresourcesubtype ==
-                                node.properties[RestConstants.CCM_PROP_CCRESSOURCESUBTYPE])
+                                node.properties[RestConstants.CCM_PROP_CCRESSOURCESUBTYPE]?.[0])
                     )
                         return filetype;
                     continue;
                 }
                 if (
                     filetype.editorType &&
-                    filetype.editorType != node.properties[RestConstants.CCM_PROP_EDITOR_TYPE]
+                    filetype.editorType != node.properties[RestConstants.CCM_PROP_EDITOR_TYPE]?.[0]
                 ) {
                     continue;
                 }

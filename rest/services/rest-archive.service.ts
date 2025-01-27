@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
-import { RequestObject } from '../request-object';
-import { ArchiveRestore, ArchiveSearch, Node } from '../data-object';
+import { Node } from 'ngx-edu-sharing-api';
+import { ArchiveRestore, ArchiveSearch } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 import { map } from 'rxjs/operators';
 
