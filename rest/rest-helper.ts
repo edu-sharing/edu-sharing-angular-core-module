@@ -3,24 +3,14 @@
  */
 
 import { RestConstants } from './rest-constants';
-import {
-    Authority,
-    CollectionReference,
-    LocalPermissions,
-    NodePermissions,
-    Permission,
-    Permissions,
-    User,
-} from './data-object';
+import { Authority, CollectionReference, Permissions, User } from './data-object';
 import { Router } from '@angular/router';
 import { RestConnectorService } from './services/rest-connector.service';
 import { ConfigurationService } from './services/configuration.service';
-import { Node } from 'ngx-edu-sharing-api';
-import { UIConstants, RestHelper as RestHelperBase } from 'ngx-edu-sharing-ui';
+import { Ace, Acl, Node, NodeTools } from 'ngx-edu-sharing-api';
+import { RestHelper as RestHelperBase, UIConstants } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
 import { Observable } from 'rxjs';
-import { UniversalNode } from './definitions';
-import { Ace, Acl, NodeTools } from 'ngx-edu-sharing-api';
 
 export class RestHelper extends RestHelperBase {
     public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
@@ -280,7 +270,7 @@ export class RestHelper extends RestHelperBase {
                 window.location.href = url;
                 return;
             }
-            router.navigate([UIConstants.ROUTER_PREFIX + 'login'], {
+            void router.navigate([UIConstants.ROUTER_PREFIX + 'login'], {
                 queryParams: {
                     scope: scope,
                     next: next,

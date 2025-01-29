@@ -41,7 +41,7 @@ export class SessionStorageService {
 
     constructor(private iam: RestIamService, private connector: RestConnectorService) {
         // Make sure `currentLogin` emits at least once.
-        this.connector.isLoggedIn(false).toPromise();
+        void this.connector.isLoggedIn(false).toPromise();
         // The currently logged in user. `null` for guest or no/invalid login.
         const currentUser = this.connector.currentLogin.pipe(
             filter((login) => login !== null),
@@ -145,7 +145,7 @@ export class SessionStorageService {
             return this.setToUserProfile(values);
         } else {
             for (const [key, value] of Object.entries(values)) {
-                this.set(key, value, store);
+                void this.set(key, value, store);
             }
         }
     }
