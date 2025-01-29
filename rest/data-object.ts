@@ -827,7 +827,7 @@ export interface RenderDetails {
     node: Node;
 }
 
-export interface Properties {}
+export type Properties = { [key: string]: string[] };
 
 export interface ModifiedBy {
     firstName: string;
