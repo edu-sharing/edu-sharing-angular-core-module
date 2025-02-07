@@ -95,10 +95,15 @@ export class RestAdminService extends AbstractRestService {
             }),
         );
     }
-    public importExcel(file: File, parent: string) {
-        let query = this.connector.createUrl('admin/:version/import/excel?parent=:parent', null, [
-            [':parent', parent],
-        ]);
+    public importExcel(file: File, parent: string, addToCollection: string) {
+        let query = this.connector.createUrl(
+            'admin/:version/import/excel?parent=:parent&addToCollection=:addToCollection',
+            null,
+            [
+                [':parent', parent],
+                [':addToCollection', addToCollection],
+            ],
+        );
         let options = this.connector.getRequestOptions();
 
         return this.connector.sendDataViaXHR(query, file, 'POST', 'excel').pipe(
