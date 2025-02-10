@@ -8,8 +8,8 @@ import {
     LoginInfo,
 } from 'ngx-edu-sharing-api';
 import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
-import { BehaviorSubject, Observable, Observer, Subject, of } from 'rxjs';
-import { first, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
+import { first, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { BridgeService } from '../../../services/bridge.service';
 import { Closable } from '../../../features/dialogs/card-dialog/card-dialog-config';
@@ -410,7 +410,7 @@ export class RestConnectorService implements OnDestroy {
                         }
                     }
                     if (this.bridge.isRunningCordova() && error.status == 0) {
-                        this.noConnectionDialog();
+                        void this.noConnectionDialog();
                         observer.complete();
                         return;
                     }
