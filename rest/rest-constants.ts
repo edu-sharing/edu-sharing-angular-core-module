@@ -285,7 +285,6 @@ export class RestConstants extends RestConstantsBase {
     public static HTTP_FORBIDDEN = 403;
     public static HTTP_NOT_FOUND = 404;
     public static HOME_APPLICATION_XML = 'homeApplication.properties.xml';
-    public static NODE_VERSION_CURRENT = '-1';
     public static PRIMARY_SEARCH_CRITERIA = 'ngsearchword';
     public static DISPLAYNAME_SUFFIX = '_DISPLAYNAME';
     public static SAVED_SEARCH = '-saved_search-';
