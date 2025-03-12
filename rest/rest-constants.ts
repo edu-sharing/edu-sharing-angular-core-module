@@ -184,7 +184,6 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_LICENSE_AI_TOOL = 'ccm:commonlicense_ai_tool';
     public static LOM_PROP_RIGHTS_DESCRIPTION = 'cclom:rights_description';
     public static CCM_PROP_QUESTIONSALLOWED = 'ccm:questionsallowed';
-    public static CM_PROP_METADATASET_EDU_METADATASET = 'cm:edu_metadataset';
     public static CM_PROP_METADATASET_EDU_FORCEMETADATASET = 'cm:edu_forcemetadataset';
     public static CCM_PROP_TOOL_CATEGORY = 'ccm:tool_category';
     public static CCM_PROP_TOOL_PRODUCER = 'ccm:tool_producer';
@@ -217,13 +216,6 @@ export class RestConstants extends RestConstantsBase {
     public static COMMENT_MIGRATION = 'BULK_MIGRATION';
     public static COMMENT_REMOTE_OBJECT_INIT = 'REMOTE_OBJECT_INIT';
     public static COMMENT_BLOCKED_IMPORT = 'IMPORT_BLOCKED';
-    public static ACCESS_ADD_CHILDREN = 'AddChildren';
-    public static ACCESS_WRITE = 'Write';
-    public static ACCESS_DELETE = 'Delete';
-    public static ACCESS_CHANGE_PERMISSIONS = 'ChangePermissions';
-    public static ACCESS_CONSUMER = 'Consumer';
-    public static ACCESS_CC_PUBLISH = 'CCPublish';
-    public static ACCESS_COMMENT = 'Comment';
     public static CONTENT_TYPE_FILES = 'FILES';
     public static CONTENT_TYPE_FILES_AND_FOLDERS = 'FILES_AND_FOLDERS';
     public static CONTENT_TYPE_ALL = 'ALL';
