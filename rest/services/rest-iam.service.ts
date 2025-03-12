@@ -22,6 +22,9 @@ import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 
+/**
+ * @Deprecated use the ngx-edu-sharing-api service
+ */
 @Injectable({ providedIn: 'root' })
 export class RestIamService extends AbstractRestService implements OnDestroy {
     private destroyed$ = new Subject<void>();

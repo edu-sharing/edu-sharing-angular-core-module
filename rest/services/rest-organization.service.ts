@@ -5,6 +5,9 @@ import { RestConnectorService } from './rest-connector.service';
 import { IamUsers, IamAuthorities, OrganizationOrganizations, Organization } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 
+/**
+ * @Deprecated use the ngx-edu-sharing-api service
+ */
 @Injectable({ providedIn: 'root' })
 export class RestOrganizationService extends AbstractRestService {
     constructor(connector: RestConnectorService) {

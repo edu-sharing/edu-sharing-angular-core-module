@@ -44,6 +44,7 @@ export class RestConstants extends RestConstantsBase {
     }
     public static PERMISSION_OWNER = 'Owner';
     public static PERMISSION_COLLABORATOR = 'Collaborator';
+    public static PERMISSION_DOWNLOAD_CONTENT = 'DownloadContent';
     public static PERMISSION_COORDINATOR = 'Coordinator';
     public static PERMISSION_ALL = 'All';
     public static PERMISSION_WRITE = 'Write';

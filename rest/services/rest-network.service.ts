@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Node, NetworkService } from 'ngx-edu-sharing-api';
+import { Node, NetworkService, Repository } from 'ngx-edu-sharing-api';
 import { Observable } from 'rxjs';
 import { UniversalNode } from '../definitions';
 import { Repository, Service } from '../../core.module';
