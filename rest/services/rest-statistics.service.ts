@@ -1,28 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
-import { RestConstants } from '../rest-constants';
-import {
-    ArchiveRestore,
-    ArchiveSearch,
-    Node,
-    NodeList,
-    IamGroup,
-    IamGroups,
-    IamAuthorities,
-    GroupProfile,
-    IamUsers,
-    IamUser,
-    UserProfile,
-    UserCredentials,
-    ServerUpdate,
-    CacheInfo,
-    NetworkRepositories,
-    Application,
-    NodeStatistics,
-    Statistics,
-} from '../data-object';
-import { Observer } from 'rxjs';
+import { NodeStatistics, Statistics } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 
 @Injectable({ providedIn: 'root' })

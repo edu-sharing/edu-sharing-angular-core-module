@@ -9,10 +9,14 @@ import {
     shareReplay,
     startWith,
     switchMap,
+    takeUntil,
+    tap,
 } from 'rxjs/operators';
 import { RestIamService } from '../../rest/services/rest-iam.service';
 import { RestConstants } from '../rest-constants';
 import { RestConnectorService } from './rest-connector.service';
+import { UIService } from './ui.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Service to store any data in session.
@@ -39,7 +43,11 @@ export class SessionStorageService {
     /** Refresh user preferences to reflect changes on the backend from outside this app. */
     private readonly triggerRefresh = new Subject<void>();
 
-    constructor(private iam: RestIamService, private connector: RestConnectorService) {
+    constructor(
+        private iam: RestIamService,
+        private connector: RestConnectorService,
+        private uiService: UIService,
+    ) {
         // Make sure `currentLogin` emits at least once.
         void this.connector.isLoggedIn(false).toPromise();
         // The currently logged in user. `null` for guest or no/invalid login.
@@ -51,7 +59,11 @@ export class SessionStorageService {
                     : null,
             ),
             distinctUntilChanged(),
+            tap(() => sessionStorage.clear()),
         );
+        this.uiService.logoutSubject.pipe(takeUntilDestroyed()).subscribe(() => {
+            sessionStorage.clear();
+        });
         // User preferences on the backend, updated when user changes and on `refresh`.
         const remoteUserPreferences = combineLatest([
             currentUser,

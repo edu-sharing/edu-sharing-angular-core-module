@@ -44,6 +44,7 @@ export class RestConstants extends RestConstantsBase {
     }
     public static PERMISSION_OWNER = 'Owner';
     public static PERMISSION_COLLABORATOR = 'Collaborator';
+    public static PERMISSION_DOWNLOAD_CONTENT = 'DownloadContent';
     public static PERMISSION_COORDINATOR = 'Coordinator';
     public static PERMISSION_ALL = 'All';
     public static PERMISSION_WRITE = 'Write';
@@ -285,7 +286,6 @@ export class RestConstants extends RestConstantsBase {
     public static HTTP_FORBIDDEN = 403;
     public static HTTP_NOT_FOUND = 404;
     public static HOME_APPLICATION_XML = 'homeApplication.properties.xml';
-    public static NODE_VERSION_CURRENT = '-1';
     public static PRIMARY_SEARCH_CRITERIA = 'ngsearchword';
     public static DISPLAYNAME_SUFFIX = '_DISPLAYNAME';
     public static SAVED_SEARCH = '-saved_search-';
