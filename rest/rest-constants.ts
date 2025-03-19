@@ -93,6 +93,7 @@ export class RestConstants extends RestConstantsBase {
     public static LOM_PROP_LIFECYCLE_VERSION = 'cclom:version';
     public static CCM_PROP_LIFECYCLE_VERSION_COMMENT = 'ccm:version_comment';
     public static LOM_PROP_TECHNICAL_FORMAT = 'cclom:format';
+    public static LOM_PROP_TECHNICAL_LOCATION = 'cclom:location';
     public static LOM_PROP_DESCRIPTION = 'cclom:general_description';
     public static CCM_PROP_RESTRICTED_ACCESS = 'ccm:restricted_access';
     public static CCM_PROP_METADATACONTRIBUTER_CREATOR = 'ccm:metadatacontributer_creator';
@@ -137,6 +138,7 @@ export class RestConstants extends RestConstantsBase {
     public static CM_PROP_AUTHORITY_AUTHORITYNAME = 'cm:authorityName';
     public static VIRTUAL_PROP_USAGECOUNT = 'virtual:usagecount';
     public static VIRTUAL_PROP_CHILDOBJECTCOUNT = 'virtual:childobjectcount';
+    public static VIRTUAL_PROP_LINK_DOWNLOAD_ALLOWED = 'virtual:linkDownloadAllowed';
     public static GROUP_PREFIX = 'GROUP_';
 
     public static CONTENT_QUOTA_EXCEPTION = 'DAOQuotaException';
