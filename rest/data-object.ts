@@ -130,12 +130,12 @@ export type License = NodeModel['license'];
 export class Node implements NodeModel {
     access: string[];
     aspects?: string[];
-    collection: Collection;
+    collection?: Collection;
     commentCount?: number;
     content?: NodeContent;
     createdAt: string;
     createdBy: Person;
-    downloadUrl: string;
+    downloadUrl?: string;
     iconURL?: string;
     isDirectory?: boolean;
     license?: License;
