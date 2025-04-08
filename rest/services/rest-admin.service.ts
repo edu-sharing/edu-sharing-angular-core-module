@@ -264,7 +264,6 @@ export class RestAdminService extends AbstractRestService {
         return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
     }
     public searchElastic(dsl: string, index: string) {
-        console.log('INDEX:' + index);
         let query = this.connector.createUrlNoEscape(
             'admin/:version/elastic?dsl=:dsl&index=:index&:request',
             null,
@@ -304,10 +303,8 @@ export class RestAdminService extends AbstractRestService {
         if (file) {
             return new Observable((observer) => {
                 const reader = new FileReader();
-                console.log(reader);
                 reader.addEventListener('load', (event) => {
                     const result = event.target.result;
-                    console.log(result);
                     params.FILE_DATA = result;
                     this.startJob(job, params).subscribe(
                         () => {
@@ -338,10 +335,8 @@ export class RestAdminService extends AbstractRestService {
         if (file) {
             return new Observable((observer) => {
                 const reader = new FileReader();
-                console.log(reader);
                 reader.addEventListener('load', (event) => {
                     const result = event.target.result;
-                    console.log(result);
                     params.FILE_DATA = result;
                     this.startJob(job, params).subscribe(
                         () => {

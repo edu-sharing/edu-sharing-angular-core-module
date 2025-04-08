@@ -22,7 +22,6 @@ export class RestTrackingService {
                 [':node', node],
             ],
         );
-        console.log(query);
         return this.connector.put(query, null, this.connector.getRequestOptions());
     }
 }
