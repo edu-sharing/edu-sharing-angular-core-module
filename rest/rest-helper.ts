@@ -193,10 +193,6 @@ export class RestHelper extends RestHelperBase {
         return false;
     }
 
-    public static hasAccessPermission(node: Node, permission: string): boolean {
-        return node.access && node.access.indexOf(permission) != -1;
-    }
-
     public static isContentItem(node: Node): boolean {
         return (
             node.type != null &&

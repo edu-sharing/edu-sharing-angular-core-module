@@ -15,6 +15,7 @@ import {
     UserProfile as ApiUserProfile,
     UserQuota,
     UserStatus,
+    Suggestion,
 } from 'ngx-edu-sharing-api';
 
 import { ListItem, VCard } from 'ngx-edu-sharing-ui';
@@ -647,15 +648,7 @@ export interface Mds {
 export interface MdsMetadataset {
     mds: Mds;
 }
-export interface MdsValue {
-    replacementString: string;
-    displayString: string;
-    key: string;
-}
-
-export interface MdsValueList {
-    values: MdsValue[];
-}
+export type MdsValue = Suggestion;
 
 export interface MdsValuesParameters {
     query: string;
