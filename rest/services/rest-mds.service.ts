@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MetadataSetInfo } from 'ngx-edu-sharing-api';
 import { Observable } from 'rxjs';
 import { MdsMetadataset, MdsMetadatasets, MdsValueList, MdsValues } from '../data-object';
 import { RestConstants } from '../rest-constants';
@@ -14,7 +15,11 @@ export class RestMdsService extends AbstractRestService {
         super(connector);
     }
 
-    getSets = (repository = RestConstants.HOME_REPOSITORY): Observable<any> => {
+    getSets = (
+        repository = RestConstants.HOME_REPOSITORY,
+    ): Observable<{
+        metadatasets: MetadataSetInfo[];
+    }> => {
         const query = this.connector.createUrl('mds/:version/metadatasets/:repository', repository);
         return this.connector.get<MdsMetadatasets>(query, this.connector.getRequestOptions());
     };
