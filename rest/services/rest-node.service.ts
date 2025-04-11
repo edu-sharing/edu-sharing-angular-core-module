@@ -792,7 +792,7 @@ export class RestNodeService extends AbstractRestService {
         createVersion = true,
         mimetype = 'auto',
         repository = RestConstants.HOME_REPOSITORY,
-    ): Observable<XMLHttpRequest> => {
+    ): Observable<{ node: Node }> => {
         if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);
         let query = this.connector.createUrl(
             'node/:version/nodes/:repository/:node/preview?mimetype=:mime',
@@ -805,7 +805,9 @@ export class RestNodeService extends AbstractRestService {
         );
         let options = this.connector.getRequestOptions();
 
-        return this.connector.sendDataViaXHR(query, file, 'POST', 'image');
+        return this.connector
+            .sendDataViaXHR(query, file, 'POST', 'image')
+            .pipe(map((r) => JSON.parse(r.response)));
         /*
      return this.http.post(query,"",this.connector.getRequestOptions())
      .map((response: Response) => response.json());
