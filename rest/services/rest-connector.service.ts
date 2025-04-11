@@ -385,9 +385,6 @@ export class RestConnectorService implements OnDestroy {
                         if (error.status === RestConstants.HTTP_FORBIDDEN) {
                             this.isLoggedIn(true).subscribe((result) => {
                                 if (result.statusCode !== RestConstants.STATUS_CODE_OK) {
-                                    console.log(
-                                        'forbidden request and user session is lost -> go to login',
-                                    );
                                     callback();
                                 } else {
                                     // login is okay, person has no access, throw error

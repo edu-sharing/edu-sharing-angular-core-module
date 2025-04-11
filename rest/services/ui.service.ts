@@ -1,5 +1,5 @@
 import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
 import { UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
@@ -11,6 +11,10 @@ import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UIService extends UIServiceBase {
+    /**
+     * triggered when a user logout is requested/processed
+     */
+    logoutSubject = new Subject<ConfigValues>();
     constructor(
         componentFactoryResolver: ComponentFactoryResolver,
         injector: Injector,
@@ -61,6 +65,7 @@ export class UIService extends UIServiceBase {
                 .getConfigurationService()
                 .getAll()
                 .subscribe(async (config: ConfigValues) => {
+                    this.logoutSubject.next(config);
                     if (this.bridge.isRunningCordova()) {
                         this.connector.logout().subscribe(() => {
                             this.bridge.getCordova().restartCordova();

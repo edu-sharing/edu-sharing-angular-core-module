@@ -44,6 +44,7 @@ export class RestConstants extends RestConstantsBase {
     }
     public static PERMISSION_OWNER = 'Owner';
     public static PERMISSION_COLLABORATOR = 'Collaborator';
+    public static PERMISSION_DOWNLOAD_CONTENT = 'DownloadContent';
     public static PERMISSION_COORDINATOR = 'Coordinator';
     public static PERMISSION_ALL = 'All';
     public static PERMISSION_WRITE = 'Write';
@@ -93,6 +94,7 @@ export class RestConstants extends RestConstantsBase {
     public static LOM_PROP_LIFECYCLE_VERSION = 'cclom:version';
     public static CCM_PROP_LIFECYCLE_VERSION_COMMENT = 'ccm:version_comment';
     public static LOM_PROP_TECHNICAL_FORMAT = 'cclom:format';
+    public static LOM_PROP_TECHNICAL_LOCATION = 'cclom:location';
     public static LOM_PROP_DESCRIPTION = 'cclom:general_description';
     public static CCM_PROP_RESTRICTED_ACCESS = 'ccm:restricted_access';
     public static CCM_PROP_RESTRICTED_ACCESS_PERMISSIONS = 'ccm:restricted_access_permissions';
@@ -140,6 +142,7 @@ export class RestConstants extends RestConstantsBase {
     public static CM_PROP_AUTHORITY_AUTHORITYNAME = 'cm:authorityName';
     public static VIRTUAL_PROP_USAGECOUNT = 'virtual:usagecount';
     public static VIRTUAL_PROP_CHILDOBJECTCOUNT = 'virtual:childobjectcount';
+    public static VIRTUAL_PROP_LINK_DOWNLOAD_ALLOWED = 'virtual:linkDownloadAllowed';
     public static GROUP_PREFIX = 'GROUP_';
 
     public static CONTENT_QUOTA_EXCEPTION = 'DAOQuotaException';
@@ -292,6 +295,9 @@ export class RestConstants extends RestConstantsBase {
     public static GROUP_TYPE_CLASS = 'CLASS';
     public static GROUP_TYPE_WORKING_GROUP = 'WORKING_GROUP';
     public static GROUP_TYPE_LESSON = 'LESSON';
+    public static GROUP_TYPE_SCHOOL_NATIONAL = 'SCHOOL_NATIONAL';
+    public static GROUP_TYPE_SCHOOL_MUNICIPAL = 'SCHOOL_MUNICIPAL';
+    public static GROUP_TYPE_SCHOOL_PRIVATE = 'SCHOOL_PRIVATE';
     public static GROUP_SCOPETYPE_GLOBAL = 'global';
     public static VALID_GROUP_TYPES = [
         null,
@@ -306,7 +312,13 @@ export class RestConstants extends RestConstantsBase {
         RestConstants.GROUP_TYPE_LESSON,
     ];
     public static VALID_PERSON_STATUS_TYPES = ['active', 'blocked', 'todelete'];
-    public static VALID_GROUP_TYPES_ORG = [null, RestConstants.GROUP_TYPE_EDITORIAL];
+    public static VALID_GROUP_TYPES_ORG = [
+        null,
+        RestConstants.GROUP_TYPE_EDITORIAL,
+        RestConstants.GROUP_TYPE_SCHOOL_NATIONAL,
+        RestConstants.GROUP_TYPE_SCHOOL_MUNICIPAL,
+        RestConstants.GROUP_TYPE_SCHOOL_PRIVATE,
+    ];
     public static VALID_SCOPE_TYPES = [null, RestConstants.GROUP_SCOPETYPE_GLOBAL];
     public static TYPE_ROCKETCHAT = 'ROCKETCHAT';
     static COLLECTION_ORDER_MODE_CUSTOM = 'custom';

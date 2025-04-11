@@ -26,8 +26,10 @@ import { AbstractRestService } from './abstract-rest-service';
 import { BridgeService } from '../../../services/bridge.service';
 import { FrameEventsService } from './frame-events.service';
 import { MessageType } from '../../../util/message-type';
+import { Node } from 'ngx-edu-sharing-api';
 import { Values } from '../../../features/mds/types/types';
 import * as rxjs from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class RestNodeService extends AbstractRestService {
@@ -688,7 +690,7 @@ export class RestNodeService extends AbstractRestService {
         mimetype = 'auto',
         onProgress: (progress: UploadProgress) => void = null,
         repository = RestConstants.HOME_REPOSITORY,
-    ): Observable<XMLHttpRequest> => {
+    ): Observable<{ node: Node }> => {
         if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);
         let query = this.connector.createUrl(
             'node/:version/nodes/:repository/:node/content?versionComment=:comment&mimetype=:mime',
@@ -701,7 +703,9 @@ export class RestNodeService extends AbstractRestService {
         );
         let options = this.connector.getRequestOptions();
 
-        return this.connector.sendDataViaXHR(query, file, 'POST', 'file', onProgress);
+        return this.connector
+            .sendDataViaXHR(query, file, 'POST', 'file', onProgress)
+            .pipe(map((r) => JSON.parse(r.response)));
         /*
     return this.http.post(query,"",this.connector.getRequestOptions())
       .map((response: Response) => response.json());
@@ -788,7 +792,7 @@ export class RestNodeService extends AbstractRestService {
         createVersion = true,
         mimetype = 'auto',
         repository = RestConstants.HOME_REPOSITORY,
-    ): Observable<XMLHttpRequest> => {
+    ): Observable<{ node: Node }> => {
         if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);
         let query = this.connector.createUrl(
             'node/:version/nodes/:repository/:node/preview?mimetype=:mime',
@@ -801,7 +805,9 @@ export class RestNodeService extends AbstractRestService {
         );
         let options = this.connector.getRequestOptions();
 
-        return this.connector.sendDataViaXHR(query, file, 'POST', 'image');
+        return this.connector
+            .sendDataViaXHR(query, file, 'POST', 'image')
+            .pipe(map((r) => JSON.parse(r.response)));
         /*
      return this.http.post(query,"",this.connector.getRequestOptions())
      .map((response: Response) => response.json());

@@ -82,10 +82,15 @@ export class RestAdminService extends AbstractRestService {
             }),
         );
     }
-    public importExcel(file: File, parent: string) {
-        let query = this.connector.createUrl('admin/:version/import/excel?parent=:parent', null, [
-            [':parent', parent],
-        ]);
+    public importExcel(file: File, parent: string, addToCollection: string) {
+        let query = this.connector.createUrl(
+            'admin/:version/import/excel?parent=:parent&addToCollection=:addToCollection',
+            null,
+            [
+                [':parent', parent],
+                [':addToCollection', addToCollection],
+            ],
+        );
         let options = this.connector.getRequestOptions();
 
         return this.connector.sendDataViaXHR(query, file, 'POST', 'excel').pipe(
@@ -258,11 +263,14 @@ export class RestAdminService extends AbstractRestService {
         );
         return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
     }
-    public searchElastic(dsl: string) {
+    public searchElastic(dsl: string, index: string) {
         let query = this.connector.createUrlNoEscape(
-            'admin/:version/elastic?dsl=:dsl&:request',
+            'admin/:version/elastic?dsl=:dsl&index=:index&:request',
             null,
-            [[':dsl', encodeURIComponent(dsl)]],
+            [
+                [':dsl', encodeURIComponent(dsl)],
+                [':index', encodeURIComponent(index)],
+            ],
         );
         return this.connector.get<NodeListElastic>(query, this.connector.getRequestOptions());
     }
@@ -295,10 +303,8 @@ export class RestAdminService extends AbstractRestService {
         if (file) {
             return new Observable((observer) => {
                 const reader = new FileReader();
-                console.log(reader);
                 reader.addEventListener('load', (event) => {
                     const result = event.target.result;
-                    console.log(result);
                     params.FILE_DATA = result;
                     this.startJob(job, params).subscribe(
                         () => {
@@ -329,10 +335,8 @@ export class RestAdminService extends AbstractRestService {
         if (file) {
             return new Observable((observer) => {
                 const reader = new FileReader();
-                console.log(reader);
                 reader.addEventListener('load', (event) => {
                     const result = event.target.result;
-                    console.log(result);
                     params.FILE_DATA = result;
                     this.startJob(job, params).subscribe(
                         () => {

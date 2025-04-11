@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { RestConnectorService } from './rest-connector.service';
 import { AbstractRestService } from './abstract-rest-service';
-import { Group, IamGroup, Mediacenter, MediacenterProfile, NodeList } from '../data-object';
+import { Group, IamGroup, MediacenterProfile, NodeList } from '../data-object';
+import { Mediacenter } from 'ngx-edu-sharing-api';
 
 /**
  * @Deprecated Use the new api service MediacenterService instead
