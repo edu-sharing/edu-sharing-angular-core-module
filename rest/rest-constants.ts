@@ -220,13 +220,7 @@ export class RestConstants extends RestConstantsBase {
     public static COMMENT_MIGRATION = 'BULK_MIGRATION';
     public static COMMENT_REMOTE_OBJECT_INIT = 'REMOTE_OBJECT_INIT';
     public static COMMENT_BLOCKED_IMPORT = 'IMPORT_BLOCKED';
-    public static ACCESS_ADD_CHILDREN = 'AddChildren';
-    public static ACCESS_WRITE = 'Write';
-    public static ACCESS_DELETE = 'Delete';
-    public static ACCESS_CHANGE_PERMISSIONS = 'ChangePermissions';
-    public static ACCESS_CONSUMER = 'Consumer';
-    public static ACCESS_CC_PUBLISH = 'CCPublish';
-    public static ACCESS_COMMENT = 'Comment';
+
     public static CONTENT_TYPE_FILES = 'FILES';
     public static CONTENT_TYPE_FILES_AND_FOLDERS = 'FILES_AND_FOLDERS';
     public static CONTENT_TYPE_ALL = 'ALL';
@@ -234,8 +228,6 @@ export class RestConstants extends RestConstantsBase {
 
     // @Deprecated
     public static PERMISSION_CONSUMER = RestConstants.ACCESS_CONSUMER;
-
-    public static IMPLICIT_COLLECTION_PERMISSIONS = [RestConstants.ACCESS_CONSUMER];
 
     public static COMBINE_MODE_AND = 'AND';
     public static COMBINE_MODE_OR = 'OR';
