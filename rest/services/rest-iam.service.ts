@@ -318,15 +318,17 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         status: string = '',
         request: any = null,
         repository = RestConstants.HOME_REPOSITORY,
+        resolveOrganisations = true,
     ) => {
         const query = this.connector.createUrlNoEscape(
-            'iam/:version/people/:repository?pattern=:pattern&global=:global&status=:status&:request',
+            'iam/:version/people/:repository?pattern=:pattern&global=:global&status=:status&:request&resolveOrganisations=:resolveOrganisations',
             repository,
             [
                 [':pattern', encodeURIComponent(pattern)],
                 [':global', global + ''],
                 [':status', status],
                 [':request', this.connector.createRequestString(request)],
+                [':resolveOrganisations', resolveOrganisations + ''],
             ],
         );
         return this.connector.get<IamUsers>(query, this.connector.getRequestOptions());
