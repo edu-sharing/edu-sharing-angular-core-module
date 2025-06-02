@@ -6,7 +6,7 @@ import { UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
-import { UserService, ConfigValues } from 'ngx-edu-sharing-api';
+import { ConfigValues, UserService } from 'ngx-edu-sharing-api';
 import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +18,7 @@ export class UIService extends UIServiceBase {
     constructor(
         componentFactoryResolver: ComponentFactoryResolver,
         injector: Injector,
-        private ngZone: NgZone,
+        ngZone: NgZone,
         private bridge: BridgeService,
         private connector: RestConnectorService,
         private userService: UserService,

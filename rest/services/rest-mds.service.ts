@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MdsMetadataset, MdsMetadatasets, MdsValueList, MdsValues } from '../data-object';
+import { MdsMetadataset, MdsMetadatasets, MdsValues } from '../data-object';
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
+import { MdsValueList } from 'ngx-edu-sharing-ui';
 
 /**
  * @Deprecated Use the new MdsService instead
