@@ -301,7 +301,7 @@ export class RestAdminService extends AbstractRestService {
             params = {};
         }
         if (file) {
-            return new Observable((observer) => {
+            return new Observable<void>((observer) => {
                 const reader = new FileReader();
                 reader.addEventListener('load', (event) => {
                     const result = event.target.result;
@@ -333,7 +333,7 @@ export class RestAdminService extends AbstractRestService {
             params = {};
         }
         if (file) {
-            return new Observable((observer) => {
+            return new Observable<void>((observer) => {
                 const reader = new FileReader();
                 reader.addEventListener('load', (event) => {
                     const result = event.target.result;
