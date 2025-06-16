@@ -10,6 +10,7 @@ export class RestConstants extends RestConstantsBase {
     static NODE_STORE_LIST = 'BASKET';
     public static DUPLICATE_NODE_RESPONSE = 409;
 
+    public static DEFAULT_DISPLAY_MODE: string = 'dynamic';
     public static DEFAULT_SORT_CRITERIA: string[] = ['cm:name'];
     public static DEFAULT_SORT_ASCENDING = true;
     public static API_VERSION = 'v1';
