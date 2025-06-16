@@ -848,15 +848,17 @@ export class RestNodeService extends AbstractRestService {
 
     public getNodeRenderSnippetUrl(
         node: string,
-        version: string = '-1',
+        version: string = RestConstants.NODE_VERSION_CURRENT,
         repository = RestConstants.HOME_REPOSITORY,
+        displayMode: string = RestConstants.DEFAULT_DISPLAY_MODE,
     ) {
         return this.connector.createUrl(
-            'rendering/:version/details/:repository/:node?version=:nodeVersion',
+            'rendering/:version/details/:repository/:node?version=:nodeVersion&displayMode=:displayMode',
             repository,
             [
                 [':node', node],
                 [':nodeVersion', version ? version : '-1'],
+                [':displayMode', displayMode],
             ],
         );
     }
@@ -865,9 +867,10 @@ export class RestNodeService extends AbstractRestService {
         version: string = '-1',
         parameters: any = null,
         repository = RestConstants.HOME_REPOSITORY,
+        displayMode: string = RestConstants.DEFAULT_DISPLAY_MODE,
     ) {
         return this.connector.post<RenderDetails>(
-            this.getNodeRenderSnippetUrl(node, version, repository),
+            this.getNodeRenderSnippetUrl(node, version, repository, displayMode),
             JSON.stringify(parameters),
             this.connector.getRequestOptions(),
         );
