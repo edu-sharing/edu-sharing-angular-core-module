@@ -7,7 +7,7 @@ import { Authority, CollectionReference, Permissions, User } from './data-object
 import { Router } from '@angular/router';
 import { RestConnectorService } from './services/rest-connector.service';
 import { ConfigurationService } from './services/configuration.service';
-import { Ace, Acl, Node, NodeTools } from 'ngx-edu-sharing-api';
+import { Ace, Acl, ConfigService, Node, NodeTools } from 'ngx-edu-sharing-api';
 import { RestHelper as RestHelperBase, UIConstants } from 'ngx-edu-sharing-ui';
 import { Helper } from './helper';
 import { Observable } from 'rxjs';
@@ -253,26 +253,6 @@ export class RestHelper extends RestHelperBase {
             },
             permissions: [],
         } as Ace;
-    }
-
-    public static goToLogin(
-        router: Router,
-        config: ConfigurationService,
-        scope: string = null,
-        next = window.location.href,
-    ) {
-        config.get('loginUrl').subscribe((url: string) => {
-            if (url && !scope && !config.instant('loginAllowLocal', false)) {
-                window.location.href = url;
-                return;
-            }
-            void router.navigate([UIConstants.ROUTER_PREFIX + 'login'], {
-                queryParams: {
-                    scope: scope,
-                    next: next,
-                },
-            });
-        });
     }
 
     static guessMediatypeForFile(file: File) {

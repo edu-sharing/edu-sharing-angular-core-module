@@ -7,7 +7,7 @@ import {
     ConfigService,
     LoginInfo,
 } from 'ngx-edu-sharing-api';
-import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
+import { TemporaryStorageService, UIService } from 'ngx-edu-sharing-ui';
 import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
@@ -85,6 +85,7 @@ export class RestConnectorService implements OnDestroy {
         private http: HttpClient,
         private ngZone: NgZone,
         private config: ConfigurationService,
+        private ui: UIService,
         private locator: RestLocatorService,
         private bridge: BridgeService,
         private storage: TemporaryStorageService,
@@ -560,7 +561,7 @@ export class RestConnectorService implements OnDestroy {
             this.authenticationApi.forceLoginInfoRefresh();
         }
         if (this.currentPageIsLogin()) return;
-        RestHelper.goToLogin(this.router, this.config, scope);
+        this.ui.goToLogin(scope);
         //this.router.navigate([UIConstants.ROUTER_PREFIX+"login"],{queryParams:{scope:scope?scope:"",next:window.location}});
     }
 

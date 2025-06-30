@@ -7,6 +7,7 @@ import { ConfigService } from 'ngx-edu-sharing-api';
 import { first } from 'rxjs/operators';
 
 /**
+ * @Deprecated use the new ConfigService from the api module
  Service to get configuration data while running (e.g. loaded extension)
  */
 @Injectable({ providedIn: 'root' })
