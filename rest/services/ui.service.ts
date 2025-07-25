@@ -2,12 +2,21 @@ import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular
 import { Observable, Observer, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
-import { UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
+import { OPEN_URL_MODE, UIConstants, UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
-import { UserService, ConfigValues } from 'ngx-edu-sharing-api';
+import { ConfigValues, Connector, UserService } from 'ngx-edu-sharing-api';
 import { take } from 'rxjs/operators';
+import { RestConnectorsService } from './rest-connectors.service';
+import { RestIamService } from './rest-iam.service';
+import { FrameEventsService } from './frame-events.service';
+import { Toast } from '../../../services/toast';
+import { Filetype, Node, NodeLock } from '../data-object';
+import { OK } from '../../../features/dialogs/dialog-modules/generic-dialog/generic-dialog-data';
+import { UIHelper } from 'src/app/core-ui-module/ui-helper';
+import { PlatformLocation } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class UIService extends UIServiceBase {
@@ -19,6 +28,11 @@ export class UIService extends UIServiceBase {
         componentFactoryResolver: ComponentFactoryResolver,
         injector: Injector,
         ngZone: NgZone,
+        private iamService: RestIamService,
+        private events: FrameEventsService,
+        private toast: Toast,
+        private platformLocation: PlatformLocation,
+        private router: Router,
         private bridge: BridgeService,
         private connector: RestConnectorService,
         private userService: UserService,
@@ -268,5 +282,92 @@ export class UIService extends UIServiceBase {
             return url;
         }
         return config.logout.localUrl || config.logout.url;
+    }
+
+    openConnector(
+        node: Node,
+        type: Filetype = null,
+        win: Window = null,
+        connectorType: Connector = null,
+        newWindow = true,
+        parameters: { [key in string]: string[] } = {},
+    ) {
+        const connectors = this.injector.get(RestConnectorsService);
+        if (connectorType == null) {
+            connectorType = connectors.connectorSupportsEdit(node);
+        }
+        let isCordova = this.connector.getBridgeService().isRunningCordova();
+        if (win == null && newWindow) {
+            win = UIHelper.getNewWindow(connectors.getRestConnector());
+        }
+        if (win) {
+            win.location.replace(this.getLoadingSpinnerUrl());
+        }
+
+        connectors.nodeApi.isLocked(node.ref.id).subscribe(
+            (result: NodeLock) => {
+                if (result.isLocked) {
+                    this.toast.error(null, 'TOAST.NODE_LOCKED');
+                    if (win) win.close();
+                    return;
+                }
+                this.iamService.getCurrentUserAsync().then(
+                    (user) => {
+                        if (
+                            user.person.quota.enabled &&
+                            user.person.quota.sizeCurrent >= user.person.quota.sizeQuota
+                        ) {
+                            void this.toast.openGenericDialog({
+                                title: 'CONNECTOR_QUOTA_REACHED_TITLE',
+                                message: 'CONNECTOR_QUOTA_REACHED_MESSAGE',
+                                buttons: OK,
+                            });
+                            if (win) win.close();
+                            return;
+                        }
+                        connectors.generateToolUrl(connectorType, type, node, parameters).subscribe(
+                            (url: string) => {
+                                if (win) {
+                                    win.location.href = url;
+                                } else if (isCordova) {
+                                    UIHelper.openUrl(
+                                        url,
+                                        connectors.getRestConnector().getBridgeService(),
+                                        OPEN_URL_MODE.Blank,
+                                    );
+                                } else {
+                                    window.location.replace(url);
+                                }
+                                if (win) {
+                                    this.events.addWindow(win);
+                                }
+                            },
+                            (error) => {
+                                this.toast.error(null, error);
+                                if (win) win.close();
+                            },
+                        );
+                    },
+                    (error) => {
+                        this.toast.error(null, error);
+                        if (win) win.close();
+                    },
+                );
+            },
+            (error: any) => {
+                this.toast.error(error);
+                if (win) win.close();
+            },
+        );
+    }
+
+    getLoadingSpinnerUrl() {
+        return (
+            this.platformLocation.getBaseHrefFromDOM() +
+            this.router
+                .createUrlTree([UIConstants.ROUTER_PREFIX + 'loading'])
+                .toString()
+                .substring(1)
+        );
     }
 }
