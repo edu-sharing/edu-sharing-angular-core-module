@@ -103,6 +103,7 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_METADATACONTRIBUTER_PROVIDER = 'ccm:metadatacontributer_provider';
     public static CCM_PROP_METADATACONTRIBUTER_CREATOR_FN = 'ccm:metadatacontributer_creatorFN';
     public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR = 'ccm:lifecyclecontributer_author';
+    public static CCM_PROP_LIFECYCLECONTRIBUTER_REDAKTION = 'ccm:lifecyclecontributer_redaktion';
     public static CCM_PROP_AUTHOR_FREETEXT = 'ccm:author_freetext';
     public static CCM_PROP_PUBLISHED_MODE = 'ccm:published_mode';
     public static CCM_PROP_LIFECYCLECONTRIBUTER_AUTHOR_FN = 'ccm:lifecyclecontributer_authorFN';
