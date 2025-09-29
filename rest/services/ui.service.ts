@@ -1,22 +1,33 @@
 import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular/core';
-import { Observable, Observer, Subject } from 'rxjs';
+import { concatMap, from, Observable, Observer, of, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
-import { OPEN_URL_MODE, UIConstants, UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
+import {
+    LocalEventsService,
+    OPEN_URL_MODE,
+    UIConstants,
+    UIService as UIServiceBase,
+} from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
 import { ConfigValues, Connector, UserService } from 'ngx-edu-sharing-api';
-import { take } from 'rxjs/operators';
+import { catchError, take, toArray } from 'rxjs/operators';
 import { RestConnectorsService } from './rest-connectors.service';
 import { RestIamService } from './rest-iam.service';
 import { FrameEventsService } from './frame-events.service';
 import { Toast } from '../../../services/toast';
-import { Filetype, Node, NodeLock } from '../data-object';
-import { OK } from '../../../features/dialogs/dialog-modules/generic-dialog/generic-dialog-data';
+import { CollectionReference, Filetype, Node, NodeLock } from '../data-object';
+import {
+    OK,
+    YES_OR_NO,
+} from '../../../features/dialogs/dialog-modules/generic-dialog/generic-dialog-data';
 import { UIHelper } from 'src/app/core-ui-module/ui-helper';
 import { PlatformLocation } from '@angular/common';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
+import { RestHelper } from '../rest-helper';
+import { RestCollectionService } from './rest-collection.service';
+import { NodeHelperService } from '../../../services/node-helper.service';
 
 @Injectable({ providedIn: 'root' })
 export class UIService extends UIServiceBase {
@@ -35,8 +46,10 @@ export class UIService extends UIServiceBase {
         private router: Router,
         private bridge: BridgeService,
         private connector: RestConnectorService,
+        private collectionService: RestCollectionService,
         private userService: UserService,
         private http: HttpClient,
+        private localEventsService: LocalEventsService,
     ) {
         super(componentFactoryResolver, injector, ngZone);
     }
@@ -263,5 +276,157 @@ export class UIService extends UIServiceBase {
                 .toString()
                 .substring(1)
         );
+    }
+
+    /**
+     * handles adding nodes to a collection
+     * @param nodeHelper
+     * @param collectionService
+     * @param router
+     * @param bridge
+     * @param collection
+     * @param nodes
+     * @param callback
+     * @param allowDuplicate false (default) will trigger a confirmation if duplicate was detected, true will always create a duplicate and 'ignore' works as false but will not trigger a confirmation but silently abort
+     */
+
+    addToCollection(
+        collection: Node,
+        nodes: Node[],
+        asProposal = false,
+        callback: (nodes: CollectionReference[]) => void = null,
+        allowDuplicate: boolean | 'ignore' = false,
+    ) {
+        from(
+            nodes.map((node) =>
+                this.collectionService
+                    .addNodeToCollection(
+                        collection.ref.id,
+                        node.ref.id,
+                        node.ref.repo,
+                        allowDuplicate === true,
+                        asProposal,
+                    )
+                    .pipe(catchError((error: any) => of({ error, node }))),
+            ),
+        )
+            .pipe(
+                concatMap((req) => req),
+                toArray(),
+            )
+            .subscribe(async (results) => {
+                const success: { node: Node }[] = results.filter((r) => !(r as any).error);
+                const failed: { node: Node; error: any }[] = results.filter(
+                    (r) => !!(r as any).error,
+                ) as { node: Node; error: any }[];
+                if (success.length > 0) {
+                    this.showAddedToCollectionInfo(collection, success.length, asProposal);
+                    this.localEventsService.nodesCreated.emit(success.map((s) => s.node));
+                    this.localEventsService.nodesChanged.emit([collection]);
+                }
+                if (failed.length > 0) {
+                    const duplicated = failed.filter(
+                        ({ error }) => error.status === RestConstants.DUPLICATE_NODE_RESPONSE,
+                    );
+                    if (duplicated.length > 0 && !asProposal) {
+                        if (allowDuplicate !== 'ignore') {
+                            const dialogRef = await this.bridge.openGenericDialog({
+                                title: 'COLLECTIONS.ADD_TO.DUPLICATE_TITLE',
+                                message: 'COLLECTIONS.ADD_TO.DUPLICATE_MESSAGE',
+                                messageParameters: { count: duplicated.length.toString() },
+                                buttons: YES_OR_NO,
+                            });
+                            dialogRef.afterClosed().subscribe((response) => {
+                                if (response === 'YES') {
+                                    this.addToCollection(
+                                        collection,
+                                        duplicated.map((d) => d.node),
+                                        false,
+                                        (nodes) =>
+                                            // Invoke `callback` with both, the nodes successfully added
+                                            // before and the duplicate nodes added now.
+                                            callback?.([
+                                                ...success.map(
+                                                    (n) => n.node as CollectionReference,
+                                                ),
+                                                ...nodes,
+                                            ]),
+                                        true,
+                                    );
+                                } else if (response === 'NO') {
+                                    // Invoke `callback` only with the nodes successfully added
+                                    // before.
+                                    callback?.(success.map((n) => n.node as CollectionReference));
+                                } else {
+                                    // Dialog was canceled by the user.
+                                    //
+                                    // TODO: should we invoke `callback` here?
+                                    this.bridge.closeModalDialog();
+                                }
+                            });
+                            return;
+                        }
+                    } else {
+                        this.injector
+                            .get(NodeHelperService)
+                            .handleNodeError(RestHelper.getTitle(failed[0].node), failed[0].error);
+                    }
+                }
+
+                if (callback) {
+                    callback(success.map((n) => n.node as CollectionReference));
+                }
+            });
+    }
+    showAddedToCollectionInfo(node: Node | any, count: number, asProposal = false) {
+        let scope = node.collection ? node.collection.scope : node.scope;
+        let type = node.collection ? node.collection.type : node.type;
+        if (scope == RestConstants.COLLECTIONSCOPE_MY) {
+            scope = 'MY';
+        } else if (
+            scope == RestConstants.COLLECTIONSCOPE_ORGA ||
+            scope == RestConstants.COLLECTIONSCOPE_CUSTOM
+        ) {
+            scope = 'SHARED';
+        } else if (
+            scope == RestConstants.COLLECTIONSCOPE_ALL ||
+            scope == RestConstants.COLLECTIONSCOPE_CUSTOM_PUBLIC
+        ) {
+            scope = 'PUBLIC';
+        } else if (type == RestConstants.COLLECTIONTYPE_EDITORIAL) {
+            scope = 'PUBLIC';
+        } else if (type == RestConstants.COLLECTIONTYPE_MEDIA_CENTER) {
+            scope = 'MEDIA_CENTER';
+        }
+        if (asProposal) {
+            this.bridge.showTemporaryMessage(
+                MessageType.info,
+                'WORKSPACE.TOAST.PROPOSED_FOR_COLLECTION',
+                { count: count, collection: RestHelper.getTitle(node) },
+            );
+        } else {
+            this.bridge.showTemporaryMessage(
+                MessageType.info,
+                'WORKSPACE.TOAST.ADDED_TO_COLLECTION_' + scope,
+                { count: count, collection: RestHelper.getTitle(node) },
+                {
+                    link: {
+                        caption: 'WORKSPACE.TOAST.VIEW_COLLECTION',
+                        callback: () => this.goToCollection(node),
+                    },
+                },
+            );
+        }
+    }
+    goToCollection(node: Node, mode: null | 'new' | 'edit' = null, extras: NavigationExtras = {}) {
+        if (mode === 'new' || mode === 'edit') {
+            void this.router.navigate(
+                [UIConstants.ROUTER_PREFIX, 'collections', 'collection', mode, node.ref.id],
+                extras,
+            );
+        } else {
+            extras.queryParams = { id: node.ref.id };
+            void this.router.navigate([UIConstants.ROUTER_PREFIX, 'collections'], extras);
+        }
     }
 }
