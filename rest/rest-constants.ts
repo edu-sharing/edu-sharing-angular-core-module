@@ -69,6 +69,7 @@ export class RestConstants extends RestConstantsBase {
 
     public static CM_TYPE_FOLDER = 'cm:folder';
     public static CM_TYPE_PERSON = 'cm:person';
+    public static LOM_PROP_SIZE = 'cclom:size';
     public static SIZE = 'size';
     public static MEDIATYPE = 'mediatype';
     public static DIMENSIONS = 'dimensions';
@@ -245,6 +246,7 @@ export class RestConstants extends RestConstantsBase {
         // new ListItemSort('NODE', RestConstants.LOM_PROP_TITLE),
         new ListItemSort('NODE', RestConstants.CM_MODIFIED_DATE),
         new ListItemSort('NODE', RestConstants.CM_PROP_C_CREATED),
+        new ListItemSort('NODE', RestConstants.LOM_PROP_SIZE),
         // new ListItemSort('NODE', RestConstants.CM_CREATOR),
     ];
 
@@ -258,6 +260,7 @@ export class RestConstants extends RestConstantsBase {
         new ListItemSort('NODE', RestConstants.CCM_PROP_WF_STATUS),
         new ListItemSort('NODE', RestConstants.CM_ARCHIVED_DATE),
         new ListItemSort('NODE', RestConstants.LOM_PROP_GENERAL_KEYWORD),
+        new ListItemSort('NODE', RestConstants.LOM_PROP_SIZE),
         new ListItemSort('NODE', RestConstants.CCM_PROP_LICENSE),
         new ListItemSort('NODE', RestConstants.CCM_PROP_IO_EDITORIAL_STATE),
         new ListItemSort('NODE', RestConstants.CCM_PROP_IO_TECHNICAL_STATE),
