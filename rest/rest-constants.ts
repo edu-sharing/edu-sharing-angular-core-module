@@ -29,20 +29,6 @@ export class RestConstants extends RestConstantsBase {
     public static CORDOVA_STORAGE_SERVER_ENDPOINT: string = 'server_endpoint';
     public static CORDOVA_STORAGE_SERVER_OWN: string = 'server_own';
 
-    public static AUTHORITY_ROLE_OWNER = 'ROLE_OWNER';
-    public static AUTHORITY_TYPE_USER = 'USER';
-    public static AUTHORITY_TYPE_GROUP = 'GROUP';
-    public static AUTHORITY_TYPE_OWNER = 'OWNER';
-    public static AUTHORITY_TYPE_EVERYONE = 'EVERYONE';
-    public static AUTHORITY_TYPE_UNKNOWN = 'UNKNOWN';
-    public static AUTHORITY_EVERYONE = 'GROUP_EVERYONE';
-
-    public static getAuthorityEveryone() {
-        return {
-            authorityName: RestConstants.AUTHORITY_EVERYONE,
-            authorityType: RestConstants.AUTHORITY_TYPE_EVERYONE,
-        };
-    }
     public static PERMISSION_OWNER = 'Owner';
     public static PERMISSION_COLLABORATOR = 'Collaborator';
     public static PERMISSION_DOWNLOAD_CONTENT = 'DownloadContent';
@@ -324,5 +310,4 @@ export class RestConstants extends RestConstantsBase {
     public static VALID_SCOPE_TYPES = [null, RestConstants.GROUP_SCOPETYPE_GLOBAL];
     public static TYPE_ROCKETCHAT = 'ROCKETCHAT';
     static COLLECTION_ORDER_MODE_CUSTOM = 'custom';
-    public static AUTHORITY_DELETED_USER = 'DELETED_USER';
 }
