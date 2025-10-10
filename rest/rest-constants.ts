@@ -53,22 +53,12 @@ export class RestConstants extends RestConstantsBase {
 
     public static CCM_ASSOC_CHILDIO = 'ccm:childio';
 
-    public static CM_TYPE_FOLDER = 'cm:folder';
     public static CM_TYPE_PERSON = 'cm:person';
     public static SIZE = 'size';
     public static MEDIATYPE = 'mediatype';
     public static DIMENSIONS = 'dimensions';
     public static CM_CREATOR = 'cm:creator';
     public static CM_OWNER = 'cm:owner';
-    public static CM_PROP_ESUID = 'cm:esuid';
-    public static CM_TYPE_CONTENT = 'cm:content';
-    public static CM_TYPE_OBJECT = 'cm:cmobject';
-    public static CM_TYPE_CONTAINER = 'cm:container';
-    public static CM_TYPE_AUTHORITY_CONTAINER = 'cm:authorityContainer';
-    public static CCM_TYPE_IO = 'ccm:io';
-    public static CCM_TYPE_MAP = 'ccm:map';
-    public static SYS_TYPE_CONTAINER = 'sys:container';
-    public static SYS_NODE_UUID = 'sys:node-uuid';
     public static CCM_TYPE_TOOLPERMISSION = 'ccm:toolpermission';
     public static CCM_TYPE_REMOTEOBJECT = 'ccm:remoteobject';
     public static CCM_TYPE_TOOL_INSTANCE = 'ccm:tool_instance';
@@ -111,8 +101,6 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_TRACKING_VIEWS = 'ccm:tracking_views';
     public static CCM_PROP_TRACKING_DOWNLOADS = 'ccm:tracking_downloads';
     public static CCM_PROP_CHILDOBJECT_ORDER = 'ccm:childobject_order';
-    public static CCM_PROP_COLLECTION_SUBCOLLECTION_ORDER_MODE =
-        'ccm:collectionsubcollectionordermode';
     public static CCM_PROP_COLLECTION_ORDER_MODE = 'ccm:collectionordermode';
     public static CCM_PROP_PUBLISHED_HANDLE_ID = 'ccm:published_handle_id';
     public static CCM_PROP_PUBLISHED_DOI_ID = 'ccm:published_doi_id';
@@ -309,5 +297,4 @@ export class RestConstants extends RestConstantsBase {
     ];
     public static VALID_SCOPE_TYPES = [null, RestConstants.GROUP_SCOPETYPE_GLOBAL];
     public static TYPE_ROCKETCHAT = 'ROCKETCHAT';
-    static COLLECTION_ORDER_MODE_CUSTOM = 'custom';
 }

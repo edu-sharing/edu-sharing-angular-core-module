@@ -10,7 +10,9 @@ import { AbstractList, CollectionSubcollections, CollectionWrapper } from '../da
 import { AbstractRestService } from './abstract-rest-service';
 import { NodeWrapper } from '../data-object';
 import { CollectionProposalStatus, ProposalNode } from 'ngx-edu-sharing-api';
-
+/**
+ * @Deprecated use the ngx-edu-sharing-api service
+ */
 @Injectable({ providedIn: 'root' })
 export class RestCollectionService extends AbstractRestService {
     constructor(connector: RestConnectorService) {
