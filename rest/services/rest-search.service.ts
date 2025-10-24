@@ -3,15 +3,15 @@ import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
-import { NodeList, NodeWrapper, SearchRequestBody, VCardResult } from '../data-object';
+import { NodeList, NodeWrapper, VCardResult } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
-import { Helper } from '../helper';
-import { MdsHelper } from '../mds-helper';
 import { map } from 'rxjs/operators';
 import { VCard } from 'ngx-edu-sharing-ui';
-import { MdsService } from 'ngx-edu-sharing-api';
-import { MdsWidget, Values } from '../../../features/mds/types/types';
+import { SearchParameters } from 'ngx-edu-sharing-api';
 
+/**
+ * @Deprecated
+ */
 @Injectable({ providedIn: 'root' })
 export class RestSearchService extends AbstractRestService {
     constructor(connector: RestConnectorService) {
@@ -87,7 +87,7 @@ export class RestSearchService extends AbstractRestService {
         );
     }
     searchWithBody(
-        body: SearchRequestBody,
+        body: SearchParameters,
         request: any = null,
         contentType = RestConstants.CONTENT_TYPE_FILES,
         repository = RestConstants.HOME_REPOSITORY,
@@ -124,9 +124,11 @@ export class RestSearchService extends AbstractRestService {
         query = RestConstants.DEFAULT_QUERY_NAME,
         permissions: string[] = [],
     ) {
-        let body = {
+        let body: SearchParameters = {
             criteria: criterias,
-            facets: facettes,
+            facets: facettes.map((property) => {
+                return { property };
+            }),
         };
         return this.searchWithBody(
             body,

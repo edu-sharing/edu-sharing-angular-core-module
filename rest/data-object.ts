@@ -16,6 +16,7 @@ import {
     UserQuota,
     UserStatus,
     Suggestion,
+    SearchParameters,
 } from 'ngx-edu-sharing-api';
 
 import { ListItem, VCard } from 'ngx-edu-sharing-ui';
@@ -1009,12 +1010,7 @@ export interface SearchRequestCriteria {
     property: string;
     values: string[];
 }
-export interface SearchRequestBody {
-    facets?: string[];
-    criteria: SearchRequestCriteria[];
-    resolveCollections?: boolean;
-    permissions?: string[];
-}
+
 export interface WebsiteInformation {
     title: string;
     page: string;
