@@ -20,7 +20,6 @@ import {
 } from 'ngx-edu-sharing-api';
 
 import { ListItem, VCard } from 'ngx-edu-sharing-ui';
-import { PrimaryLogin } from '../../../../projects/edu-sharing-api/src/lib/api/models/primary-login';
 
 export { Connector, ConnectorList } from 'ngx-edu-sharing-api';
 export { GroupProfile } from 'ngx-edu-sharing-api';
