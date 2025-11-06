@@ -430,11 +430,18 @@ export class UIService extends UIServiceBase {
         }
     }
 
-    goToAssignment(assignment: Assignment, mode: 'edit') {
+    goToAssignment(assignment: Assignment, mode: 'edit' | 'submission') {
         if (mode === 'edit') {
             void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
                 queryParams: {
                     mainComponent: 'manageAssignment',
+                    assignment: assignment.ref.id,
+                },
+            });
+        } else if (mode === 'submission') {
+            void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
+                queryParams: {
+                    mainComponent: 'assignmentSubmission',
                     assignment: assignment.ref.id,
                 },
             });
