@@ -11,7 +11,7 @@ import {
 import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
-import { ConfigValues, Connector, UserService } from 'ngx-edu-sharing-api';
+import { Assignment, ConfigValues, Connector, UserService } from 'ngx-edu-sharing-api';
 import { catchError, take, toArray } from 'rxjs/operators';
 import { RestConnectorsService } from './rest-connectors.service';
 import { RestIamService } from './rest-iam.service';
@@ -427,6 +427,17 @@ export class UIService extends UIServiceBase {
         } else {
             extras.queryParams = { id: node.ref.id };
             void this.router.navigate([UIConstants.ROUTER_PREFIX, 'collections'], extras);
+        }
+    }
+
+    goToAssignment(assignment: Assignment, mode: 'edit') {
+        if (mode === 'edit') {
+            void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
+                queryParams: {
+                    mainComponent: 'manageAssignment',
+                    assignment: assignment.ref.id,
+                },
+            });
         }
     }
 }
