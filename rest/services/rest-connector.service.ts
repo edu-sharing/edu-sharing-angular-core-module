@@ -3,13 +3,14 @@ import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ApiRequestConfiguration,
+    ApiStateService,
     AuthenticationService,
     ConfigService,
     LoginInfo,
 } from 'ngx-edu-sharing-api';
 import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
-import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Observer, Subject } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { BridgeService } from '../../../services/bridge.service';
 import { Closable } from '../../../features/dialogs/card-dialog/card-dialog-config';
@@ -44,7 +45,7 @@ export interface UploadProgress {
 @Injectable({ providedIn: 'root' })
 export class RestConnectorService implements OnDestroy {
     public static DEFAULT_NUMBER_PER_REQUEST = 25;
-    private _currentRequestCount = 0;
+    private currentRequestCount$ = new BehaviorSubject<number>(0);
     private _logoutTimeout: number;
     private _autoLogin = true;
     public _scope: string;
@@ -91,6 +92,7 @@ export class RestConnectorService implements OnDestroy {
         private event: FrameEventsService,
         private configApi: ConfigService,
         private apiRequestConfiguration: ApiRequestConfiguration,
+        private apiStateService: ApiStateService,
         private authenticationApi: AuthenticationService,
     ) {
         this.registerLoginInfo();
@@ -333,7 +335,7 @@ export class RestConnectorService implements OnDestroy {
     private request<T>(method: string, url: string, body: any, options: any, appendUrl = true) {
         return new Observable<T>((observer: Observer<T>) => {
             this.authenticationApi.reportOutsideApiRequest();
-            this._currentRequestCount++;
+            this.currentRequestCount$.next(this.currentRequestCount$.value + 1);
             let requestUrl = (appendUrl ? this.endpointUrl : '') + url;
             const traceId = uuidv4();
             options.headers['X-Client-Trace-Id'] = traceId;
@@ -355,14 +357,14 @@ export class RestConnectorService implements OnDestroy {
             }
             call.subscribe(
                 (response: any) => {
-                    this._currentRequestCount--;
+                    this.currentRequestCount$.next(this.currentRequestCount$.value - 1);
                     this.checkHeaders(response);
                     observer.next(response.body);
                     observer.complete();
                 },
                 (error) => {
                     error.traceId = traceId;
-                    this._currentRequestCount--;
+                    this.currentRequestCount$.next(this.currentRequestCount$.value - 1);
 
                     if (!this._autoLogin) {
                     } else if (
@@ -461,7 +463,10 @@ export class RestConnectorService implements OnDestroy {
      * returns how much requests are currently not answered (waiting for response)
      */
     public getCurrentRequestCount() {
-        return this._currentRequestCount;
+        return combineLatest([
+            this.currentRequestCount$,
+            this.apiStateService.ongoingRequestsCount$,
+        ]).pipe(map(([a, b]) => a + b));
     }
 
     /**
@@ -476,7 +481,7 @@ export class RestConnectorService implements OnDestroy {
     private onAllRequestsReadyObserver(observer: Observer<void>) {
         this.ngZone.runOutsideAngular(() => {
             setTimeout(() => {
-                if (this._currentRequestCount > 0) {
+                if (this.currentRequestCount$.value > 0) {
                     this.onAllRequestsReadyObserver(observer);
                 } else {
                     observer.next(null);
