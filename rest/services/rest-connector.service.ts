@@ -9,7 +9,7 @@ import {
     LoginInfo,
 } from 'ngx-edu-sharing-api';
 import { TemporaryStorageService, UIService } from 'ngx-edu-sharing-ui';
-import { BehaviorSubject, combineLatest, Observable, Observer, Subject, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Observer, Subject } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { BridgeService } from '../../../services/bridge.service';
