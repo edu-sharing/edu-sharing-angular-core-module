@@ -312,7 +312,11 @@ export class RestConnectorService implements OnDestroy {
                 }
                 let formData = new FormData();
                 if (file) {
-                    formData.append(fieldName, file, file.name);
+                    // dirty hack for request body stream exhausted error on some ios formats
+                    if (UIService.isSafari()) {
+                        file = new File([file], file.name, { type: 'application/octet-stream' });
+                    }
+                    formData.append(fieldName, file);
                 }
                 let progress: UploadProgress = { start: new Date().getTime() };
                 xhr.upload.addEventListener('progress', (event: any) => {
