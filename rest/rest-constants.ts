@@ -8,7 +8,6 @@ export class RestConstants extends RestConstantsBase {
     public static ROOT = '-root-';
     public static DEFAULT = '-default-';
     static NODE_STORE_LIST = 'BASKET';
-    public static DUPLICATE_NODE_RESPONSE = 409;
 
     public static DEFAULT_DISPLAY_MODE: string = 'dynamic';
     public static DEFAULT_SORT_CRITERIA: string[] = ['cm:name'];
@@ -38,19 +37,6 @@ export class RestConstants extends RestConstantsBase {
     public static PERMISSION_DELETE = 'Delete';
     public static PERMISSION_FEEDBACK = 'Feedback'; // Giving feedback for collections
     public static PERMISSION_RATE = 'Rate';
-
-    public static CCM_ASPECT_TOOL_DEFINITION = 'ccm:tool_definition';
-    public static CCM_ASPECT_TOOL_OBJECT = 'ccm:tool_object';
-    public static CCM_ASPECT_TOOL_INSTANCE_LINK = 'ccm:tool_instance_link';
-    public static CCM_ASPECT_IO_REFERENCE = 'ccm:collection_io_reference';
-    public static CCM_ASPECT_METADATA_PRESETTING = 'ccm:metadataPresetting';
-    public static CCM_ASPECT_PUBLISHED = 'ccm:published';
-    public static CCM_ASPECT_MAP_REF = 'ccm:map_ref';
-    public static CCM_ASPECT_LOMREPLICATION = 'ccm:lomreplication';
-    public static CCM_ASPECT_CCLOM_GENERAL = 'cclom:general';
-    public static CCM_ASPECT_IO_CHILDOBJECT = 'ccm:io_childobject';
-    public static CCM_ASPECT_REMOTEREPOSITORY = 'ccm:remoterepository';
-
     public static CCM_ASSOC_CHILDIO = 'ccm:childio';
 
     public static CM_TYPE_PERSON = 'cm:person';
@@ -60,10 +46,6 @@ export class RestConstants extends RestConstantsBase {
     public static DIMENSIONS = 'dimensions';
     public static CM_CREATOR = 'cm:creator';
     public static CM_OWNER = 'cm:owner';
-    public static CCM_TYPE_TOOLPERMISSION = 'ccm:toolpermission';
-    public static CCM_TYPE_REMOTEOBJECT = 'ccm:remoteobject';
-    public static CCM_TYPE_TOOL_INSTANCE = 'ccm:tool_instance';
-    public static CCM_TYPE_SAVED_SEARCH = 'ccm:saved_search';
     public static CCM_FILENAME = 'ccm:filename';
     public static CCM_OBJECTTYPE = 'ccm:objecttype';
     public static LOM_PROP_GENERAL_KEYWORD = 'cclom:general_keyword';

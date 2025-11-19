@@ -16,8 +16,11 @@ function consoleWarn(s: string): void {
     }
 }
 
+/**
+ * @Deprecated
+ * use `NetworkService` from `ngx-edu-sharing-api` instead.
+ * */
 @Injectable({ providedIn: 'root' })
-/** @deprecated use `NetworkService` from `ngx-edu-sharing-api` instead. */
 export class RestNetworkService extends AbstractRestService {
     // FIXME: if methods of this service get called before `currentRepositories` is populated, we
     // will cause errors.
@@ -36,23 +39,11 @@ export class RestNetworkService extends AbstractRestService {
         }
         return false;
     }
-    static allFromHomeRepo(nodes: Node[], repositories = this.currentRepositories) {
-        if (!nodes) return true;
-        if (repositories == null) {
-            consoleWarn('repository list is empty, home repo might not be detected');
-        }
-        for (let node of nodes) {
-            if (!node.ref.isHomeRepo && !RestNetworkService.isHomeRepo(node.ref.repo, repositories))
-                return false;
-        }
-        return true;
-    }
-    static getRepository(node: Node, repositories = this.currentRepositories) {
-        if (RestNetworkService.isFromHomeRepo(node, repositories)) {
-            return repositories.filter((r) => r.isHomeRepo)[0];
-        }
-        return repositories.filter((r) => r.id === node.ref.repo)[0];
-    }
+
+    /**
+     * @Deprecated
+     * use `NetworkService` from `ngx-edu-sharing-api` instead.
+     * */
     static isFromHomeRepo(node: UniversalNode, repositories = this.currentRepositories) {
         if (!node || !node.ref) {
             return false;
