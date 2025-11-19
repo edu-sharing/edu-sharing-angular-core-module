@@ -13,7 +13,7 @@ import { Helper } from './helper';
 import { Observable } from 'rxjs';
 
 export class RestHelper extends RestHelperBase {
-    public static getNodeIds(nodes: Node[] | CollectionReference[]): Array<string> {
+    public static getNodeIds(nodes: Node[] | { ref: { id: string } }[]): Array<string> {
         let data = new Array<string>(nodes.length);
         for (let i = 0; i < nodes.length; i++) {
             data[i] = nodes[i].ref.id;

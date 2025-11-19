@@ -11,7 +11,13 @@ import {
 import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
-import { Assignment, ConfigValues, Connector, UserService } from 'ngx-edu-sharing-api';
+import {
+    Assignment,
+    ConfigValues,
+    Connector,
+    LtiPlatformService,
+    UserService,
+} from 'ngx-edu-sharing-api';
 import { catchError, take, toArray } from 'rxjs/operators';
 import { RestConnectorsService } from './rest-connectors.service';
 import { RestIamService } from './rest-iam.service';
@@ -43,6 +49,7 @@ export class UIService extends UIServiceBase {
         private events: FrameEventsService,
         private toast: Toast,
         private platformLocation: PlatformLocation,
+        private ltiPlatformService: LtiPlatformService,
         private router: Router,
         private bridge: BridgeService,
         private connector: RestConnectorService,
@@ -189,6 +196,35 @@ export class UIService extends UIServiceBase {
             return url;
         }
         return config.logout.localUrl || config.logout.url;
+    }
+
+    async hasAvailableConnector(n: Node) {
+        if (n?.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE)) {
+            return true;
+        }
+        // simple connector node;
+        if (n?.properties?.[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
+            return true;
+        }
+        return (
+            this.injector.get(RestConnectorsService).connectorSupportsEdit(n) != null ||
+            (await this.ltiPlatformService.toolForNode(n)) != null
+        );
+    }
+    async editConnector(
+        node: Node | any,
+        type: Filetype = null,
+        win: any = null,
+        connectorType: Connector = null,
+    ) {
+        const ltiTool = await this.ltiPlatformService.toolForNode(node);
+        if (node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
+            UIHelper.openWindow(win, node.properties[RestConstants.CCM_PROP_IO_WWWURL]?.[0]);
+        } else if (node.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE) || ltiTool) {
+            UIHelper.openLTIResourceLink(win, node);
+        } else {
+            this.openConnector(node, type, win, connectorType);
+        }
     }
 
     openConnector(
