@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Observer } from 'rxjs';
 import { BridgeService } from '../../../services/bridge.service';
-import { OAuthResult } from '../data-object';
 import { RestConstants } from '../rest-constants';
 
 const EDU_SHARING_API_URL = (window as any).__env?.EDU_SHARING_API_URL;
@@ -58,30 +57,6 @@ export class RestLocatorService {
     }
 
     constructor(private http: HttpClient, private bridge: BridgeService) {}
-
-    createOAuthFromSession() {
-        return new Observable((observer: Observer<OAuthResult>) => {
-            this.bridge
-                .getCordova()
-                .loginOAuth(this.apiUrl, null, null, 'client_credentials')
-                .subscribe(
-                    (oauthTokens) => {
-                        this.bridge
-                            .getCordova()
-                            .setPermanentStorage(
-                                RestConstants.CORDOVA_STORAGE_OAUTHTOKENS,
-                                JSON.stringify(oauthTokens),
-                            );
-                        observer.next(oauthTokens);
-                        observer.complete();
-                    },
-                    (error) => {
-                        observer.error(error);
-                        observer.complete();
-                    },
-                );
-        });
-    }
 
     getConfigDynamic(key: string): Observable<any> {
         return new Observable<any>((observer: Observer<any>) => {

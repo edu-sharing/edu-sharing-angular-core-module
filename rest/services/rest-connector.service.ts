@@ -14,7 +14,7 @@ import { first, map, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { BridgeService } from '../../../services/bridge.service';
 import { Closable } from '../../../features/dialogs/card-dialog/card-dialog-config';
-import { Licenses, OAuthResult } from '../data-object';
+import { Licenses } from '../data-object';
 import { RequestObject } from '../request-object';
 import { RestConstants } from '../rest-constants';
 import { RestHelper } from '../rest-helper';
@@ -137,28 +137,6 @@ export class RestConnectorService implements OnDestroy {
         }
     }
 
-    public getOAuthToken() {
-        let url = this.createUrl('../oauth2/token', null);
-        //"grant_type=password&client_id=eduApp&client_secret=secret&username=admin&password=admin"
-        return new Observable<OAuthResult>((observer: Observer<OAuthResult>) => {
-            this.post<OAuthResult>(
-                url,
-                'client_id=eduApp&grant_type=client_credentials&client_secret=secret',
-                //"&username="+encodeURIComponent(username)+
-                //"&password="+encodeURIComponent(password)
-                this.getRequestOptions('application/x-www-form-urlencoded'),
-            ).subscribe(
-                (data) => {
-                    observer.next(data);
-                    observer.complete();
-                },
-                (error: any) => {
-                    observer.error(error);
-                    observer.complete();
-                },
-            );
-        });
-    }
     public logout() {
         return this.authenticationApi.logout().pipe(
             tap(() => {
