@@ -21,13 +21,6 @@ export class RestConstants extends RestConstantsBase {
 
     public static BASIC_PERMISSIONS = ['Consumer', 'Collaborator', 'Coordinator'];
 
-    /**
-     * cordova oauth storage
-     */
-    public static CORDOVA_STORAGE_OAUTHTOKENS: string = 'oauth';
-    public static CORDOVA_STORAGE_SERVER_ENDPOINT: string = 'server_endpoint';
-    public static CORDOVA_STORAGE_SERVER_OWN: string = 'server_own';
-
     public static PERMISSION_OWNER = 'Owner';
     public static PERMISSION_COLLABORATOR = 'Collaborator';
     public static PERMISSION_DOWNLOAD_CONTENT = 'DownloadContent';
