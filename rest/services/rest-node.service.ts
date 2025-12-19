@@ -30,8 +30,10 @@ import { Node } from 'ngx-edu-sharing-api';
 import { Values } from '../../../features/mds/types/types';
 import * as rxjs from 'rxjs';
 import { map } from 'rxjs/operators';
+
 /**
- * @Deprecated use the ngx-edu-sharing-api service
+ * @Deprecated
+ * Prefer using the service from ngx-edu-sharing-api
  */
 @Injectable({ providedIn: 'root' })
 export class RestNodeService extends AbstractRestService {
