@@ -15,6 +15,10 @@ export class ConfigurationHelper {
         if (!banner.components || !banner.components.length) banner.components = ['search'];
         return banner;
     }
+    // TODO: Torsten (use client config)
+    public static getFooter(config: ConfigService) {
+        return ['LANDING'];
+    }
     public static hasMenuButton(config: ConfigService, button: string): boolean {
         let hide = config.instant('hideMainMenu');
         if (!hide) return true;
