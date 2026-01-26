@@ -16,7 +16,6 @@ export * from './rest/rest-helper';
 export * from './rest/services/configuration.service';
 export * from './rest/services/frame-events.service';
 export { RestAdminService } from './rest/services/rest-admin.service';
-export { RestArchiveService } from './rest/services/rest-archive.service';
 export { RestCollectionService } from './rest/services/rest-collection.service';
 export { RestCommentsService } from './rest/services/rest-comments.service';
 export { RestConnectorService } from './rest/services/rest-connector.service';
