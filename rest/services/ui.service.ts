@@ -466,7 +466,7 @@ export class UIService extends UIServiceBase {
         }
     }
 
-    goToAssignment(assignment: Assignment, mode: 'edit' | 'submission') {
+    goToAssignment(assignment: Assignment, mode: 'edit' | 'submissions' | 'submit') {
         if (mode === 'edit') {
             void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
                 queryParams: {
@@ -474,10 +474,17 @@ export class UIService extends UIServiceBase {
                     assignment: assignment.ref.id,
                 },
             });
-        } else if (mode === 'submission') {
+        } else if (mode === 'submissions') {
             void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
                 queryParams: {
                     mainComponent: 'assignmentSubmission',
+                    assignment: assignment.ref.id,
+                },
+            });
+        } else if (mode === 'submit') {
+            void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
+                queryParams: {
+                    mainComponent: 'submitAssignment',
                     assignment: assignment.ref.id,
                 },
             });
