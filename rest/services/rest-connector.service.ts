@@ -184,7 +184,10 @@ export class RestConnectorService implements OnDestroy {
         });
     }
 
-    public isLoggedIn(forceRenew = true): Observable<LoginInfo> {
+    public isLoggedIn(forceRenew = false): Observable<LoginInfo> {
+        if (forceRenew) {
+            this.authenticationApi.forceLoginInfoRefresh();
+        }
         return this.authenticationApi.observeLoginInfo().pipe(first());
     }
 
