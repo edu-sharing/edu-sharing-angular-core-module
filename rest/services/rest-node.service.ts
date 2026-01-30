@@ -10,7 +10,6 @@ import {
     NodePermissions,
     NodePermissionsHistory,
     NodeRef,
-    NodeRemoteWrapper,
     NodeShare,
     NodeTemplate,
     NodeTextContent,
@@ -118,7 +117,7 @@ export class RestNodeService extends AbstractRestService {
             repository,
             [[':node', node]],
         );
-        return this.connector.post<NodeRemoteWrapper>(
+        return this.connector.post<{ node: Node; remote: Node }>(
             query,
             null,
             this.connector.getRequestOptions(),

@@ -148,7 +148,6 @@ export class Node implements NodeModel {
     createdAt: string;
     createdBy: Person;
     downloadUrl?: string;
-    iconURL?: string;
     isDirectory?: boolean;
     license?: License;
     mediatype?: string;
@@ -701,9 +700,6 @@ export interface NodeWrapper {
 }
 export interface NodeTemplate extends NodeWrapper {
     enabled: boolean;
-}
-export interface NodeRemoteWrapper extends NodeWrapper {
-    remote: Node;
 }
 export interface AbstractList<T extends NodeModel> {
     nodes: T[];
