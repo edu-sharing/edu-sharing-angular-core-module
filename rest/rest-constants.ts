@@ -303,6 +303,7 @@ export class RestConstants extends RestConstantsBase {
     public static GROUP_TYPE_SCHOOL_NATIONAL = 'SCHOOL_NATIONAL';
     public static GROUP_TYPE_SCHOOL_MUNICIPAL = 'SCHOOL_MUNICIPAL';
     public static GROUP_TYPE_SCHOOL_PRIVATE = 'SCHOOL_PRIVATE';
+    public static GROUP_TYPE_SCHOOL_NONE = 'SCHOOL_NONE';
     public static GROUP_SCOPETYPE_GLOBAL = 'global';
     public static VALID_GROUP_TYPES = [
         null,
@@ -323,6 +324,7 @@ export class RestConstants extends RestConstantsBase {
         RestConstants.GROUP_TYPE_SCHOOL_NATIONAL,
         RestConstants.GROUP_TYPE_SCHOOL_MUNICIPAL,
         RestConstants.GROUP_TYPE_SCHOOL_PRIVATE,
+        RestConstants.GROUP_TYPE_SCHOOL_NONE,
     ];
     public static VALID_SCOPE_TYPES = [null, RestConstants.GROUP_SCOPETYPE_GLOBAL];
     public static TYPE_ROCKETCHAT = 'ROCKETCHAT';
