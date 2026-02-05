@@ -1,5 +1,5 @@
 import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular/core';
-import { concatMap, from, Observable, Observer, of, Subject } from 'rxjs';
+import { concatMap, firstValueFrom, from, Observable, Observer, of, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
 import {
@@ -16,14 +16,16 @@ import {
     ConfigValues,
     Connector,
     LtiPlatformService,
+    Node,
+    NodeServiceUnwrapped,
     UserService,
 } from 'ngx-edu-sharing-api';
 import { catchError, take, toArray } from 'rxjs/operators';
 import { RestConnectorsService } from './rest-connectors.service';
 import { RestIamService } from './rest-iam.service';
 import { FrameEventsService } from './frame-events.service';
-import { Toast } from '../../../services/toast';
-import { CollectionReference, Filetype, Node, NodeLock } from '../data-object';
+import { Toast, ToastType } from '../../../services/toast';
+import { CollectionReference, Filetype, NodeLock } from '../data-object';
 import {
     OK,
     YES_OR_NO,
@@ -53,6 +55,7 @@ export class UIService extends UIServiceBase {
         private router: Router,
         private bridge: BridgeService,
         private connector: RestConnectorService,
+        private nodeServiceUnwrapped: NodeServiceUnwrapped,
         private collectionService: RestCollectionService,
         private userService: UserService,
         private http: HttpClient,
@@ -314,6 +317,29 @@ export class UIService extends UIServiceBase {
         );
     }
 
+    async copyNodes(source: Node[], target: Node) {
+        for (const node of source) {
+            await firstValueFrom(
+                this.nodeServiceUnwrapped.createChildByCopying({
+                    source: node.ref.id,
+                    repository: target.ref.repo,
+                    node: target.ref.id,
+                    withChildren: true,
+                }),
+            );
+        }
+        this.toast.show({
+            action: {
+                label: 'WORKSPACE.TOAST.VIEW_FOLDER',
+                callback: () => this.goToWorkspace(target),
+            },
+            type: 'info',
+            subtype: ToastType.InfoAction,
+            message: 'WORKSPACE.TOAST.COPIED_NODES',
+            messageParameters: { count: source.length, target: RestHelper.getTitle(target) },
+        });
+    }
+
     /**
      * handles adding nodes to a collection
      * @param nodeHelper
@@ -489,5 +515,13 @@ export class UIService extends UIServiceBase {
                 },
             });
         }
+    }
+
+    goToWorkspace(target: Node) {
+        void this.router.navigate([UIConstants.ROUTER_PREFIX, 'workspace'], {
+            queryParams: {
+                id: target.ref.id,
+            },
+        });
     }
 }
