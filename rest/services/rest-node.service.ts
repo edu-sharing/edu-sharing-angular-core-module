@@ -616,23 +616,6 @@ export class RestNodeService extends AbstractRestService {
             this.connector.getRequestOptions(),
         );
     };
-    public editNodeProperty = (
-        node: string,
-        property: string,
-        value: string[],
-        repository = RestConstants.HOME_REPOSITORY,
-    ) => {
-        let query = this.connector.createUrlNoEscape(
-            'node/v1/nodes/:repository/:node/property?property=:property&:value',
-            repository,
-            [
-                [':node', node],
-                [':property', property],
-                [':value', RestHelper.getQueryStringForList('value', value)],
-            ],
-        );
-        return this.connector.post<void>(query, null, this.connector.getRequestOptions());
-    };
     /**
      * Add one or more aspects to an existing
      * @param node The node id
