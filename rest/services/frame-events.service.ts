@@ -21,7 +21,7 @@ export class FrameEventsService {
     public static EVENT_NODE_SAVED = 'NODE_SAVED';
     /**
      * search filter applied
-     * payload contains {key: [value]} of the active criteria
+     * payload contains a JSON.stringify from type SearchFilter
      */
     public static EVENT_APPLY_FILTER = 'APPLY_FILTER';
     public static EVENT_UPLOAD_CANCELED = 'UPLOAD_CANCELED';
