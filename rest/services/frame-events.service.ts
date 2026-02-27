@@ -19,6 +19,11 @@ export class FrameEventsService {
     public static EVENT_APPLY_NODE = 'APPLY_NODE';
     public static EVENT_POST_DATA = 'POST_DATA';
     public static EVENT_NODE_SAVED = 'NODE_SAVED';
+    /**
+     * search filter applied
+     * payload contains a JSON.stringify from type SearchFilter
+     */
+    public static EVENT_APPLY_FILTER = 'APPLY_FILTER';
     public static EVENT_UPLOAD_CANCELED = 'UPLOAD_CANCELED';
     /**
      * Hint to ng that the content has changed (e.g. via a connector) and should be reloaded
@@ -28,18 +33,18 @@ export class FrameEventsService {
     public static EVENT_CLOSE = 'CLOSE';
     public static EVENT_CORDOVA_CAMERA = 'EVENT_CORDOVA_CAMERA';
     public static EVENT_CORDOVA_CAMERA_RESPONSE = 'EVENT_CORDOVA_CAMERA_RESPONSE';
+
     public static EVENT_REST_RESPONSE = 'PARENT_REST_RESPONSE';
 
     public static INVALIDATE_HEIGHT_EVENTS = ['VIEW_SWITCHED', 'VIEW_OPENED', 'NODE_FOLDER_OPENED'];
-
     // incomming events
     public static EVENT_PARENT_SCROLL = 'PARENT_SCROLL';
     public static EVENT_PARENT_SEARCH = 'PARENT_SEARCH';
     public static EVENT_PARENT_ADD_NODE_URL = 'PARENT_ADD_NODE_URL';
     public static EVENT_PARENT_FETCH_DATA = 'PARENT_FETCH_DATA';
     public static EVENT_PARENT_REST_REQUEST = 'PARENT_REST_REQUEST';
-    public static EVENT_UPDATE_SESSION_TIMEOUT = 'UPDATE_SESSION_TIMEOUT';
 
+    public static EVENT_UPDATE_SESSION_TIMEOUT = 'UPDATE_SESSION_TIMEOUT';
     private eventListeners: EventListener[] = [];
     private eventSelfListeners: EventListener[] = [];
     private windows: Window[] = [];
