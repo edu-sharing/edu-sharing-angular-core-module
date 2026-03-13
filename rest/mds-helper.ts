@@ -79,33 +79,6 @@ export class MdsHelper {
         return columns;
     }
 
-    /**
-     * Same as getWidget, but will also check the widget conditions
-     * @param connector
-     * @param properties
-     * @param id
-     * @param template
-     * @param widgets
-     */
-    static getWidgetWithCondition(
-        connector: RestConnectorService,
-        properties: any,
-        id: string,
-        template: string = null,
-        widgets: any,
-    ) {
-        for (let w of widgets) {
-            if (w.id == id) {
-                if (
-                    (template == null || w.template == template) &&
-                    this.isWidgetConditionTrue(connector, w, properties)
-                ) {
-                    return w;
-                }
-            }
-        }
-        return null;
-    }
     static isWidgetConditionTrue(connector: RestConnectorService, widget: any, properties: any) {
         if (!widget.condition) return true;
         let condition = widget.condition;
