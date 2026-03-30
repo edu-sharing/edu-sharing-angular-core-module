@@ -53,18 +53,6 @@ export class RestConstants extends RestConstantsBase {
     public static PERMISSION_FEEDBACK = 'Feedback'; // Giving feedback for collections
     public static PERMISSION_RATE = 'Rate';
 
-    public static CCM_ASPECT_TOOL_DEFINITION = 'ccm:tool_definition';
-    public static CCM_ASPECT_TOOL_OBJECT = 'ccm:tool_object';
-    public static CCM_ASPECT_TOOL_INSTANCE_LINK = 'ccm:tool_instance_link';
-    public static CCM_ASPECT_IO_REFERENCE = 'ccm:collection_io_reference';
-    public static CCM_ASPECT_METADATA_PRESETTING = 'ccm:metadataPresetting';
-    public static CCM_ASPECT_PUBLISHED = 'ccm:published';
-    public static CCM_ASPECT_MAP_REF = 'ccm:map_ref';
-    public static CCM_ASPECT_LOMREPLICATION = 'ccm:lomreplication';
-    public static CCM_ASPECT_CCLOM_GENERAL = 'cclom:general';
-    public static CCM_ASPECT_IO_CHILDOBJECT = 'ccm:io_childobject';
-    public static CCM_ASPECT_REMOTEREPOSITORY = 'ccm:remoterepository';
-
     public static CCM_ASSOC_CHILDIO = 'ccm:childio';
 
     public static CM_TYPE_FOLDER = 'cm:folder';
@@ -167,8 +155,6 @@ export class RestConstants extends RestConstantsBase {
     public static FILTER_FILES = 'files';
     public static FILTER_SPECIAL = 'special';
     public static FILTER_FOLDERS = 'folders';
-    // use not the maximum int value to prevent overflows in repository
-    public static COUNT_UNLIMITED = 1247483647;
     public static USERHOME = '-userhome-';
     public static COLLECTIONHOME = '-collectionhome-';
     public static SHARED_FILES = '-shared_files-';
