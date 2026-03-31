@@ -53,8 +53,6 @@ export class RestConstants extends RestConstantsBase {
     public static PERMISSION_FEEDBACK = 'Feedback'; // Giving feedback for collections
     public static PERMISSION_RATE = 'Rate';
 
-    public static CCM_ASSOC_CHILDIO = 'ccm:childio';
-
     public static CM_TYPE_FOLDER = 'cm:folder';
     public static CM_TYPE_PERSON = 'cm:person';
     public static LOM_PROP_SIZE = 'cclom:size';
@@ -113,7 +111,6 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_AUTHORITY_GROUPTYPE = 'ccm:groupType';
     public static CCM_PROP_TRACKING_VIEWS = 'ccm:tracking_views';
     public static CCM_PROP_TRACKING_DOWNLOADS = 'ccm:tracking_downloads';
-    public static CCM_PROP_CHILDOBJECT_ORDER = 'ccm:childobject_order';
     public static CCM_PROP_COLLECTION_SUBCOLLECTION_ORDER_MODE =
         'ccm:collectionsubcollectionordermode';
     public static CCM_PROP_COLLECTION_ORDER_MODE = 'ccm:collectionordermode';
