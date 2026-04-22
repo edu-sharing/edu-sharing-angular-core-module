@@ -317,16 +317,26 @@ export class UIService extends UIServiceBase {
         );
     }
 
-    async copyNodes(source: Node[], target: Node) {
+    async copyOrMoveNodes(source: Node[], target: Node, mode: 'copy' | 'move' = 'copy') {
         for (const node of source) {
-            await firstValueFrom(
-                this.nodeServiceUnwrapped.createChildByCopying({
-                    source: node.ref.id,
-                    repository: target.ref.repo,
-                    node: target.ref.id,
-                    withChildren: true,
-                }),
-            );
+            if (mode === 'move') {
+                await firstValueFrom(
+                    this.nodeServiceUnwrapped.createChildByMoving({
+                        source: node.ref.id,
+                        repository: target.ref.repo,
+                        node: target.ref.id,
+                    }),
+                );
+            } else {
+                await firstValueFrom(
+                    this.nodeServiceUnwrapped.createChildByCopying({
+                        source: node.ref.id,
+                        repository: target.ref.repo,
+                        node: target.ref.id,
+                        withChildren: true,
+                    }),
+                );
+            }
         }
         this.toast.show({
             action: {
@@ -335,7 +345,8 @@ export class UIService extends UIServiceBase {
             },
             type: 'info',
             subtype: ToastType.InfoAction,
-            message: 'WORKSPACE.TOAST.COPIED_NODES',
+            message:
+                mode === 'move' ? 'WORKSPACE.TOAST.MOVED_NODES' : 'WORKSPACE.TOAST.COPIED_NODES',
             messageParameters: { count: source.length, target: RestHelper.getTitle(target) },
         });
     }
