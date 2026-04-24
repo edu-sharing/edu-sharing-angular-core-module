@@ -76,6 +76,8 @@ export class RestConstants extends RestConstantsBase {
     public static CCM_PROP_AUTHORITY_GROUPTYPE = 'ccm:groupType';
     public static CCM_PROP_TRACKING_VIEWS = 'ccm:tracking_views';
     public static CCM_PROP_TRACKING_DOWNLOADS = 'ccm:tracking_downloads';
+    public static CCM_PROP_COLLECTION_SUBCOLLECTION_ORDER_MODE =
+        'ccm:collectionsubcollectionordermode';
     public static CCM_PROP_CHILDOBJECT_ORDER = 'ccm:childobject_order';
     public static CCM_PROP_COLLECTION_ORDER_MODE = 'ccm:collectionordermode';
     public static CCM_PROP_PUBLISHED_HANDLE_ID = 'ccm:published_handle_id';
@@ -116,8 +118,6 @@ export class RestConstants extends RestConstantsBase {
     public static FILTER_FILES = 'files';
     public static FILTER_SPECIAL = 'special';
     public static FILTER_FOLDERS = 'folders';
-    // use not the maximum int value to prevent overflows in repository
-    public static COUNT_UNLIMITED = 1247483647;
     public static USERHOME = '-userhome-';
     public static COLLECTIONHOME = '-collectionhome-';
     public static SHARED_FILES = '-shared_files-';
