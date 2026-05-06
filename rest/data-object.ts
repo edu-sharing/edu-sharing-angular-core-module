@@ -12,11 +12,10 @@ import {
     NodeRef,
     Organization,
     Person,
+    Suggestion,
     UserProfile as ApiUserProfile,
     UserQuota,
     UserStatus,
-    Suggestion,
-    SearchParameters,
 } from 'ngx-edu-sharing-api';
 
 import { ListItem, VCard } from 'ngx-edu-sharing-ui';
@@ -906,7 +905,9 @@ export class Property {
     name: string;
     values: string[];
 }
-
+/**
+ * @Deprecated
+ */
 export class CollectionReference extends Node {
     originalId: string;
     accessOriginal: string[];
