@@ -18,6 +18,7 @@ import {
     LtiPlatformService,
     Node,
     NodeServiceUnwrapped,
+    ROOT,
     UserService,
 } from 'ngx-edu-sharing-api';
 import { catchError, take, toArray } from 'rxjs/operators';
@@ -494,11 +495,17 @@ export class UIService extends UIServiceBase {
     goToCollection(node: Node, mode: null | 'new' | 'edit' = null, extras: NavigationExtras = {}) {
         if (mode === 'new' || mode === 'edit') {
             void this.router.navigate(
-                [UIConstants.ROUTER_PREFIX, 'collections', 'collection', mode, node.ref.id],
+                [
+                    UIConstants.ROUTER_PREFIX,
+                    'collections',
+                    'collection',
+                    mode,
+                    node?.ref?.id || ROOT,
+                ],
                 extras,
             );
         } else {
-            extras.queryParams = { id: node.ref.id };
+            extras.queryParams = { id: node?.ref?.id || ROOT };
             void this.router.navigate([UIConstants.ROUTER_PREFIX, 'collections'], extras);
         }
     }
