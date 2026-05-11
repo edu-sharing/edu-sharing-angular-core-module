@@ -17,7 +17,7 @@ export class ConfigurationHelper {
     }
     // TODO: Torsten (use client config)
     public static getFooter(config: ConfigService) {
-        return ['LANDING'];
+        return ['landing'];
     }
     public static hasMenuButton(config: ConfigService, button: string): boolean {
         let hide = config.instant('hideMainMenu');
