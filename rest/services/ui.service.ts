@@ -13,6 +13,7 @@ import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
 import {
     Assignment,
+    AuthenticationService,
     ConfigValues,
     Connector,
     LtiPlatformService,
@@ -37,6 +38,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { RestHelper } from '../rest-helper';
 import { RestCollectionService } from './rest-collection.service';
 import { NodeHelperService } from '../../../services/node-helper.service';
+import { RestToolService } from './rest-tool.service';
 
 @Injectable({ providedIn: 'root' })
 export class UIService extends UIServiceBase {
@@ -541,5 +543,35 @@ export class UIService extends UIServiceBase {
                 id: target.ref.id,
             },
         });
+    }
+
+    /**
+     * opens a given node in the preferred env (collection, workspace, render)
+     */
+    async openNode(node: Node, useConnector = true) {
+        if (!node.aspects) {
+            // unsuoported element
+            return;
+        }
+        if (this.injector.get(NodeHelperService).isNodeCollection(node)) {
+            UIHelper.goToCollection(this.router, node);
+        } else if (this.injector.get(NodeHelperService).isSavedSearchObject(node)) {
+            UIHelper.routeToSearchNode(this.router, null, node);
+        } else if (RestToolService.isLtiObject(node)) {
+            this.injector.get(RestToolService).openLtiObject(node);
+        } else if (
+            useConnector &&
+            this.injector.get(RestConnectorsService).connectorSupportsEdit(node)
+        ) {
+            await this.editConnector(node);
+        } else if (node.isDirectory) {
+            UIHelper.goToWorkspaceFolder(
+                this.router,
+                await firstValueFrom(this.injector.get(AuthenticationService).observeLoginInfo()),
+                node.ref.id,
+            );
+        } else {
+            UIHelper.goToNode(this.router, node);
+        }
     }
 }
