@@ -12,11 +12,10 @@ import {
     NodeRef,
     Organization,
     Person,
+    Suggestion,
     UserProfile as ApiUserProfile,
     UserQuota,
     UserStatus,
-    Suggestion,
-    SearchParameters,
 } from 'ngx-edu-sharing-api';
 
 import { ListItem, VCard } from 'ngx-edu-sharing-ui';
@@ -893,7 +892,9 @@ export class Property {
     name: string;
     values: string[];
 }
-
+/**
+ * @Deprecated
+ */
 export class CollectionReference extends Node {
     originalId: string;
     accessOriginal: string[];
@@ -1045,6 +1046,7 @@ export enum DeleteMode {
 export enum EventType {
     VIEW_MATERIAL_PLAY_MEDIA = 'VIEW_MATERIAL_PLAY_MEDIA',
     OPEN_EXTERNAL_LINK = 'OPEN_EXTERNAL_LINK',
+    VIEW_MATERIAL_GDPR_CONFIRMED = 'VIEW_MATERIAL_GDPR_CONFIRMED',
 }
 
 /**
