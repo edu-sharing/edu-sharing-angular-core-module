@@ -546,6 +546,7 @@ export class UIService extends UIServiceBase {
     }
 
     /**
+     * @Deprecated use NodeHelperService.navigateToNode
      * opens a given node in the preferred env (collection, workspace, render)
      */
     async openNode(node: Node, useConnector = true) {
