@@ -220,17 +220,18 @@ export class UIService extends UIServiceBase {
     async editConnector(
         node: Node | any,
         type: Filetype = null,
-        win: any = null,
+        win: Window = null,
         connectorType: Connector = null,
-    ) {
+    ): Promise<Window> {
         const ltiTool = await this.ltiPlatformService.toolForNode(node);
         if (node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
             UIHelper.openWindow(win, node.properties[RestConstants.CCM_PROP_IO_WWWURL]?.[0]);
         } else if (node.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE) || ltiTool) {
             UIHelper.openLTIResourceLink(win, node);
         } else {
-            this.openConnector(node, type, win, connectorType);
+            win = this.openConnector(node, type, win, connectorType);
         }
+        return win;
     }
 
     openConnector(
@@ -240,7 +241,7 @@ export class UIService extends UIServiceBase {
         connectorType: Connector = null,
         newWindow = true,
         parameters: { [key in string]: string[] } = {},
-    ) {
+    ): Window {
         const connectors = this.injector.get(RestConnectorsService);
         if (connectorType == null) {
             connectorType = connectors.connectorSupportsEdit(node);
@@ -305,9 +306,12 @@ export class UIService extends UIServiceBase {
             },
             (error: any) => {
                 this.toast.error(error);
-                if (win) win.close();
+                if (win) {
+                    win.close();
+                }
             },
         );
+        return win;
     }
 
     getLoadingSpinnerUrl() {
