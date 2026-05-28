@@ -218,23 +218,34 @@ export class UIService extends UIServiceBase {
         );
     }
     async editConnector(
-        node: Node | any,
-        type: Filetype = null,
-        win: Window = null,
-        connectorType: Connector = null,
+        node: Node,
+        options: {
+            type?: Filetype;
+            win?: Window;
+            connectorType?: Connector;
+            preferEdit?: boolean;
+        } = {},
     ): Promise<Window> {
+        const {
+            type = null,
+            win: winIn = null,
+            connectorType = null,
+            preferEdit = false,
+        } = options;
+        let win = winIn;
         const ltiTool = await this.ltiPlatformService.toolForNode(node);
         if (node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
             UIHelper.openWindow(win, node.properties[RestConstants.CCM_PROP_IO_WWWURL]?.[0]);
         } else if (node.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE) || ltiTool) {
             UIHelper.openLTIResourceLink(win, node);
         } else {
-            win = this.openConnector(node, type, win, connectorType);
+            const parameters = preferEdit ? { preferEdit: ['true'] } : {};
+            win = this.openConnector(node, type, win, connectorType, true, parameters);
         }
         return win;
     }
 
-    openConnector(
+    private openConnector(
         node: Node,
         type: Filetype = null,
         win: Window = null,
