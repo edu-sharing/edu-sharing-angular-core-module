@@ -286,14 +286,14 @@ export class UIService extends UIServiceBase {
                             if (win) win.close();
                             return;
                         }
-                        connectors.generateToolUrl(connectorType, type, node, parameters).subscribe(
+                        this.generateConnectorUrl(connectorType, type, node, parameters).subscribe(
                             (url: string) => {
                                 if (win) {
                                     win.location.href = url;
                                 } else if (isCordova) {
                                     UIHelper.openUrl(
                                         url,
-                                        connectors.getRestConnector().getBridgeService(),
+                                        this.connector.getBridgeService(),
                                         OPEN_URL_MODE.Blank,
                                     );
                                 } else {
@@ -323,6 +323,35 @@ export class UIService extends UIServiceBase {
             },
         );
         return win;
+    }
+
+    private generateConnectorUrl(
+        connectorType: Connector,
+        type: Filetype,
+        node: Node,
+        parameters: { [key in string]: string[] } = {},
+    ): Observable<string> {
+        return new Observable<string>((observer) => {
+            const send: { [key in string]: string[] } = { ...parameters };
+            send['connectorId'] = [connectorType.id];
+            send['nodeId'] = [node.ref.id];
+            let req = this.connector.getAbsoluteEndpointUrl() + '../eduservlet/connector?';
+            let i = 0;
+            for (const param in send) {
+                if (!send[param]) {
+                    continue;
+                }
+                for (const value of send[param]) {
+                    if (i > 0) {
+                        req += '&';
+                    }
+                    req += param + '=' + encodeURIComponent(value);
+                    i++;
+                }
+            }
+            observer.next(req);
+            observer.complete();
+        });
     }
 
     getLoadingSpinnerUrl() {

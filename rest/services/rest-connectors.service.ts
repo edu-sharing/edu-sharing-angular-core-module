@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Connector, ConnectorList, ConnectorService, Node } from 'ngx-edu-sharing-api';
-import { Observable, Observer } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { NodeHelperService } from '../../../services/node-helper.service';
-import { CollectionReference, Filetype } from '../data-object';
+import { CollectionReference } from '../data-object';
 import { NodesRightMode } from 'ngx-edu-sharing-ui';
 import { RestConstants } from '../rest-constants';
 import { AbstractRestService } from './abstract-rest-service';
@@ -11,6 +9,9 @@ import { RestConnectorService } from './rest-connector.service';
 import { RestNodeService } from './rest-node.service';
 import { UIService } from './ui.service';
 
+/**
+ * @Deprecated use ConnectorService from ngx-edu-sharing-api instead
+ */
 @Injectable({ providedIn: 'root' })
 export class RestConnectorsService extends AbstractRestService {
     private static MODE_NONE = 0;
@@ -29,10 +30,6 @@ export class RestConnectorsService extends AbstractRestService {
         // FIXME: This causes the connectors list to always be fetched, even if no one needs it. In
         // order to change that, all functions depending on `currentList` need to be asynchronous.
         this.connectorApi.observeConnectorList().subscribe((list) => (this.currentList = list));
-    }
-
-    public list(repository = RestConstants.HOME_REPOSITORY): Observable<ConnectorList> {
-        return this.connectorApi.observeConnectorList({ repository }).pipe(take(1));
     }
 
     public connectorSupportsEdit(node: Node) {
@@ -93,35 +90,6 @@ export class RestConnectorsService extends AbstractRestService {
             }
         }
         return null;
-    }
-
-    public generateToolUrl(
-        connectorType: Connector,
-        type: Filetype,
-        node: Node,
-        parameters: { [key in string]: string[] } = {},
-    ): Observable<string> {
-        return new Observable<string>((observer: Observer<string>) => {
-            let send: { [key in string]: string[] } = parameters || {};
-            send['connectorId'] = [connectorType.id];
-            send['nodeId'] = [node.ref.id];
-            let req = this.connector.getAbsoluteEndpointUrl() + '../eduservlet/connector?';
-            let i = 0;
-            for (let param in send) {
-                if (!send[param]) {
-                    continue;
-                }
-                for (const value of send[param]) {
-                    if (i > 0) {
-                        req += '&';
-                    }
-                    req += param + '=' + encodeURIComponent(value);
-                    i++;
-                }
-            }
-            observer.next(req);
-            observer.complete();
-        });
     }
 
     getConnectors() {
