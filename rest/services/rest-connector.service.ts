@@ -193,8 +193,19 @@ export class RestConnectorService implements OnDestroy {
         });
     }
 
-    public login(username: string, password: string, scope?: string, code2Fa?: string) {
-        return this.authenticationApi.login(username, password, scope, code2Fa).pipe(
+    public login(username: string, password: string, scope?: string) {
+        return this.authenticationApi.login(username, password, scope).pipe(
+            tap((loginInfo) => {
+                if (loginInfo.isValidLogin) {
+                    this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, loginInfo);
+                }
+                this.currentLogin.next(loginInfo);
+            }),
+        );
+    }
+
+    public verify2Fa(code2Fa: string) {
+        return this.authenticationApi.verify2Fa(code2Fa).pipe(
             tap((loginInfo) => {
                 if (loginInfo.isValidLogin) {
                     this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_IN, loginInfo);
