@@ -385,6 +385,16 @@ export class UIService extends UIServiceBase {
                 );
             }
         }
+        if (mode === 'move') {
+            this.localEventsService.nodesMoved.emit({
+                nodes: source,
+                source: { ref: source[0]?.parent } as Node,
+                target,
+            });
+        } else {
+            this.localEventsService.nodesCreated.emit(source);
+            this.localEventsService.nodesChanged.emit([target]);
+        }
         this.toast.show({
             action: {
                 label: 'WORKSPACE.TOAST.VIEW_FOLDER',
