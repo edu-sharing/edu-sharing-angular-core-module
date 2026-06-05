@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Injectable, Injector, NgZone, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { concatMap, firstValueFrom, from, Observable, Observer, of, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
@@ -362,23 +362,32 @@ export class UIService extends UIServiceBase {
     }
 
     async copyOrMoveNodes(source: Node[], target: Node, mode: 'copy' | 'move' = 'copy') {
+        let result = [];
         for (const node of source) {
             if (mode === 'move') {
-                await firstValueFrom(
-                    this.nodeServiceUnwrapped.createChildByMoving({
-                        source: node.ref.id,
-                        repository: target.ref.repo,
-                        node: target.ref.id,
-                    }),
+                result.push(
+                    (
+                        await firstValueFrom(
+                            this.nodeServiceUnwrapped.createChildByMoving({
+                                source: node.ref.id,
+                                repository: target.ref.repo,
+                                node: target.ref.id,
+                            }),
+                        )
+                    ).node,
                 );
             } else {
-                await firstValueFrom(
-                    this.nodeServiceUnwrapped.createChildByCopying({
-                        source: node.ref.id,
-                        repository: target.ref.repo,
-                        node: target.ref.id,
-                        withChildren: true,
-                    }),
+                result.push(
+                    (
+                        await firstValueFrom(
+                            this.nodeServiceUnwrapped.createChildByCopying({
+                                source: node.ref.id,
+                                repository: target.ref.repo,
+                                node: target.ref.id,
+                                withChildren: true,
+                            }),
+                        )
+                    ).node,
                 );
             }
         }
@@ -389,7 +398,7 @@ export class UIService extends UIServiceBase {
                 target,
             });
         } else {
-            this.localEventsService.nodesCreated.emit(source);
+            this.localEventsService.nodesCreated.emit(result);
             this.localEventsService.nodesChanged.emit([target]);
         }
         this.toast.show({
