@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UploadProgress, RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
@@ -36,13 +36,16 @@ import { map } from 'rxjs/operators';
  */
 @Injectable({ providedIn: 'root' })
 export class RestNodeService extends AbstractRestService {
-    constructor(
-        connector: RestConnectorService,
-        private events: FrameEventsService,
-        private iam: RestIamService,
-        private bridge: BridgeService,
-    ) {
+    private events = inject(FrameEventsService);
+    private iam = inject(RestIamService);
+    private bridge = inject(BridgeService);
+
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
+        const events = this.events;
+
         events.addListener(this, rxjs.EMPTY);
     }
     onEvent(event: string, data: any) {

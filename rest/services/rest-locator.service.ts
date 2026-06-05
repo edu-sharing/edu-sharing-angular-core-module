@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Observer } from 'rxjs';
 import { BridgeService } from '../../../services/bridge.service';
@@ -9,6 +9,9 @@ const EDU_SHARING_API_URL = (window as any).__env?.EDU_SHARING_API_URL;
 
 @Injectable({ providedIn: 'root' })
 export class RestLocatorService {
+    private http = inject(HttpClient);
+    private bridge = inject(BridgeService);
+
     readonly apiUrl = EDU_SHARING_API_URL ? EDU_SHARING_API_URL + '/' : 'rest/';
     private ticket: string;
     // @DEPRECATED
@@ -55,8 +58,6 @@ export class RestLocatorService {
         if (url.length > 1000) console.warn('URL is ' + url.length + ' long');
         return url;
     }
-
-    constructor(private http: HttpClient, private bridge: BridgeService) {}
 
     getConfigDynamic(key: string): Observable<any> {
         return new Observable<any>((observer: Observer<any>) => {

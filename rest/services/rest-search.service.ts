@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
@@ -14,7 +14,9 @@ import { SearchParameters } from 'ngx-edu-sharing-api';
  */
 @Injectable({ providedIn: 'root' })
 export class RestSearchService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
 

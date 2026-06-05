@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Node } from 'ngx-edu-sharing-api';
 import { RestConnectorService } from './rest-connector.service';
@@ -8,7 +8,9 @@ import { AbstractRestService } from './abstract-rest-service';
 
 @Injectable({ providedIn: 'root' })
 export class RestToolService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
 

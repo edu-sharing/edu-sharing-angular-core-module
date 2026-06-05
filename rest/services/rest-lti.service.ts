@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AbstractRestService } from './abstract-rest-service';
 import { RestConnectorService } from './rest-connector.service';
 import { TemporaryStorageService } from 'ngx-edu-sharing-ui';
@@ -6,7 +6,11 @@ import { LTIRegistrationTokens } from '../data-object';
 
 @Injectable({ providedIn: 'root' })
 export class RestLtiService extends AbstractRestService {
-    constructor(connector: RestConnectorService, private storage: TemporaryStorageService) {
+    private storage = inject(TemporaryStorageService);
+
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
@@ -17,7 +17,7 @@ import { RequestObject } from '../request-object';
 
 @Injectable({ providedIn: 'root' })
 export class RestCommentsService {
-    constructor(private connector: RestConnectorService) {}
+    private connector = inject(RestConnectorService);
 
     getComments(node: string, repository = RestConstants.HOME_REPOSITORY): Observable<Comments> {
         let query = this.connector.createUrl(

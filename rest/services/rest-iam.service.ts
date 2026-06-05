@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Group, User, UserEntry, UserService } from 'ngx-edu-sharing-api';
 import { Observable, Subject } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -27,9 +27,13 @@ import { RestConnectorService } from './rest-connector.service';
  */
 @Injectable({ providedIn: 'root' })
 export class RestIamService extends AbstractRestService implements OnDestroy {
+    private userService = inject(UserService);
+
     private destroyed$ = new Subject<void>();
 
-    constructor(connector: RestConnectorService, private userService: UserService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
 

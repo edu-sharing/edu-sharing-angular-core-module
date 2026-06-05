@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Connector, ConnectorList, ConnectorService, Node } from 'ngx-edu-sharing-api';
 import { NodeHelperService } from '../../../services/node-helper.service';
 import { CollectionReference } from '../data-object';
@@ -14,18 +14,19 @@ import { UIService } from './ui.service';
  */
 @Injectable({ providedIn: 'root' })
 export class RestConnectorsService extends AbstractRestService {
+    nodeApi = inject(RestNodeService);
+    private nodeHelper = inject(NodeHelperService);
+    ui = inject(UIService);
+    private connectorApi = inject(ConnectorService);
+
     private static MODE_NONE = 0;
     private static MODE_CREATE = 1;
     private static MODE_EDIT = 2;
 
     private currentList: ConnectorList;
-    constructor(
-        connector: RestConnectorService,
-        public nodeApi: RestNodeService,
-        private nodeHelper: NodeHelperService,
-        public ui: UIService,
-        private connectorApi: ConnectorService,
-    ) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
         // FIXME: This causes the connectors list to always be fetched, even if no one needs it. In
         // order to change that, all functions depending on `currentList` need to be asynchronous.

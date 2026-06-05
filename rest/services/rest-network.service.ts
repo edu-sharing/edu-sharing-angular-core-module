@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NetworkService, Node, Repository } from 'ngx-edu-sharing-api';
 import { Observable } from 'rxjs';
 import { UniversalNode } from '../definitions';
@@ -22,6 +22,8 @@ function consoleWarn(s: string): void {
  * */
 @Injectable({ providedIn: 'root' })
 export class RestNetworkService extends AbstractRestService {
+    private networkApi = inject(NetworkService);
+
     // FIXME: if methods of this service get called before `currentRepositories` is populated, we
     // will cause errors.
     private static currentRepositories: Repository[];
@@ -75,7 +77,9 @@ export class RestNetworkService extends AbstractRestService {
 
     private _repositories = this.networkApi.getRepositories();
 
-    constructor(connector: RestConnectorService, private networkApi: NetworkService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
 

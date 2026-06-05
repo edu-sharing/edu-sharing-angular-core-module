@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { RestConnectorService } from './rest-connector.service';
 import { AbstractRestService } from './abstract-rest-service';
@@ -12,7 +12,9 @@ import { Mediacenter } from 'ngx-edu-sharing-api';
 @Injectable({ providedIn: 'root' })
 export class RestMediacenterService extends AbstractRestService {
     // @TODO: declare the mediacenter type when it is finalized in backend
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
     public getMediacenters(repository = RestConstants.HOME_REPOSITORY) {

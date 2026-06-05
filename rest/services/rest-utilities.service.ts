@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RestConnectorService } from './rest-connector.service';
 import { AbstractRestService } from './abstract-rest-service';
 import { WebsiteInformation } from '../data-object';
 
 @Injectable({ providedIn: 'root' })
 export class RestUtilitiesService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
     public getWebsiteInformation = (url: string) => {

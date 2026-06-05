@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
@@ -19,7 +19,9 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class RestAdminService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
     public getJobs() {
