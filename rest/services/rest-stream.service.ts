@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RestConnectorService } from './rest-connector.service';
 import { RestConstants } from '../rest-constants';
 import { STREAM_STATUS } from '../data-object';
 
 @Injectable({ providedIn: 'root' })
 export class RestStreamService {
-    constructor(private connector: RestConnectorService) {}
+    private connector = inject(RestConnectorService);
 
     public getStream = (
         status: STREAM_STATUS = STREAM_STATUS.OPEN,

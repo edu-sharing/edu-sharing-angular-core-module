@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
 import { RestConstants } from '../rest-constants';
@@ -7,7 +7,7 @@ import { RequestObject } from '../request-object';
 
 @Injectable({ providedIn: 'root' })
 export class RestTrackingService {
-    constructor(private connector: RestConnectorService) {}
+    private connector = inject(RestConnectorService);
 
     trackEvent(
         event: EventType,

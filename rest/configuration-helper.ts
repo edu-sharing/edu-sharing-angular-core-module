@@ -25,8 +25,8 @@ export class ConfigurationHelper {
         // if button was not found in hide -> it has the menu button
         return hide.indexOf(button) == -1;
     }
-    static getPersonWithConfigDisplayName(person: any, config: ConfigService) {
-        return new NodePersonNamePipe(config).transform(person);
+    static getPersonWithConfigDisplayName(person: any, pipe: NodePersonNamePipe) {
+        return pipe.transform(person);
     }
     public static async getAvailableMds(
         repository: string | Repository,

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RestConstants } from '../rest-constants';
 import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
@@ -13,7 +13,9 @@ import { AbstractRestService } from './abstract-rest-service';
 
 @Injectable({ providedIn: 'root' })
 export class RestRegisterService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
     public register = (data: RegisterInformation) => {

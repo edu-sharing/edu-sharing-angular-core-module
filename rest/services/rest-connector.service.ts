@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ApiRequestConfiguration,
@@ -44,6 +44,20 @@ export interface UploadProgress {
  */
 @Injectable({ providedIn: 'root' })
 export class RestConnectorService implements OnDestroy {
+    private router = inject(Router);
+    private http = inject(HttpClient);
+    private ngZone = inject(NgZone);
+    private config = inject(ConfigurationService);
+    private ui = inject(UIService);
+    private locator = inject(RestLocatorService);
+    private bridge = inject(BridgeService);
+    private storage = inject(TemporaryStorageService);
+    private event = inject(FrameEventsService);
+    private configApi = inject(ConfigService);
+    private apiRequestConfiguration = inject(ApiRequestConfiguration);
+    private apiStateService = inject(ApiStateService);
+    private authenticationApi = inject(AuthenticationService);
+
     public static DEFAULT_NUMBER_PER_REQUEST = 25;
     private currentRequestCount$ = new BehaviorSubject<number>(0);
     private _logoutTimeout: number;
@@ -81,21 +95,9 @@ export class RestConnectorService implements OnDestroy {
     ) {
         return this.locator.getRequestOptions(contentType, username, password);
     }
-    constructor(
-        private router: Router,
-        private http: HttpClient,
-        private ngZone: NgZone,
-        private config: ConfigurationService,
-        private ui: UIService,
-        private locator: RestLocatorService,
-        private bridge: BridgeService,
-        private storage: TemporaryStorageService,
-        private event: FrameEventsService,
-        private configApi: ConfigService,
-        private apiRequestConfiguration: ApiRequestConfiguration,
-        private apiStateService: ApiStateService,
-        private authenticationApi: AuthenticationService,
-    ) {
+    constructor() {
+        const event = this.event;
+
         this.registerLoginInfo();
         this.numberPerRequest = RestConnectorService.DEFAULT_NUMBER_PER_REQUEST;
         event.addListener(this, this.destroyed);

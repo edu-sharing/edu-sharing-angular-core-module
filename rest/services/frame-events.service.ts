@@ -1,10 +1,12 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 export interface EventListener {
     onEvent(event: string, data: any): void;
 }
 @Injectable({ providedIn: 'root' })
 export class FrameEventsService {
+    private ngZone = inject(NgZone);
+
     public static EVENT_UPDATE_LOGIN_STATE = 'UPDATE_LOGIN_STATE';
     public static EVENT_USER_LOGGED_IN = 'USER_LOGGED_IN';
     public static EVENT_USER_LOGGED_OUT = 'USER_LOGGED_OUT';
@@ -49,7 +51,7 @@ export class FrameEventsService {
     private eventSelfListeners: EventListener[] = [];
     private windows: Window[] = [];
 
-    constructor(private ngZone: NgZone) {
+    constructor() {
         this.ngZone.runOutsideAngular(() => {
             window.addEventListener('message', (event: any) => this.onEvent(event), false);
             setInterval(() => {

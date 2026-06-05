@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { RestLocatorService } from './rest-locator.service';
 import { BridgeService } from '../../../services/bridge.service';
@@ -12,15 +12,11 @@ import { first } from 'rxjs/operators';
  */
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
-    private data: any = null;
+    private bridge = inject(BridgeService);
+    private locator = inject(RestLocatorService);
+    private configApi = inject(ConfigService);
 
-    constructor(
-        private bridge: BridgeService,
-        private locator: RestLocatorService,
-        private configApi: ConfigService,
-    ) {
-        //this.getAll().subscribe(()=>{});
-    }
+    private data: any = null;
     public getLocator() {
         return this.locator;
     }

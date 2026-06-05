@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { Observable } from 'rxjs';
 import { RestConnectorService } from './rest-connector.service';
@@ -15,7 +15,9 @@ import { CollectionProposalStatus, ProposalNode } from 'ngx-edu-sharing-api';
  */
 @Injectable({ providedIn: 'root' })
 export class RestCollectionService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
     public deleteCollection = (

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MdsMetadataset, MdsMetadatasets, MdsValues } from '../data-object';
 import { RestConstants } from '../rest-constants';
@@ -11,7 +11,9 @@ import { MdsValueList } from 'ngx-edu-sharing-ui';
  */
 @Injectable({ providedIn: 'root' })
 export class RestMdsService extends AbstractRestService {
-    constructor(connector: RestConnectorService) {
+    constructor() {
+        const connector = inject(RestConnectorService);
+
         super(connector);
     }
 

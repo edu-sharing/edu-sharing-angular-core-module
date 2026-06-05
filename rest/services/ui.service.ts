@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular/core';
+import { ComponentFactoryResolver, Injectable, Injector, NgZone, inject } from '@angular/core';
 import { concatMap, firstValueFrom, from, Observable, Observer, of, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
@@ -42,29 +42,26 @@ import { RestToolService } from './rest-tool.service';
 
 @Injectable({ providedIn: 'root' })
 export class UIService extends UIServiceBase {
+    private iamService = inject(RestIamService);
+    private events = inject(FrameEventsService);
+    private toast = inject(Toast);
+    private platformLocation = inject(PlatformLocation);
+    private ltiPlatformService = inject(LtiPlatformService);
+    private router = inject(Router);
+    private bridge = inject(BridgeService);
+    private connector = inject(RestConnectorService);
+    private nodeServiceUnwrapped = inject(NodeServiceUnwrapped);
+    private collectionService = inject(RestCollectionService);
+    private userService = inject(UserService);
+    private http = inject(HttpClient);
+    private localEventsService = inject(LocalEventsService);
+
     /**
      * triggered when a user logout is requested/processed
      */
     logoutSubject = new Subject<ConfigValues>();
-    constructor(
-        componentFactoryResolver: ComponentFactoryResolver,
-        injector: Injector,
-        ngZone: NgZone,
-        private iamService: RestIamService,
-        private events: FrameEventsService,
-        private toast: Toast,
-        private platformLocation: PlatformLocation,
-        private ltiPlatformService: LtiPlatformService,
-        private router: Router,
-        private bridge: BridgeService,
-        private connector: RestConnectorService,
-        private nodeServiceUnwrapped: NodeServiceUnwrapped,
-        private collectionService: RestCollectionService,
-        private userService: UserService,
-        private http: HttpClient,
-        private localEventsService: LocalEventsService,
-    ) {
-        super(componentFactoryResolver, injector, ngZone);
+    constructor() {
+        super();
     }
 
     /**
