@@ -2,7 +2,12 @@ import { ComponentFactoryResolver, Injectable, Injector, NgZone } from '@angular
 import { Observable, Observer, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
-import { OPEN_URL_MODE, UIConstants, UIService as UIServiceBase } from 'ngx-edu-sharing-ui';
+import {
+    OPEN_URL_MODE,
+    RenderHelperService,
+    UIConstants,
+    UIService as UIServiceBase,
+} from 'ngx-edu-sharing-ui';
 import { BridgeService } from '../../../services/bridge.service';
 import { RestConnectorService } from './rest-connector.service';
 import { HttpClient } from '@angular/common/http';
@@ -37,6 +42,7 @@ export class UIService extends UIServiceBase {
         private connector: RestConnectorService,
         private userService: UserService,
         private http: HttpClient,
+        private renderHelper: RenderHelperService,
     ) {
         super(componentFactoryResolver, injector, ngZone);
     }
@@ -80,6 +86,9 @@ export class UIService extends UIServiceBase {
                 .getAll()
                 .subscribe(async (config: ConfigValues) => {
                     this.logoutSubject.next(config);
+                    await this.renderHelper
+                        .logoutRendering2()
+                        .catch((error) => console.warn('rs2 logout failed', error));
                     if (this.bridge.isRunningCordova()) {
                         this.connector.logout().subscribe(() => {
                             this.bridge.getCordova().restartCordova();
