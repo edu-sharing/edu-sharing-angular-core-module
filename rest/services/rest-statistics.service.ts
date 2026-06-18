@@ -1,9 +1,13 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { NodeStatistics, Statistics } from '../data-object';
 import { AbstractRestService } from './abstract-rest-service';
 
+/**
+ * @Deprecated
+ * Prefer using the service from ngx-edu-sharing-api
+ */
 @Injectable({ providedIn: 'root' })
 export class RestStatisticsService extends AbstractRestService {
     constructor() {

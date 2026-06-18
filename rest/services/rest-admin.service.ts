@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { RestConnectorService } from './rest-connector.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
@@ -17,6 +17,10 @@ import { Observable } from 'rxjs';
 import { AbstractRestService } from './abstract-rest-service';
 import { map } from 'rxjs/operators';
 
+/**
+ * @Deprecated
+ * Prefer using the service from ngx-edu-sharing-api
+ */
 @Injectable({ providedIn: 'root' })
 export class RestAdminService extends AbstractRestService {
     constructor() {
