@@ -162,6 +162,7 @@ export class RestConnectorService implements OnDestroy {
         return this.authenticationApi.logout().pipe(
             tap(() => {
                 this.currentLogin.next(null);
+                this.authenticationApi.forceLoginInfoRefresh();
                 this._scope = null;
                 this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
             }),
