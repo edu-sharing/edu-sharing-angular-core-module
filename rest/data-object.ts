@@ -826,6 +826,7 @@ export interface Usage {
     appUser: string;
     appUserMail: string;
     courseId: string;
+    courseTitle: string;
     distinctPersons: number;
     appId: string;
     appType: string;
