@@ -4,6 +4,7 @@ import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
 import {
     LocalEventsService,
+    RenderHelperService,
     OPEN_URL_MODE,
     UIConstants,
     UIService as UIServiceBase,
@@ -55,6 +56,7 @@ export class UIService extends UIServiceBase {
     private userService = inject(UserService);
     private http = inject(HttpClient);
     private localEventsService = inject(LocalEventsService);
+    private renderHelper = inject(RenderHelperService);
 
     /**
      * triggered when a user logout is requested/processed
@@ -103,6 +105,9 @@ export class UIService extends UIServiceBase {
                 .getAll()
                 .subscribe(async (config: ConfigValues) => {
                     this.logoutSubject.next(config);
+                    await this.renderHelper
+                        .logoutRendering2()
+                        .catch((error) => console.warn('rs2 logout failed', error));
                     if (this.bridge.isRunningCordova()) {
                         this.connector.logout().subscribe(() => {
                             this.bridge.getCordova().restartCordova();

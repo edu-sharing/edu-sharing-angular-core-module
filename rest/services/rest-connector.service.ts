@@ -143,6 +143,7 @@ export class RestConnectorService implements OnDestroy {
         return this.authenticationApi.logout().pipe(
             tap(() => {
                 this.currentLogin.next(null);
+                this.authenticationApi.forceLoginInfoRefresh();
                 this._scope = null;
                 this.event.broadcastEvent(FrameEventsService.EVENT_USER_LOGGED_OUT);
             }),
@@ -167,7 +168,10 @@ export class RestConnectorService implements OnDestroy {
         });
     }
 
-    public isLoggedIn(forceRenew = true): Observable<LoginInfo> {
+    public isLoggedIn(forceRenew = false): Observable<LoginInfo> {
+        if (forceRenew) {
+            this.authenticationApi.forceLoginInfoRefresh();
+        }
         return this.authenticationApi.observeLoginInfo().pipe(first());
     }
 
