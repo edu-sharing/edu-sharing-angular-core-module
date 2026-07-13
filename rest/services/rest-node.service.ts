@@ -664,6 +664,7 @@ export class RestNodeService extends AbstractRestService {
         );
     };
     /**
+     * @Deprecated use new libs changeContent method
      * Upload binary data to a node and create a new version
      * @param node The node id
      * @param file The @File to upload
