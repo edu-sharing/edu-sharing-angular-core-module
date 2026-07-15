@@ -199,26 +199,6 @@ export class RestCollectionService extends AbstractRestService {
         );
     };
 
-    public uploadCollectionImage = (
-        collectionId: string,
-        file: File,
-        mimetype: string,
-        repository: string = RestConstants.HOME_REPOSITORY,
-    ): Observable<XMLHttpRequest> => {
-        if (mimetype == 'auto') mimetype = file.type;
-        const query = this.connector.createUrl(
-            'collection/:version/collections/:repository/:collectionid/icon?mimetype=:mime',
-            repository,
-            [
-                [':collectionid', collectionId],
-                [':mime', mimetype],
-            ],
-        );
-        const options = this.connector.getRequestOptions();
-
-        return this.connector.sendDataViaXHR(query, file);
-    };
-
     public deleteCollectionImage = (
         collectionId: string,
         repository: string = RestConstants.HOME_REPOSITORY,
