@@ -15,7 +15,6 @@ import {
 } from '../data-object';
 import { Observable } from 'rxjs';
 import { AbstractRestService } from './abstract-rest-service';
-import { map } from 'rxjs/operators';
 
 /**
  * @Deprecated
@@ -75,35 +74,6 @@ export class RestAdminService extends AbstractRestService {
             [':url', url],
         ]);
         return this.connector.put<any>(query, null, this.connector.getRequestOptions());
-    }
-    public uploadTempFile(file: File, filename = file.name) {
-        let query = this.connector.createUrl('admin/:version/upload/temp/:name', null, [
-            [':name', filename],
-        ]);
-        let options = this.connector.getRequestOptions();
-
-        return this.connector.sendDataViaXHR(query, file, 'PUT').pipe(
-            map((response: XMLHttpRequest) => {
-                return JSON.parse(response.response);
-            }),
-        );
-    }
-    public importExcel(file: File, parent: string, addToCollection: string) {
-        let query = this.connector.createUrl(
-            'admin/:version/import/excel?parent=:parent&addToCollection=:addToCollection',
-            null,
-            [
-                [':parent', parent],
-                [':addToCollection', addToCollection],
-            ],
-        );
-        let options = this.connector.getRequestOptions();
-
-        return this.connector.sendDataViaXHR(query, file, 'POST', 'excel').pipe(
-            map((response: XMLHttpRequest) => {
-                return JSON.parse(response.response);
-            }),
-        );
     }
     public getApplications(): Observable<Application[]> {
         let query = this.connector.createUrl('admin/:version/applications', null);
@@ -172,21 +142,6 @@ export class RestAdminService extends AbstractRestService {
             ],
         );
         return this.connector.post(query, null, this.connector.getRequestOptions());
-    }
-    public importOAIXML(xml: File, recordHandlerClassName: string, binaryHandlerClassName = '') {
-        let query = this.connector.createUrl(
-            'admin/:version/import/oai/xml?recordHandlerClassName=:recordHandlerClassName&binaryHandlerClassName=:binaryHandlerClassName',
-            null,
-            [
-                [':recordHandlerClassName', recordHandlerClassName],
-                [':binaryHandlerClassName', binaryHandlerClassName],
-            ],
-        );
-        return this.connector.sendDataViaXHR(query, xml, 'POST', 'xml').pipe(
-            map((response: XMLHttpRequest) => {
-                return JSON.parse(response.response);
-            }),
-        );
     }
     public refreshCache(rootFolder: string, sticky = false) {
         let query = this.connector.createUrl(
