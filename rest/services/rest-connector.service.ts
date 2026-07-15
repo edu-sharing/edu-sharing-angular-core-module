@@ -277,61 +277,6 @@ export class RestConnectorService implements OnDestroy {
         return RestLocatorService.createUrlNoEscape(url, repository, urlParams);
     }
 
-    public sendDataViaXHR(
-        url: string,
-        file: File,
-        method = 'POST',
-        fieldName = 'file',
-        onProgress?: (progress: UploadProgress) => void,
-    ): Observable<XMLHttpRequest> {
-        return Observable.create((observer: Observer<XMLHttpRequest>) => {
-            try {
-                let xhr: XMLHttpRequest = new XMLHttpRequest();
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === 4) {
-                        if (onProgress) onProgress({ progress: 1 });
-                        if (xhr.status === 200) {
-                            observer.next(xhr);
-                            observer.complete();
-                        } else {
-                            console.error(xhr);
-                            observer.error(xhr);
-                        }
-                    }
-                };
-                let options: any = this.getRequestOptions('');
-                xhr.withCredentials = options.withCredentials;
-                xhr.open(method, this.endpointUrl + url, true);
-                for (let key in options.headers) {
-                    xhr.setRequestHeader(key, options.headers[key]);
-                }
-                let formData = new FormData();
-                if (file) {
-                    // dirty hack for request body stream exhausted error on some ios formats
-                    if (UIService.isSafari()) {
-                        file = new File([file], file.name, { type: 'application/octet-stream' });
-                    }
-                    formData.append(fieldName, file);
-                }
-                let progress: UploadProgress = { start: new Date().getTime() };
-                xhr.upload.addEventListener('progress', (event: any) => {
-                    if (event.lengthComputable) {
-                        progress.progress = event.loaded / event.total;
-                        progress.loaded = event.loaded;
-                        progress.total = event.total;
-                        progress.elapsed = (new Date().getTime() - progress.start) / 1000;
-                        progress.remaining =
-                            ((event.total - event.loaded) * progress.elapsed) / event.loaded;
-                        if (onProgress) onProgress(progress);
-                    }
-                });
-                xhr.send(formData);
-            } catch (e) {
-                console.error(e);
-                observer.error(e);
-            }
-        });
-    }
     private request<T>(method: string, url: string, body: any, options: any, appendUrl = true) {
         return new Observable<T>((observer: Observer<T>) => {
             this.authenticationApi.reportOutsideApiRequest();
