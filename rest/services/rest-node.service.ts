@@ -663,44 +663,6 @@ export class RestNodeService extends AbstractRestService {
             this.connector.getRequestOptions(),
         );
     };
-    /**
-     * @Deprecated use new libs changeContent method
-     * Upload binary data to a node and create a new version
-     * @param node The node id
-     * @param file The @File to upload
-     * @param versionComment The version comment string
-     * @param mimetype when default "auto" is used, the mimetype is guessed from the content type
-     * @param repository
-     * @returns {Observable<void>}
-     */
-    public uploadNodeContent = (
-        node: string,
-        file: File,
-        versionComment: string,
-        mimetype = 'auto',
-        onProgress: (progress: UploadProgress) => void = null,
-        repository = RestConstants.HOME_REPOSITORY,
-    ): Observable<{ node: Node }> => {
-        if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);
-        let query = this.connector.createUrl(
-            'node/:version/nodes/:repository/:node/content?versionComment=:comment&mimetype=:mime',
-            repository,
-            [
-                [':node', node],
-                [':comment', versionComment],
-                [':mime', mimetype],
-            ],
-        );
-        let options = this.connector.getRequestOptions();
-
-        return this.connector
-            .sendDataViaXHR(query, file, 'POST', 'file', onProgress)
-            .pipe(map((r) => JSON.parse(r.response)));
-        /*
-    return this.http.post(query,"",this.connector.getRequestOptions())
-      .map((response: Response) => response.json());
-      */
-    };
     public setNodeTextContent = (
         node: string,
         text: string,
