@@ -64,17 +64,6 @@ export class RestHelper extends RestHelperBase {
     }
 
     /**
-     * Guess the mimetype for a HTML-File object
-     * @param file
-     * @returns {string}
-     */
-    public static guessMimeType(file: File): string {
-        let type = file.type;
-        if (type == 'application/x-zip-compressed') type = 'application/zip';
-        return type;
-    }
-
-    /**
      * checks a rest error message and returns true if the string was found in the error or message text
      * @param error
      * @param needle

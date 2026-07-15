@@ -729,42 +729,7 @@ export class RestNodeService extends AbstractRestService {
         );
         return this.connector.get<NodeLock>(query, this.connector.getRequestOptions());
     };
-    /**
-     * Upload binary data to a node and create a new version
-     * @param node The node id
-     * @param file The @File to upload
-     * @param createVersion Determines whether to create a new node version
-     * @param mimetype when default "auto" is used, the mimetype is guessed from the content type
-     * @param repository
-     * @returns {Observable<void>}
-     */
-    public uploadNodePreview = (
-        node: string,
-        file: File,
-        createVersion = true,
-        mimetype = 'auto',
-        repository = RestConstants.HOME_REPOSITORY,
-    ): Observable<{ node: Node }> => {
-        if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);
-        let query = this.connector.createUrl(
-            'node/:version/nodes/:repository/:node/preview?mimetype=:mime',
-            repository,
-            [
-                [':node', node],
-                [':mime', mimetype],
-                [':createVersion', '' + createVersion],
-            ],
-        );
-        let options = this.connector.getRequestOptions();
 
-        return this.connector
-            .sendDataViaXHR(query, file, 'POST', 'image')
-            .pipe(map((r) => JSON.parse(r.response)));
-        /*
-     return this.http.post(query,"",this.connector.getRequestOptions())
-     .map((response: Response) => response.json());
-     */
-    };
     public deleteNodePreview = (
         node: string,
         repository = RestConstants.HOME_REPOSITORY,
