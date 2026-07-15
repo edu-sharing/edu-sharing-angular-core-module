@@ -493,19 +493,6 @@ export class RestIamService extends AbstractRestService implements OnDestroy {
         return this.connector.delete(query, this.connector.getRequestOptions());
     };
 
-    public setUserAvatar = (
-        avatar: File,
-        user = RestConstants.ME,
-        repository = RestConstants.HOME_REPOSITORY,
-    ) => {
-        const query = this.connector.createUrl(
-            'iam/:version/people/:repository/:user/avatar',
-            repository,
-            [[':user', user]],
-        );
-        return this.connector.sendDataViaXHR(query, avatar, 'PUT', 'avatar');
-    };
-
     public createUser = (
         user: string,
         password: string,

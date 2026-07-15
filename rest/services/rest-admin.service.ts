@@ -105,30 +105,6 @@ export class RestAdminService extends AbstractRestService {
             }),
         );
     }
-    public importCollections(file: File, parent: string) {
-        let query = this.connector.createUrl(
-            'admin/:version/import/collections?parent=:parent',
-            null,
-            [[':parent', parent]],
-        );
-        let options = this.connector.getRequestOptions();
-
-        return this.connector.sendDataViaXHR(query, file, 'POST', 'xml').pipe(
-            map((response: XMLHttpRequest) => {
-                return JSON.parse(response.response);
-            }),
-        );
-    }
-    public addApplicationXml(file: File): Observable<any> {
-        let query = this.connector.createUrl('admin/:version/applications/xml', null);
-        let options = this.connector.getRequestOptions();
-
-        return this.connector.sendDataViaXHR(query, file, 'PUT', 'xml').pipe(
-            map((response: XMLHttpRequest) => {
-                return JSON.parse(response.response);
-            }),
-        );
-    }
     public getApplications(): Observable<Application[]> {
         let query = this.connector.createUrl('admin/:version/applications', null);
         return this.connector.get(query, this.connector.getRequestOptions());
