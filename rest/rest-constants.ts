@@ -21,15 +21,6 @@ export class RestConstants extends RestConstantsBase {
 
     public static BASIC_PERMISSIONS = ['Consumer', 'Collaborator', 'Coordinator'];
 
-    public static PERMISSION_OWNER = 'Owner';
-    public static PERMISSION_COLLABORATOR = 'Collaborator';
-    public static PERMISSION_DOWNLOAD_CONTENT = 'DownloadContent';
-    public static PERMISSION_COORDINATOR = 'Coordinator';
-    public static PERMISSION_ALL = 'All';
-    public static PERMISSION_WRITE = 'Write';
-    public static PERMISSION_DELETE = 'Delete';
-    public static PERMISSION_FEEDBACK = 'Feedback'; // Giving feedback for collections
-    public static PERMISSION_RATE = 'Rate';
     public static CCM_ASSOC_CHILDIO = 'ccm:childio';
 
     public static CM_TYPE_PERSON = 'cm:person';
