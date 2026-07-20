@@ -582,12 +582,20 @@ export class UIService extends UIServiceBase {
         }
     }
 
-    goToAssignment(assignment: Assignment, mode: 'edit' | 'submissions' | 'submit') {
+    goToAssignment(assignment: Assignment, mode: 'edit' | 'assign' | 'submissions' | 'submit') {
         if (mode === 'edit') {
             void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
                 queryParams: {
                     mainComponent: 'manageAssignment',
                     assignment: assignment.ref.id,
+                },
+            });
+        } else if (mode === 'assign') {
+            void this.router.navigate([UIConstants.ROUTER_PREFIX, 'editorial', 'assignment'], {
+                queryParams: {
+                    mainComponent: 'manageAssignment',
+                    assignment: assignment.ref.id,
+                    step: 'assign',
                 },
             });
         } else if (mode === 'submissions') {
