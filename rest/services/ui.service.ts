@@ -4,8 +4,8 @@ import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
 import {
     LocalEventsService,
-    RenderHelperService,
     OPEN_URL_MODE,
+    RenderHelperService,
     UIConstants,
     UIService as UIServiceBase,
 } from 'ngx-edu-sharing-ui';
@@ -225,6 +225,8 @@ export class UIService extends UIServiceBase {
             type?: Filetype;
             win?: Window;
             connectorType?: Connector;
+            // additional request params like metadata
+            data?: { [key in string]: string[] };
             preferEdit?: boolean;
         } = {},
     ): Promise<Window> {
@@ -232,6 +234,7 @@ export class UIService extends UIServiceBase {
             type = null,
             win: winIn = null,
             connectorType = null,
+            data = null,
             preferEdit = false,
         } = options;
         let win = winIn;
@@ -241,7 +244,8 @@ export class UIService extends UIServiceBase {
         } else if (node.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE) || ltiTool) {
             UIHelper.openLTIResourceLink(win, node);
         } else {
-            const parameters = preferEdit ? { preferEdit: ['true'] } : {};
+            let parameters = data || {};
+            parameters['preferEdit'] = [preferEdit + ''];
             win = this.openConnector(node, type, win, connectorType, true, parameters);
         }
         return win;
@@ -288,6 +292,7 @@ export class UIService extends UIServiceBase {
                             if (win) win.close();
                             return;
                         }
+                        console.log(parameters);
                         this.generateConnectorUrl(connectorType, type, node, parameters).subscribe(
                             (url: string) => {
                                 if (win) {
