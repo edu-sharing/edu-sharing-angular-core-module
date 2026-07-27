@@ -28,7 +28,6 @@ export class RestConstants extends RestConstantsBase {
     public static SIZE = 'size';
     public static MEDIATYPE = 'mediatype';
     public static DIMENSIONS = 'dimensions';
-    public static CM_CREATOR = 'cm:creator';
     public static CM_OWNER = 'cm:owner';
     public static CCM_FILENAME = 'ccm:filename';
     public static CCM_OBJECTTYPE = 'ccm:objecttype';
