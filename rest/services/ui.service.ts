@@ -210,9 +210,12 @@ export class UIService extends UIServiceBase {
         if (n?.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE)) {
             return true;
         }
-        // simple connector node;
+        // simple connector node: either it stores its target or the connector resolves it
         if (n?.properties?.[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
-            return true;
+            return (
+                !!n.properties[RestConstants.CCM_PROP_IO_WWWURL]?.[0] ||
+                this.injector.get(RestConnectorsService).connectorOfNode(n) != null
+            );
         }
         return (
             this.injector.get(RestConnectorsService).connectorSupportsEdit(n) != null ||
@@ -239,8 +242,24 @@ export class UIService extends UIServiceBase {
         } = options;
         let win = winIn;
         const ltiTool = await this.ltiPlatformService.toolForNode(node);
-        if (node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
-            UIHelper.openWindow(win, node.properties[RestConstants.CCM_PROP_IO_WWWURL]?.[0]);
+        const simpleConnectorUrl =
+            node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector'
+                ? node.properties[RestConstants.CCM_PROP_IO_WWWURL]?.[0]
+                : null;
+        if (simpleConnectorUrl) {
+            UIHelper.openWindow(win, simpleConnectorUrl);
+        } else if (node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] === 'connector') {
+            // no target stored on the element (connector "redirectMode"), so the backend servlet resolves it
+            let parameters = data || {};
+            parameters['preferEdit'] = [preferEdit + ''];
+            win = this.openConnector(
+                node,
+                type,
+                win,
+                connectorType ?? this.injector.get(RestConnectorsService).connectorOfNode(node),
+                true,
+                parameters,
+            );
         } else if (node.aspects?.includes(RestConstants.CCM_ASPECT_LTITOOL_NODE) || ltiTool) {
             UIHelper.openLTIResourceLink(win, node);
         } else {

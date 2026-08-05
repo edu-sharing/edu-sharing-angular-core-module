@@ -34,7 +34,7 @@ export class RestConnectorsService extends AbstractRestService {
     }
 
     public connectorSupportsEdit(node: Node) {
-        const connectors = this.getConnectors();
+        const connectors = this.getConnectorsSupportingMimetypes();
         if (connectors == null) return null;
         for (const connector of connectors) {
             let access = (node as CollectionReference).accessOriginal || node.access;
@@ -95,6 +95,34 @@ export class RestConnectorsService extends AbstractRestService {
 
     getConnectors() {
         return this.filterConnectors(this.currentList?.connectors);
+    }
+
+    /**
+     * Regular connectors plus all simple connectors that declare mimetypes for their filetypes,
+     * i.e. simple connectors that can be matched against an element like a regular connector.
+     */
+    getConnectorsSupportingMimetypes(): Connector[] {
+        return (this.getConnectors() ?? []).concat(
+            (this.filterConnectors(this.currentList?.simpleConnectors) ?? []).filter((connector) =>
+                connector.filetypes?.some((filetype) => !!filetype.mimetype),
+            ),
+        );
+    }
+
+    /**
+     * The simple connector an element was created with, identified via the ccm:ccressourcesubtype.
+     * Returns null if the element was not created by a simple connector or the connector is not available.
+     */
+    public connectorOfNode(node: Node): Connector | null {
+        if (node?.properties?.[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] !== 'connector') {
+            return null;
+        }
+        const subtype = node.properties[RestConstants.CCM_PROP_CCRESSOURCESUBTYPE]?.[0];
+        return (
+            (this.filterConnectors(this.currentList?.simpleConnectors) ?? []).find(
+                (connector) => connector.id === subtype,
+            ) ?? null
+        );
     }
 
     /** Filters connectors which are only available on desktop. */
