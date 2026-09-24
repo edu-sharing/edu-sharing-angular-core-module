@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UploadProgress, RestConnectorService } from './rest-connector.service';
+import { RestChunkedUploadService } from './rest-chunked-upload.service';
 import { RestHelper } from '../rest-helper';
 import { RestConstants } from '../rest-constants';
 import {
@@ -42,6 +43,7 @@ export class RestNodeService extends AbstractRestService {
         private events: FrameEventsService,
         private iam: RestIamService,
         private bridge: BridgeService,
+        private chunkedUpload: RestChunkedUploadService,
     ) {
         super(connector);
         events.addListener(this, rxjs.EMPTY);
@@ -679,6 +681,11 @@ export class RestNodeService extends AbstractRestService {
         repository = RestConstants.HOME_REPOSITORY,
     ): Observable<{ node: Node }> => {
         if (mimetype == 'auto') mimetype = RestHelper.guessMimeType(file);
+        // large files go through the chunked upload endpoints instead of a single long-lived
+        // request, so no individual request risks hitting a reverse-proxy timeout
+        if (RestChunkedUploadService.shouldUseChunkedUpload(file)) {
+            return this.chunkedUpload.upload(node, file, versionComment, onProgress, repository);
+        }
         let query = this.connector.createUrl(
             'node/:version/nodes/:repository/:node/content?versionComment=:comment&mimetype=:mime',
             repository,

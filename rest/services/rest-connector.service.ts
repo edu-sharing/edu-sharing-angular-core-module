@@ -334,9 +334,11 @@ export class RestConnectorService implements OnDestroy {
                     }
                 });
                 xhr.send(formData);
+                return () => xhr.abort();
             } catch (e) {
                 console.error(e);
                 observer.error(e);
+                return undefined;
             }
         });
     }

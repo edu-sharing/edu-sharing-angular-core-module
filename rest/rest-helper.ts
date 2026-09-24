@@ -81,7 +81,10 @@ export class RestHelper extends RestHelperBase {
      */
     public static errorMatchesAny(error: any, needle: string) {
         try {
-            let json = JSON.parse(error.response);
+            // raw XHR error (sendDataViaXHR) has the JSON body as a string in `.response`;
+            // an Angular HttpErrorResponse (e.g. from the typed API client) already has it
+            // parsed under `.error`
+            const json = error?.response != null ? JSON.parse(error.response) : error?.error;
             return json.error.indexOf(needle) != -1 || json.message.indexOf(needle) != -1;
         } catch (e) {}
         return false;
