@@ -211,27 +211,6 @@ export class RestAdminService extends AbstractRestService {
         );
         return this.connector.get<NodeListElastic>(query, this.connector.getRequestOptions());
     }
-    public exportLucene(
-        lucene: string,
-        store: string,
-        properties: string[],
-        authorities: string[],
-    ) {
-        let query = this.connector.createUrlNoEscape(
-            'admin/:version/lucene/export?query=:lucene&store=:store&:properties&:authorityScope',
-            null,
-            [
-                [':lucene', encodeURIComponent(lucene)],
-                [':store', encodeURIComponent(store)],
-                [':properties', RestHelper.getQueryStringForList('properties', properties)],
-                [
-                    ':authorityScope',
-                    RestHelper.getQueryStringForList('authorityScope', authorities),
-                ],
-            ],
-        );
-        return this.connector.get<any>(query, this.connector.getRequestOptions());
-    }
     public startJobSync(job: string, params: any, file: File = null) {
         let query = this.connector.createUrl('admin/:version/job/:job/sync', null, [[':job', job]]);
         if (!params) {
