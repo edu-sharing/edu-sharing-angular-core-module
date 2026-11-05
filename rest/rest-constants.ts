@@ -1,6 +1,9 @@
 import { RestConstants as RestConstantsBase } from 'ngx-edu-sharing-api';
 import { ListItemSort } from 'ngx-edu-sharing-ui';
 
+/**
+ * @Deprecated use the RestConstants in ngx-edu-sharing-api
+ */
 export class RestConstants extends RestConstantsBase {
     public static DOCUMENT_EDITOR_URL = 'http://appserver9.metaventis.com/eduConDev/';
     public static HOME_REPOSITORY = '-home-';

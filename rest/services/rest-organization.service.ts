@@ -57,6 +57,8 @@ export class RestOrganizationService extends AbstractRestService {
         onlyMemberships = true,
         request: any = null,
         repository = RestConstants.HOME_REPOSITORY,
+        /** only organizations of this group type (e.g. SCOPE) */
+        groupType: string = null,
     ) => {
         let query = this.connector.createUrlNoEscape(
             'organization/:version/organizations/:repository/?pattern=:pattern&onlyMemberships=:onlyMemberships&:request',
@@ -67,6 +69,9 @@ export class RestOrganizationService extends AbstractRestService {
                 [':onlyMemberships', '' + onlyMemberships],
             ],
         );
+        if (groupType) {
+            query += '&groupType=' + encodeURIComponent(groupType);
+        }
         return this.connector.get<OrganizationOrganizations>(
             query,
             this.connector.getRequestOptions(),
