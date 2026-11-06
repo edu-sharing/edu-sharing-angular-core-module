@@ -11,7 +11,6 @@ import {
 import { TemporaryStorageService, UIService } from 'ngx-edu-sharing-ui';
 import { BehaviorSubject, combineLatest, Observable, Observer, Subject } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
-import { v4 as uuidv4 } from 'uuid';
 import { BridgeService } from '../../../services/bridge.service';
 import { Closable } from '../../../features/dialogs/card-dialog/card-dialog-config';
 import { Licenses } from '../data-object';
@@ -282,8 +281,6 @@ export class RestConnectorService implements OnDestroy {
             this.authenticationApi.reportOutsideApiRequest();
             this.currentRequestCount$.next(this.currentRequestCount$.value + 1);
             let requestUrl = (appendUrl ? this.endpointUrl : '') + url;
-            const traceId = uuidv4();
-            options.headers['X-Client-Trace-Id'] = traceId;
             if (this.apiRequestConfiguration.getLanguage()) {
                 options.headers['X-Edu-Sharing-Language'] =
                     this.apiRequestConfiguration.getLanguage();
@@ -308,7 +305,6 @@ export class RestConnectorService implements OnDestroy {
                     observer.complete();
                 },
                 (error) => {
-                    error.traceId = traceId;
                     this.currentRequestCount$.next(this.currentRequestCount$.value - 1);
 
                     if (!this._autoLogin) {
