@@ -187,29 +187,33 @@ export class RestAdminService extends AbstractRestService {
         );
         return this.connector.post<any>(query, null, this.connector.getRequestOptions());
     }
+    /** the query is sent as request body, so its size is not limited by the maximum url length */
     public searchLucene(lucene: string, store: string, authorities: string[], request: any = null) {
         let query = this.connector.createUrlNoEscape(
-            'admin/:version/lucene?query=:lucene&:authorities&store=:store&:request',
+            'admin/:version/lucene?:authorities&store=:store&:request',
             null,
             [
-                [':lucene', encodeURIComponent(lucene)],
                 [':store', encodeURIComponent(store)],
                 [':authorities', RestHelper.getQueryStringForList('authorityScope', authorities)],
                 [':request', this.connector.createRequestString(request)],
             ],
         );
-        return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
-    }
-    public searchElastic(dsl: string, index: string) {
-        let query = this.connector.createUrlNoEscape(
-            'admin/:version/elastic?dsl=:dsl&index=:index&:request',
-            null,
-            [
-                [':dsl', encodeURIComponent(dsl)],
-                [':index', encodeURIComponent(index)],
-            ],
+        return this.connector.post<NodeList>(
+            query,
+            lucene,
+            this.connector.getRequestOptions('text/plain'),
         );
-        return this.connector.get<NodeListElastic>(query, this.connector.getRequestOptions());
+    }
+    /** the dsl is sent as request body, so its size is not limited by the maximum url length */
+    public searchElastic(dsl: string, index: string) {
+        let query = this.connector.createUrlNoEscape('admin/:version/elastic?index=:index', null, [
+            [':index', encodeURIComponent(index ?? '')],
+        ]);
+        return this.connector.post<NodeListElastic>(
+            query,
+            dsl,
+            this.connector.getRequestOptions('text/plain'),
+        );
     }
     public startJobSync(job: string, params: any, file: File = null) {
         let query = this.connector.createUrl('admin/:version/job/:job/sync', null, [[':job', job]]);
