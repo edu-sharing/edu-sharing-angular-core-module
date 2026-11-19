@@ -13,6 +13,7 @@ import {
     SharingInfo,
     SecuredNode,
 } from '../data-object';
+import { MdsDefinition } from 'ngx-edu-sharing-api';
 import { RequestObject } from '../request-object';
 import { AbstractRestService } from './abstract-rest-service';
 
@@ -59,6 +60,29 @@ export class RestSharingService extends AbstractRestService {
             ],
         );
         return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
+    }
+    /**
+     * The metadata set of a shared node (or of an element of a shared folder), authorized by the share.
+     * Only valid if the share allows viewing.
+     */
+    getMetadataSet(
+        node: string,
+        token: string,
+        password = '',
+        child: string = null,
+        repository = RestConstants.HOME_REPOSITORY,
+    ) {
+        let query = this.connector.createUrlNoEscape(
+            'sharing/:version/sharing/:repository/:node/:token/metadataset?password=:password:child',
+            repository,
+            [
+                [':node', encodeURIComponent(node)],
+                [':token', encodeURIComponent(token)],
+                [':password', encodeURIComponent(password)],
+                [':child', child ? '&child=' + encodeURIComponent(child) : ''],
+            ],
+        );
+        return this.connector.get<MdsDefinition>(query, this.connector.getRequestOptions());
     }
     /**
      * Signed data to render a shared node (or an element of a shared folder), authorized by the share.
