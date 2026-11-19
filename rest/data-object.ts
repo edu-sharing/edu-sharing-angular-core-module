@@ -207,6 +207,21 @@ export interface SharingInfo {
     passwordMatches: boolean;
     invitedBy: Person;
     node: Node;
+    /** the recipient may view the content in the browser */
+    view: boolean;
+    /** the recipient may download the content */
+    download: boolean;
+}
+/**
+ * Signed node data the rendering service needs to display a node, see `SignedNodeEntry` of the api
+ */
+export interface SecuredNode {
+    node: NodeModel;
+    jwt: string;
+    signedNode: string;
+    signature: string;
+    signatureAlgorithm?: string;
+    renderingBaseUrl?: string;
 }
 export interface NodeShare {
     token: string;
@@ -217,6 +232,10 @@ export interface NodeShare {
     downloadCount: number;
     url: string;
     shareId: string;
+    /** the recipient may view the content in the browser */
+    view: boolean;
+    /** the recipient may download the content */
+    download: boolean;
 }
 export interface Value {
     value: string;

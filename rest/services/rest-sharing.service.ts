@@ -11,6 +11,7 @@ import {
     NodeVersion,
     NodeList,
     SharingInfo,
+    SecuredNode,
 } from '../data-object';
 import { RequestObject } from '../request-object';
 import { AbstractRestService } from './abstract-rest-service';
@@ -58,5 +59,28 @@ export class RestSharingService extends AbstractRestService {
             ],
         );
         return this.connector.get<NodeList>(query, this.connector.getRequestOptions());
+    }
+    /**
+     * Signed data to render a shared node (or an element of a shared folder), authorized by the share.
+     * Only valid if the share allows viewing.
+     */
+    getSecuredNode(
+        node: string,
+        token: string,
+        password = '',
+        child: string = null,
+        repository = RestConstants.HOME_REPOSITORY,
+    ) {
+        let query = this.connector.createUrlNoEscape(
+            'sharing/:version/sharing/:repository/:node/:token/metadata/secured?password=:password:child',
+            repository,
+            [
+                [':node', encodeURIComponent(node)],
+                [':token', encodeURIComponent(token)],
+                [':password', encodeURIComponent(password)],
+                [':child', child ? '&child=' + encodeURIComponent(child) : ''],
+            ],
+        );
+        return this.connector.get<SecuredNode>(query, this.connector.getRequestOptions());
     }
 }

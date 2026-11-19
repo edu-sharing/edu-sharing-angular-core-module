@@ -316,9 +316,12 @@ export class RestNodeService extends AbstractRestService {
         expiryDate = RestConstants.SHARE_EXPIRY_UNLIMITED,
         password = '',
         repository = RestConstants.HOME_REPOSITORY,
+        view?: boolean,
+        download?: boolean,
     ) => {
         let query = this.connector.createUrl(
-            'node/:version/nodes/:repository/:node/shares/?expiryDate=:expiryDate&password=:password',
+            'node/:version/nodes/:repository/:node/shares/?expiryDate=:expiryDate&password=:password' +
+                this.getShareActionsQuery(view, download),
             repository,
             [
                 [':node', node],
@@ -328,6 +331,20 @@ export class RestNodeService extends AbstractRestService {
         );
         return this.connector.put<NodeShare>(query, '', this.connector.getRequestOptions());
     };
+    /**
+     * Query suffix for the actions (view / download) of a link share; unset values are omitted so the
+     * backend uses the default (create) or keeps the current value (update).
+     */
+    private getShareActionsQuery(view?: boolean, download?: boolean): string {
+        let query = '';
+        if (typeof view === 'boolean') {
+            query += '&view=' + view;
+        }
+        if (typeof download === 'boolean') {
+            query += '&download=' + download;
+        }
+        return query;
+    }
     public deleteNodeShare = (
         node: string,
         share: string,
@@ -349,11 +366,15 @@ export class RestNodeService extends AbstractRestService {
         expiryDate = RestConstants.SHARE_EXPIRY_UNLIMITED,
         password?: string,
         repository = RestConstants.HOME_REPOSITORY,
+        view?: boolean,
+        download?: boolean,
     ) => {
         let query: string;
+        const actions = this.getShareActionsQuery(view, download);
         if (typeof password === 'string') {
             query = this.connector.createUrl(
-                'node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate&password=:password',
+                'node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate&password=:password' +
+                    actions,
                 repository,
                 [
                     [':node', node],
@@ -364,7 +385,8 @@ export class RestNodeService extends AbstractRestService {
             );
         } else {
             query = this.connector.createUrl(
-                'node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate',
+                'node/:version/nodes/:repository/:node/shares/:shareId?expiryDate=:expiryDate' +
+                    actions,
                 repository,
                 [
                     [':node', node],
