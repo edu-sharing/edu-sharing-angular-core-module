@@ -23,12 +23,8 @@ import {
 } from '../data-object';
 import { RestIamService } from './rest-iam.service';
 import { AbstractRestService } from './abstract-rest-service';
-import { BridgeService } from '../../../services/bridge.service';
-import { FrameEventsService } from './frame-events.service';
-import { MessageType } from '../../../util/message-type';
 import { Node } from 'ngx-edu-sharing-api';
 import { Values } from '../../../features/mds/types/types';
-import * as rxjs from 'rxjs';
 import { map } from 'rxjs/operators';
 
 /**
@@ -37,19 +33,8 @@ import { map } from 'rxjs/operators';
  */
 @Injectable({ providedIn: 'root' })
 export class RestNodeService extends AbstractRestService {
-    constructor(
-        connector: RestConnectorService,
-        private events: FrameEventsService,
-        private iam: RestIamService,
-        private bridge: BridgeService,
-    ) {
+    constructor(connector: RestConnectorService, private iam: RestIamService) {
         super(connector);
-        events.addListener(this, rxjs.EMPTY);
-    }
-    onEvent(event: string, data: any) {
-        if (event == FrameEventsService.EVENT_PARENT_ADD_NODE_URL) {
-            this.createNodeUrl(data);
-        }
     }
 
     /** get all published copies of this node
@@ -812,26 +797,6 @@ export class RestNodeService extends AbstractRestService {
         let options = this.connector.getRequestOptions();
         return this.connector.delete(query, options);
     };
-    private createNodeUrl(data: any) {
-        let prop = RestHelper.createNameProperty(data.name);
-        prop[RestConstants.CCM_PROP_IO_WWWURL] = [data.url];
-        prop[RestConstants.CCM_PROP_LINKTYPE] = [RestConstants.LINKTYPE_USER_GENERATED];
-        this.createNode(
-            RestConstants.USERHOME,
-            RestConstants.CCM_TYPE_IO,
-            [],
-            prop,
-            true,
-        ).subscribe(
-            (data: NodeWrapper) => {
-                this.bridge.showTemporaryMessage(MessageType.info, 'NODE_CREATED_USERHOME', {
-                    name: data.node.name,
-                });
-                this.events.broadcastEvent(FrameEventsService.EVENT_NODE_SAVED, data.node);
-            },
-            (error: any) => this.bridge.showTemporaryMessage(MessageType.error, error),
-        );
-    }
 
     public getNodeRenderSnippetUrl(
         node: string,

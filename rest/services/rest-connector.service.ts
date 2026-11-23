@@ -121,19 +121,6 @@ export class RestConnectorService implements OnDestroy {
         if (event == FrameEventsService.EVENT_UPDATE_SESSION_TIMEOUT) {
             this.authenticationApi.reportOutsideApiRequest();
         }
-        if (event == FrameEventsService.EVENT_PARENT_REST_REQUEST) {
-            let method = request.method ? request.method.toLowerCase() : 'get';
-            let path = request.path;
-            let body = request.body;
-            if (method == 'get') {
-                this.get(path, this.getRequestOptions()).subscribe(
-                    (data: any) => {
-                        this.notifyFrame(data, request, true);
-                    },
-                    (error: any) => this.notifyFrame(error, request, false),
-                );
-            }
-        }
     }
 
     public getOAuthToken() {
@@ -537,11 +524,6 @@ export class RestConnectorService implements OnDestroy {
         let split = url.split('/');
         split.splice(split.length - clip, clip);
         return split.join('/') + '/';
-    }
-
-    private notifyFrame(data: any, request: any, success: boolean) {
-        let result = { request: request, response: data, success: success };
-        this.event.broadcastEvent(FrameEventsService.EVENT_REST_RESPONSE, result);
     }
 
     public setRoute(route: ActivatedRoute, router: Router) {
