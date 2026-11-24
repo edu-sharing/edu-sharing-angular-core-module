@@ -17,7 +17,7 @@ import { RestConnectorsService } from './rest-connectors.service';
 import { RestIamService } from './rest-iam.service';
 import { FrameEventsService } from './frame-events.service';
 import { Toast } from '../../../services/toast';
-import { Filetype, Node, NodeLock } from '../data-object';
+import { Filetype, IamUser, Node, NodeLock } from '../data-object';
 import { OK } from '../../../features/dialogs/dialog-modules/generic-dialog/generic-dialog-data';
 import { UIHelper } from 'src/app/core-ui-module/ui-helper';
 import { PlatformLocation } from '@angular/common';
@@ -194,6 +194,10 @@ export class UIService extends UIServiceBase {
         connectorType: Connector = null,
         newWindow = true,
         parameters: { [key in string]: string[] } = {},
+        /**
+         * Skip the quota check if the caller already did it (e.g. when creating a new node).
+         */
+        skipQuotaCheck = false,
     ) {
         const connectors = this.injector.get(RestConnectorsService);
         if (connectorType == null) {
@@ -214,10 +218,13 @@ export class UIService extends UIServiceBase {
                     if (win) win.close();
                     return;
                 }
-                this.iamService.getCurrentUserAsync().then(
+                (skipQuotaCheck
+                    ? Promise.resolve(null as IamUser)
+                    : this.iamService.getCurrentUserAsync()
+                ).then(
                     (user) => {
                         if (
-                            user.person.quota.enabled &&
+                            user?.person.quota.enabled &&
                             user.person.quota.sizeCurrent >= user.person.quota.sizeQuota
                         ) {
                             void this.toast.openGenericDialog({
