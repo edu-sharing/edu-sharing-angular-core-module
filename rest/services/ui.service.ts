@@ -518,15 +518,10 @@ export class UIService extends UIServiceBase {
                                             ]),
                                         true,
                                     );
-                                } else if (response === 'NO') {
-                                    // Invoke `callback` only with the nodes successfully added
-                                    // before.
-                                    callback?.(success.map((n) => n.node as CollectionReference));
                                 } else {
-                                    // Dialog was canceled by the user.
-                                    //
-                                    // TODO: should we invoke `callback` here?
-                                    this.bridge.closeModalDialog();
+                                    // Declining and dismissing both skip the duplicates; callers
+                                    // still need `callback` to finish, e.g. to end their loading.
+                                    callback?.(success.map((n) => n.node as CollectionReference));
                                 }
                             });
                             return;
