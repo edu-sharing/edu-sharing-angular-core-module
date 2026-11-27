@@ -19,10 +19,6 @@ export class RestConnectorsService extends AbstractRestService {
     ui = inject(UIService);
     private connectorApi = inject(ConnectorService);
 
-    private static MODE_NONE = 0;
-    private static MODE_CREATE = 1;
-    private static MODE_EDIT = 2;
-
     private currentList: ConnectorList;
     constructor() {
         const connector = inject(RestConnectorService);
@@ -54,41 +50,7 @@ export class RestConnectorsService extends AbstractRestService {
             ) {
                 continue;
             }
-            if (RestConnectorsService.getFiletype(node, connector)) return connector;
-        }
-        return null;
-    }
-
-    public static getFiletype(node: Node, connector: Connector, mode = this.MODE_NONE) {
-        for (let filetype of connector.filetypes) {
-            if (
-                filetype.mimetype == node.mimetype &&
-                (mode == this.MODE_NONE ||
-                    (mode == this.MODE_EDIT && filetype.editable) ||
-                    (mode == this.MODE_CREATE && filetype.creatable))
-            ) {
-                if (filetype.mimetype == 'application/zip') {
-                    if (
-                        (!filetype.ccressourceversion ||
-                            filetype.ccressourceversion ==
-                                node.properties[RestConstants.CCM_PROP_CCRESSOURCEVERSION]?.[0]) &&
-                        filetype.ccressourcetype ==
-                            node.properties[RestConstants.CCM_PROP_CCRESSOURCETYPE]?.[0] &&
-                        (!filetype.ccresourcesubtype ||
-                            filetype.ccresourcesubtype ==
-                                node.properties[RestConstants.CCM_PROP_CCRESSOURCESUBTYPE]?.[0])
-                    )
-                        return filetype;
-                    continue;
-                }
-                if (
-                    filetype.editorType &&
-                    filetype.editorType != node.properties[RestConstants.CCM_PROP_EDITOR_TYPE]?.[0]
-                ) {
-                    continue;
-                }
-                return filetype;
-            }
+            if (ConnectorService.getFiletype(node, connector)) return connector;
         }
         return null;
     }

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { concatMap, firstValueFrom, from, Observable, Observer, of, Subject } from 'rxjs';
+import { concatMap, defer, firstValueFrom, from, Observable, Observer, of, Subject } from 'rxjs';
 import { MessageType } from '../../../util/message-type';
 import { RestConstants } from '../rest-constants';
 import {
@@ -17,6 +17,7 @@ import {
     AuthenticationService,
     ConfigValues,
     Connector,
+    ConnectorService,
     LtiPlatformService,
     Node,
     NodeServiceUnwrapped,
@@ -357,27 +358,17 @@ export class UIService extends UIServiceBase {
         node: Node,
         parameters: { [key in string]: string[] } = {},
     ): Observable<string> {
-        return new Observable<string>((observer) => {
-            const send: { [key in string]: string[] } = { ...parameters };
-            send['connectorId'] = [connectorType.id];
-            send['nodeId'] = [node.ref.id];
-            let req = this.connector.getAbsoluteEndpointUrl() + '../eduservlet/connector?';
-            let i = 0;
-            for (const param in send) {
-                if (!send[param]) {
-                    continue;
-                }
-                for (const value of send[param]) {
-                    if (i > 0) {
-                        req += '&';
-                    }
-                    req += param + '=' + encodeURIComponent(value);
-                    i++;
-                }
-            }
-            observer.next(req);
-            observer.complete();
-        });
+        // deferred, so errors (e.g. a missing connector) still reach the subscriber
+        return defer(() =>
+            of(
+                ConnectorService.getConnectorUrl(
+                    this.connector.getAbsoluteEndpointUrl(),
+                    connectorType.id,
+                    node.ref.id,
+                    parameters,
+                ),
+            ),
+        );
     }
 
     getLoadingSpinnerUrl() {
